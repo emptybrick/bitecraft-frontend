@@ -12,7 +12,7 @@ router.get('/:userId/recipes-collection', verifyToken, async (req, res) => {
         const recipes = user.recipesCollection;
         res.status(200).json(recipes);
     } catch (error) {
-        res.status(500).json({ err: err.message });
+        res.status(500).json(error);
     }
 });
 
@@ -25,7 +25,7 @@ router.get('/:userId/meals-collection', verifyToken, async (req, res) => {
         const meals = user.mealsCollection;
         res.status(200).json(meals);
     } catch (error) {
-        res.status(500).json({ err: err.message });
+        res.status(500).json(error);
     }
 });
 
@@ -53,7 +53,7 @@ router.post('/:userId/meals-collection', verifyToken, async (req, res) => {
         res.status(201).json(updateMealCollection);
 
     } catch (error) {
-        res.status(500).json({ err: err.message });
+        res.status(500).json(error);
     }
 });
 
@@ -79,7 +79,7 @@ router.post('/:userId/recipes-collection', verifyToken, async (req, res) => {
         }
         res.status(201).json(updateRecipeCollection);
     } catch (error) {
-        res.status(500).json({ err: err.message });
+        res.status(500).json(error);
     }
 });
 
@@ -98,7 +98,7 @@ router.delete('/:userId/recipes-collection/:recipeId', verifyToken, async (req, 
         await user.save();
         res.status(200).json({ message: "Recipe removed from collection successfully" });
     } catch (error) {
-        res.status(500).json({ err: err.message });
+        res.status(500).json(error);
     }
 });
 
@@ -117,7 +117,7 @@ router.delete('/:userId/meals-collection/:recipeId', verifyToken, async (req, re
         await user.save();
         res.status(200).json({ message: "Meal removed from collection successfully" });
     } catch (error) {
-        res.status(500).json({ err: err.message });
+        res.status(500).json(error);
     }
 });
 

@@ -1,13 +1,13 @@
-import { useContext } from 'react';
-import { Link } from 'react-router';
+import { useContext } from "react";
+import { Link } from "react-router";
 
-import { UserContext } from '../../contexts/UserContext';
+import { UserContext } from "../../contexts/UserContext";
 
 const NavBar = () => {
   const { user, setUser } = useContext(UserContext);
 
   const handleSignOut = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem("token");
     setUser(null);
   };
 
@@ -20,16 +20,23 @@ const NavBar = () => {
             <Link to="/">Dashboard</Link>
           </li>
           <li>
-            <Link to="/">Meal Plan</Link>
+            <Link to={`/plan/${user._id}`}>Meal Plan</Link>
           </li>
           <li>
-            <Link to="/">My Collections</Link>
+            <Link to={`/collections/${user._id}/recipes-collection`}>
+              Recipes Collection
+            </Link>
           </li>
           <li>
-            <Link to="/">All Recipes</Link>
+            <Link to={`/collections/${user._id}/meals-collection`}>
+              Meals Collection
+            </Link>
           </li>
           <li>
-            <Link to="/">All Meals</Link>
+            <Link to="/recipes">All Recipes</Link>
+          </li>
+          <li>
+            <Link to="/meals">All Meals</Link>
           </li>
           <li>
             <Link to="/" onClick={handleSignOut}>
@@ -55,6 +62,3 @@ const NavBar = () => {
 };
 
 export default NavBar;
-
-
-

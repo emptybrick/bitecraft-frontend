@@ -13,6 +13,7 @@ const usersRouter = require('./controllers/users');
 const mealsRouter = require('./controllers/meals')
 const recipesRouter = require('./controllers/recipes')
 const collectionsRouter = require('./controllers/collections')
+const mealPlansRouter = require('./controllers/mealplans')
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI);
@@ -32,6 +33,7 @@ app.use('/users', usersRouter);
 app.use('/meals', mealsRouter);
 app.use('/recipes', recipesRouter)
 app.use('/collections', collectionsRouter);
+app.use('/meal-plan', mealPlansRouter)
 
 // Start the server and listen on port 3000
 app.listen(3000, () => {
