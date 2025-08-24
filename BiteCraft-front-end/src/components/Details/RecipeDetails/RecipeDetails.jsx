@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from "react";
-import { useParams, useNavigate } from "react-router";
+import { useParams, useNavigate, data } from "react-router";
 import CommentForm from "../../Forms/CommentForm/CommentForm";
 import * as biteCraftService from "../../../services/BiteCraftService";
 import { UserContext } from "../../../contexts/UserContext";
@@ -28,10 +28,11 @@ const RecipeDetails = () => {
         ...prev,
         data: prev.type === "Recipe" ? recipeToShow : prev.data,
       }));
-    };
+    };    
     if (!editState.isEditing) {
       getData();
     }
+
   }, [recipeId, editState.isEditing]);
 
   const toggleEditMode = (
@@ -61,7 +62,6 @@ const RecipeDetails = () => {
       ...prev,
       data: { ...prev.data, [event.target.name]: event.target.value },
     }));
-    console.log(editState.data);
   };
 
   // comment handlers
@@ -77,7 +77,6 @@ const RecipeDetails = () => {
 
   const handleUpdateComment = async (event, formData) => {
     event.preventDefault();
-    console.log(formData);
     try {
       if (editState.type === "Comment") {
         await biteCraftService.Update(
@@ -89,9 +88,10 @@ const RecipeDetails = () => {
         setRecipe({
           ...recipe,
           comments: recipe.comments.map((comment) => {
-            comment._id === editState.commentId
+            comment._id === editState.itemId
               ? { ...comment, text: formData.text }
               : comment;
+            console.log("comment", comment);
           }),
         });
         toggleEditMode();
