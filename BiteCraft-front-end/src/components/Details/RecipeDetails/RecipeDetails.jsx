@@ -19,6 +19,7 @@ const RecipeDetails = () => {
   const [recipe, setRecipe] = useState(null);
   const recipeId = params.recipeId;
   const [visibleForm, setVisibleForm] = useState(null);
+  const [addNewComment, setAddNewComment] = useState(false);
 
   useEffect(() => {
     const getData = async () => {
@@ -28,12 +29,15 @@ const RecipeDetails = () => {
         ...prev,
         data: prev.type === "Recipe" ? recipeToShow : prev.data,
       }));
-    };    
+    };
     if (!editState.isEditing) {
       getData();
     }
+  }, [recipeId, editState.isEditing, addNewComment]);
 
-  }, [recipeId, editState.isEditing]);
+  const toggleNewComment = () => {
+    setAddNewComment(!addNewComment);
+  };
 
   const toggleEditMode = (
     type = null,
@@ -51,6 +55,7 @@ const RecipeDetails = () => {
       itemId,
       commentId,
     });
+    console.log("edit mode on, edit state is: ", editState);
   };
 
   const toggleForm = (itemId) => {
@@ -66,17 +71,20 @@ const RecipeDetails = () => {
 
   // comment handlers
   const handleAddComment = async (commentFormData) => {
+    console.log("add comment data", commentFormData);
     const newComment = await biteCraftService.Create(
       "RecipeComment",
       commentFormData,
       recipeId
     );
-    console.log("new comment:", newComment);
-    setRecipe({ ...recipe, comments: [recipe.comments, newComment] });
+    toggleNewComment();
+    console.log(addNewComment);
+    console.log("new comment", newComment);
+    console.log("new comment id", newComment._id);
+    setRecipe({ ...recipe, comments: [...recipe.comments, newComment] });
   };
 
-  const handleUpdateComment = async (event, formData) => {
-    event.preventDefault();
+  const handleUpdateComment = async (formData) => {
     try {
       if (editState.type === "Comment") {
         await biteCraftService.Update(
@@ -87,12 +95,11 @@ const RecipeDetails = () => {
         );
         setRecipe({
           ...recipe,
-          comments: recipe.comments.map((comment) => {
+          comments: recipe.comments.map((comment) =>
             comment._id === editState.itemId
               ? { ...comment, text: formData.text }
-              : comment;
-            console.log("comment", comment);
-          }),
+              : comment
+          ),
         });
         toggleEditMode();
       }
@@ -117,47 +124,49 @@ const RecipeDetails = () => {
 
   // reply handlers
   const handleAddReply = async (commentFormData, commentId) => {
+    console.log("addreply recipe details:", commentFormData, commentId);
     const newReply = await biteCraftService.Create(
       "RecipeReply",
       commentFormData,
       recipeId,
       commentId
     );
+    toggleNewComment();
     setRecipe({
       ...recipe,
-      comments: recipe.comments.map((comment) => {
+      comments: recipe.comments.map((comment) =>
         comment._id === commentId
           ? { ...comment, reply: [...(comment.reply || []), newReply] }
-          : comment;
-      }),
+          : comment
+      ),
     });
   };
 
-  const handleUpdateReply = async (event, commentId, replyId) => {
-    event.preventDefault();
+  const handleUpdateReply = async (formData, commentId, replyId) => {
+    console.log("form data", formData);
+    console.log("commentID", commentId);
+    console.log("replyId", replyId);
     try {
       if (editState.type === "Reply" && editState.itemId === replyId) {
         await biteCraftService.Update(
           "RecipeReply",
-          editState.data,
+          formData,
           recipeId,
           commentId,
           replyId
         );
         setRecipe({
           ...recipe,
-          comments: recipe.comments.map((comment) => {
+          comments: recipe.comments.map((comment) =>
             comment._id === commentId
               ? {
                   ...comment,
-                  reply: comment.reply.map((rep) => {
-                    rep._id === replyId
-                      ? { ...rep, text: editState.data.text }
-                      : rep;
-                  }),
+                  reply: comment.reply.map((rep) =>
+                    rep._id === replyId ? { ...rep, text: formData.text } : rep
+                  ),
                 }
-              : comment;
-          }),
+              : comment
+          ),
         });
         toggleEditMode();
       }
@@ -167,6 +176,7 @@ const RecipeDetails = () => {
   };
 
   const handleDeleteReply = async (commentId, replyId) => {
+    console.log("handle delete reply id", replyId);
     try {
       await biteCraftService.Delete(
         "RecipeReply",
@@ -176,7 +186,7 @@ const RecipeDetails = () => {
       );
       setRecipe({
         ...recipe,
-        comments: recipe.comments.map((comment) => {
+        comments: recipe.comments.map((comment) =>
           comment._id === commentId
             ? {
                 ...comment,
@@ -184,8 +194,8 @@ const RecipeDetails = () => {
                   rep._id !== replyId;
                 }),
               }
-            : comment;
-        }),
+            : comment
+        ),
       });
     } catch (error) {
       console.log(error);
@@ -318,8 +328,8 @@ const RecipeDetails = () => {
             )}
           </>
         )}
-        {recipe.comments.map((comment) => (
-          <article key={comment._id}>
+        {recipe.comments.map((comment, idx) => (
+          <article key={idx}>
             <header>
               <p>
                 {`${comment.author.username} posted on
@@ -333,9 +343,8 @@ const RecipeDetails = () => {
               <div>
                 <CommentForm
                   initialText={editState.data.text}
-                  handleAddComment={(event, formData, commentId) => {
-                    handleUpdateComment(event, formData, commentId);
-                    // toggleEditMode()
+                  handleAddComment={(formData, commentId) => {
+                    handleUpdateComment(formData, commentId);
                   }}
                   buttonText="Save"
                   onCancel={() => toggleEditMode()}
@@ -364,7 +373,7 @@ const RecipeDetails = () => {
                 {visibleForm === comment._id && (
                   <CommentForm
                     handleAddComment={(formData) => {
-                      handleAddReply(formData);
+                      handleAddReply(formData, comment._id);
                       setVisibleForm(null);
                     }}
                     onCancel={() => toggleForm(comment._id)}
@@ -374,8 +383,8 @@ const RecipeDetails = () => {
             )}
             {comment.reply && comment.reply.length > 0 && (
               <div>
-                {comment.reply.map((rep) => (
-                  <article key={rep._id}>
+                {comment.reply.map((rep, idx) => (
+                  <article key={idx}>
                     <header>
                       <p>{`${rep.author.username} posted on ${new Date(
                         rep.createdAt
@@ -384,35 +393,32 @@ const RecipeDetails = () => {
                     {editState.isEditing &&
                     editState.type === "Reply" &&
                     editState.itemId === rep._id &&
-                    comment.author._id === user._id ? (
+                    rep.author._id === user._id ? (
                       <div>
                         <CommentForm
                           initialText={editState.data.text}
-                          handleAddComment={(e) =>
-                            handleUpdateReply(e, comment._id, rep._id)
+                          handleAddComment={(formData) =>
+                            handleUpdateReply(formData, comment._id, rep._id)
                           }
                           buttonText="Save"
+                          onCancel={() => toggleEditMode()}
                         />
-                        <button type="button" onClick={() => toggleEditMode()}>
-                          Cancel
-                        </button>
                       </div>
                     ) : (
                       <p>{rep.text}</p>
                     )}
                     {rep.author._id === user._id && (
                       <>
-                        <button onClick={() => handleDeleteReply(rep._id)}>
+                        <button
+                          onClick={() =>
+                            handleDeleteReply(comment._id, rep._id)
+                          }
+                        >
                           Delete
                         </button>
                         <button
                           onClick={() =>
-                            toggleEditMode(
-                              "Reply",
-                              editState.data,
-                              rep._id,
-                              comment._id
-                            )
+                            toggleEditMode("Reply", rep, rep._id, comment._id)
                           }
                         >
                           Edit

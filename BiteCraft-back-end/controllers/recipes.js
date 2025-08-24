@@ -131,21 +131,25 @@ router.delete('/:recipeId/comments/:commentId', verifyToken, async (req, res) =>
 });
 
 router.post('/:recipeId/comments/:commentId/reply', verifyToken, async (req, res) => {
+    console.log("trying to add reply")
     try {
         req.body.author = req.user._id;
-        const updateRecipe = await Recipe.findByIdAndUpdate(
-            { _id: req.params.commentId },
-            { $push: { reply: req.body } },
-            { new: true, runValidators: true }
-        );
-
+        const updateRecipe = await Recipe.findById(req.params.recipeId)
         if (!updateRecipe) {
             return res.status(404).send("Recipe not found");
         }
+        const comment = updateRecipe.comments.id(req.params.commentId)
+        if (!comment) {
+            return res.status(404).send("Comment not found");
+        }
+        comment.reply = comment.reply || []
+        comment.reply.push(req.body)
 
+        await updateRecipe.save()
+  
         const newComment = { ...req.body, author: req.user };
         res.status(201).json(newComment);
-
+        
     } catch (error) {
         res.status(500).json(error);
     }
@@ -178,8 +182,8 @@ router.delete('/:recipeId/comments/:commentId/reply/:replyId', verifyToken, asyn
         if (reply.author.toString() !== req.user._id) {
             return res.status(403).json({ message: "You are not authorized to delete this comment" });
         }
-
-        recipe.comments.reply.remove({ _id: req.params.replyId });
+        console.log(recipe)
+        comment.reply.remove({ _id: req.params.replyId });
         await recipe.save();
         res.status(200).json({ message: "Comment deleted successfully" });
     } catch (error) {

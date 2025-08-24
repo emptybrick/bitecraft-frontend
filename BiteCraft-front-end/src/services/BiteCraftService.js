@@ -62,14 +62,15 @@ const Create = async (type, formData, itemId, commentId) => {
                 BASE_URL = `${ Meals_URL }/${ itemId }/comments`;
                 break;
             case "RecipeReply":
-                BASE_URL = `${ Recipes_URL }/${ itemId }/comments/${ commentId }`;
+                BASE_URL = `${ Recipes_URL }/${ itemId }/comments/${ commentId }/reply`;
                 break;
             case "MealReply":
-                BASE_URL = `${ Meals_URL }/${ itemId }/comments/${ commentId }`;
+                BASE_URL = `${ Meals_URL }/${ itemId }/comments/${ commentId }/reply`;
                 break;
             default:
                 throw new Error("Type not set");
         }
+        console.log(BASE_URL)
         const res = await axios.post(BASE_URL, formData, {
             headers: { Authorization: `Bearer ${ localStorage.getItem("token") }` },
         });
@@ -96,10 +97,10 @@ const Delete = async (type, itemId, commentId, replyId) => {
                 BASE_URL = `${ Meals_URL }/${ itemId }/comments/${ commentId }`;
                 break;
             case "RecipeReply":
-                BASE_URL = `${ Recipes_URL }/${ itemId }/comments/${ commentId }/${ replyId }`;
+                BASE_URL = `${ Recipes_URL }/${ itemId }/comments/${ commentId }/reply/${ replyId }`;
                 break;
             case "MealReply":
-                BASE_URL = `${ Meals_URL }/${ itemId }/comments/${ commentId }/${ replyId }`;
+                BASE_URL = `${ Meals_URL }/${ itemId }/comments/${ commentId }/reply/${ replyId }`;
                 break;
             default:
                 throw new Error("Type not set");
@@ -130,10 +131,10 @@ const Update = async (type, formData, itemId, commentId, replyId) => {
                 BASE_URL = `${ Meals_URL }/${ itemId }/comments/${ commentId }`;
                 break;
             case "RecipeReply":
-                BASE_URL = `${ Recipes_URL }/${ itemId }/comments/${ commentId }/${ replyId }`;
+                BASE_URL = `${ Recipes_URL }/${ itemId }/comments/${ commentId }/reply/${ replyId }`;
                 break;
             case "MealReply":
-                BASE_URL = `${ Meals_URL }/${ itemId }/comments/${ commentId }/${ replyId }`;
+                BASE_URL = `${ Meals_URL }/${ itemId }/comments/${ commentId }/reply/${ replyId }`;
                 break;
             default:
                 throw new Error("Type not set");
