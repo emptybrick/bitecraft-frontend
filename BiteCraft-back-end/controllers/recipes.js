@@ -53,7 +53,6 @@ router.put('/:recipeId', verifyToken, async (req, res) => {
         );
 
         updatedRecipe._doc.author = req.user;
-
         res.status(200).json(updatedRecipe);
 
     } catch (error) {

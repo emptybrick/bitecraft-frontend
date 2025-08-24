@@ -17,6 +17,9 @@ const RecipeList = () => {
   return (
     <main>
       <h1>List of All Recipes!</h1>
+      <Link to="/recipes/new">
+        <button>Add New Recipe</button>
+      </Link>
       {recipes.map((recipe) => (
         <Link key={recipe._id} to={`/recipes/${recipe._id}`}>
           <article>
@@ -24,12 +27,10 @@ const RecipeList = () => {
               <h2>{recipe.category} Dish</h2>
               <h2>{recipe.name}</h2>
               <p>{`${recipe.author.username} posted on ${new Date(
-                recipe.createAt
+                recipe.createdAt
               ).toLocaleDateString()}`}</p>
             </header>
             <p>{recipe.details}</p>
-            {/* <p>{ recipe.instructions }</p>
-                        <p>{ recipe.ingredients }</p> */}
           </article>
         </Link>
       ))}

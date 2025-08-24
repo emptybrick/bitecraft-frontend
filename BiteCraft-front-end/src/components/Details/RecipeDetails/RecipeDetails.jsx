@@ -4,7 +4,7 @@ import CommentForm from "../../Forms/CommentForm/CommentForm";
 import * as biteCraftService from "../../../services/BiteCraftService";
 import { UserContext } from "../../../contexts/UserContext";
 
-CommentForm
+CommentForm;
 const RecipeDetails = () => {
   const navigate = useNavigate();
   const params = useParams();
@@ -53,7 +53,7 @@ const RecipeDetails = () => {
   };
 
   const toggleForm = (itemId) => {
-      setVisibleForm((prev) => (prev === itemId ? null : itemId));
+    setVisibleForm((prev) => (prev === itemId ? null : itemId));
   };
 
   const handleChange = (event) => {
@@ -61,6 +61,7 @@ const RecipeDetails = () => {
       ...prev,
       data: { ...prev.data, [event.target.name]: event.target.value },
     }));
+    console.log(editState.data);
   };
 
   // comment handlers
@@ -70,24 +71,26 @@ const RecipeDetails = () => {
       commentFormData,
       recipeId
     );
+    console.log("new comment:", newComment);
     setRecipe({ ...recipe, comments: [recipe.comments, newComment] });
   };
 
-  const handleUpdateComment = async (event, commentId) => {
+  const handleUpdateComment = async (event, formData) => {
     event.preventDefault();
+    console.log(formData);
     try {
-      if (editState.type === "Comment" && editState.itemId === commentId) {
+      if (editState.type === "Comment") {
         await biteCraftService.Update(
           "RecipeComment",
-          editState.data,
+          formData,
           recipeId,
-          commentId
+          editState.itemId
         );
         setRecipe({
           ...recipe,
           comments: recipe.comments.map((comment) => {
-            comment._id === commentId
-              ? { ...comment, text: editState.data.text }
+            comment._id === editState.commentId
+              ? { ...comment, text: formData.text }
               : comment;
           }),
         });
@@ -206,7 +209,8 @@ const RecipeDetails = () => {
   const handleDeleteRecipe = async () => {
     try {
       await biteCraftService.Delete("Recipe", recipeId);
-      navigate(`/collections/${user._id}/recipes-collection`);
+      navigate("/recipes");
+      // navigate(`/collections/${user._id}/recipes-collection`);
     } catch (error) {
       console.log(error);
     }
@@ -267,6 +271,9 @@ const RecipeDetails = () => {
               required
             ></textarea>
             <button type="submit">Save</button>
+            <button type="button" onClick={() => toggleEditMode()}>
+              Cancel
+            </button>
           </form>
         ) : (
           <>
@@ -302,8 +309,8 @@ const RecipeDetails = () => {
             <button onClick={() => toggleForm(recipeId)}>Comment</button>
             {visibleForm === recipeId && (
               <CommentForm
-                handleAddComment={() => {
-                  handleAddComment;
+                handleAddComment={(formData) => {
+                  handleAddComment(formData);
                   setVisibleForm(null);
                 }}
                 onCancel={() => toggleForm(recipeId)}
@@ -321,17 +328,18 @@ const RecipeDetails = () => {
             </header>
             {editState.isEditing &&
             editState.type === "Comment" &&
-            editState.id === comment._id &&
+            editState.itemId === comment._id &&
             comment.author._id === user._id ? (
               <div>
                 <CommentForm
                   initialText={editState.data.text}
-                  handleAddComment={(e) => handleUpdateComment(e, comment._id)}
+                  handleAddComment={(event, formData, commentId) => {
+                    handleUpdateComment(event, formData, commentId);
+                    // toggleEditMode()
+                  }}
                   buttonText="Save"
+                  onCancel={() => toggleEditMode()}
                 />
-                <button type="button" onClick={() => toggleEditMode()}>
-                  Cancel
-                </button>
               </div>
             ) : (
               <p>{comment.text}</p>
@@ -343,7 +351,7 @@ const RecipeDetails = () => {
                 </button>
                 <button
                   onClick={() =>
-                    toggleEditMode("RecipeComment", editState.data, comment._id)
+                    toggleEditMode("Comment", comment, comment._id)
                   }
                 >
                   Edit
@@ -355,8 +363,8 @@ const RecipeDetails = () => {
                 <button onClick={() => toggleForm(comment._id)}>Reply</button>
                 {visibleForm === comment._id && (
                   <CommentForm
-                    handleAddComment={() => {
-                      handleAddReply;
+                    handleAddComment={(formData) => {
+                      handleAddReply(formData);
                       setVisibleForm(null);
                     }}
                     onCancel={() => toggleForm(comment._id)}
@@ -375,7 +383,7 @@ const RecipeDetails = () => {
                     </header>
                     {editState.isEditing &&
                     editState.type === "Reply" &&
-                    editState.id === rep._id &&
+                    editState.itemId === rep._id &&
                     comment.author._id === user._id ? (
                       <div>
                         <CommentForm
@@ -400,7 +408,7 @@ const RecipeDetails = () => {
                         <button
                           onClick={() =>
                             toggleEditMode(
-                              "RecipeReply",
+                              "Reply",
                               editState.data,
                               rep._id,
                               comment._id

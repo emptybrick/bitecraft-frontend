@@ -12,8 +12,8 @@ import RecipeDetails from "./components/Details/RecipeDetails/RecipeDetails";
 import MealDetails from "./components/Details/MealDetails/MealDetails";
 import MealForm from "./components/Forms/MealForm/MealForm";
 import RecipeForm from "./components/Forms/RecipeForm/RecipeForm";
-import RecipeList from "./components/Lists/RecipeList/RecipeList"
-import MealList from "./components/Lists/MealList/MealList"
+import RecipeList from "./components/Lists/RecipeList/RecipeList";
+import MealList from "./components/Lists/MealList/MealList";
 import MealPlan from "./components/MealPlan/MealPlan";
 
 import { UserContext } from "./contexts/UserContext";
@@ -31,18 +31,15 @@ const App = () => {
         <Route path="/recipes/:recipeId" element={<RecipeDetails />} />
         <Route path="/meals/:mealId" element={<MealDetails />} />
         <Route
-          path="/collections/:userId/recipes-collection"
+          path="/:userId/recipes-collection"
           element={<RecipeCollection />}
         />
-        <Route
-          path="/collections/:userId/meals-collection"
-          element={<MealCollection />}
-        />
+        <Route path="/:userId/meals-collection" element={<MealCollection />} />
         <Route path="/recipes/new" element={<RecipeForm />} />
         <Route path="/meals/new" element={<MealForm />} />
         <Route path="/recipes" element={<RecipeList />} />
         <Route path="/meals" element={<MealList />} />
-        <Route path="/meal-plan/:userId/meal-plan" element={<MealList />} />
+        <Route path="/:userId/planner" element={<MealPlan />} />
       </Routes>
     </>
   );

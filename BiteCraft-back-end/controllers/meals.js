@@ -17,7 +17,21 @@ router.post('/', verifyToken, async (req, res) => {
 router.get('/', verifyToken, async (req, res) => {
     try {
         const meals = await Meal.find({})
-            .populate("author")
+            .populate([
+                { path: 'author' },
+                {
+                    path: 'main',
+                    populate: { path: 'author' }
+                },
+                {
+                    path: 'side1',
+                    populate: { path: 'author' }
+                },
+                {
+                    path: 'side2',
+                    populate: { path: 'author' }
+                }
+            ])
             .sort({ createdAt: "desc" });
         res.status(200).json(meals);
     } catch (error) {
@@ -28,9 +42,21 @@ router.get('/', verifyToken, async (req, res) => {
 router.get('/:mealId', verifyToken, async (req, res) => {
     try {
         const meal = await Meal.findById(req.params.mealId).populate([
-            'author',
-            'comments.author',
-            'comments.reply.author',
+            { path: 'author' },
+            { path: 'comments.author' },
+            { path: 'comments.reply.author' },
+            {
+                path: 'main',
+                populate: { path: 'author' }
+            },
+            {
+                path: 'side1',
+                populate: { path: 'author' }
+            },
+            {
+                path: 'side2',
+                populate: { path: 'author' }
+            }
         ]);
         res.status(200).json(meal);
     } catch (error) {

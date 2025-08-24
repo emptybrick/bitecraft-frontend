@@ -1,35 +1,40 @@
 import { useState } from "react";
 
-const CommentForm = ({ handleAddComment, onCancel, buttonText, initialText }) => {
-  const [formData, setFormData] = useState({ text: "" });
-
+const CommentForm = ({
+  handleAddComment,
+  onCancel,
+  buttonText = "Submit",
+  initialText = '',
+}) => {
+  const [formData, setFormData] = useState({ text: initialText });
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event, commentId, recipeId) => {
     event.preventDefault();
-    handleAddComment(formData);
+    console.log("sending comment to handleAddComment");
+    console.log(formData.text)
+    handleAddComment(event, formData, commentId, recipeId);
     setFormData({ text: "" });
   };
 
   return (
-    <>
       <form onSubmit={handleSubmit}>
         <label htmlFor="text-input">Your comment:</label>
         <textarea
-          type="text"
           name="text"
           id="text-input"
           value={formData.text}
           onChange={handleChange}
           required
-        >{ initialText }</textarea>
-        <button type="submit">{ buttonText ? buttonText : "Submit" }</button>
-        <button type='button' onClick={onCancel}>Cancel</button>
+          placeholder="Enter your comment here"
+        ></textarea>
+        <button type="submit">{buttonText}</button>
+        <button type="button" onClick={onCancel}>
+          Cancel
+        </button>
       </form>
-      
-    </>
   );
 };
 

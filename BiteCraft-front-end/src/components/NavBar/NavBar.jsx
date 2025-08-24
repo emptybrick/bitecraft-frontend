@@ -20,15 +20,15 @@ const NavBar = () => {
             <Link to="/">Dashboard</Link>
           </li>
           <li>
-            <Link to={`/plan/${user._id}`}>Meal Plan</Link>
+            <Link to={`/${user._id}/planner`}>Meal Plan</Link>
           </li>
           <li>
-            <Link to={`/collections/${user._id}/recipes-collection`}>
+            <Link to={`/${user._id}/recipes-collection`}>
               Recipes Collection
             </Link>
           </li>
           <li>
-            <Link to={`/collections/${user._id}/meals-collection`}>
+            <Link to={`/${user._id}/meals-collection`}>
               Meals Collection
             </Link>
           </li>

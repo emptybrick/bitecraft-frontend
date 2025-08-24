@@ -22,7 +22,8 @@ const RecipeForm = () => {
     event.preventDefault();
     try {
       await biteCraftService.Create("Recipe", formData);
-      navigate(`/collections/${user._id}/meals-collection`);
+      navigate('/recipes')
+      // navigate(`/collections/${user._id}/recipes-collection`);
     } catch (error) {
       console.log(error);
     }
@@ -39,6 +40,9 @@ const RecipeForm = () => {
           value={formData.category}
           onChange={handleChange}
         >
+          <option value="" disabled selected>
+            Select a Category
+          </option>
           <option value="Main">Main Dish</option>
           <option value="Side">Side Dish</option>
         </select>

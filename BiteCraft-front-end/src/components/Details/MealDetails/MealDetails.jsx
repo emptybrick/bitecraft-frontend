@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router";
 import CommentForm from "../../Forms/CommentForm/CommentForm";
 import * as biteCraftService from "../../../services/BiteCraftService";
 import { UserContext } from "../../../contexts/UserContext";
+import { Link } from 'react-router'
 
 const MealDetails = () => {
   const navigate = useNavigate();
@@ -39,6 +40,7 @@ const MealDetails = () => {
     itemId = null,
     commentId = null
   ) => {
+    console.log("trying to toggle edit mode")
     setEditState({
       isEditing:
         !editState.isEditing ||
@@ -279,6 +281,9 @@ const MealDetails = () => {
               })}
             </select>
             <button type="Submit">Save</button>
+            <button type="button" onClick={() => toggleEditMode()}>
+              Cancel
+            </button>
           </form>
         ) : (
           <>
@@ -306,7 +311,7 @@ const MealDetails = () => {
               <h4>Details:</h4>
               <p>{meal.side1.details}</p>
             </div>
-            {main.side2 ? (
+            {meal.side2 ? (
               <div>
                 <Link key={meal.side2._id} to={`/recipes/${meal.side2._id}`}>
                   Side Dish: {meal.side2.name}
@@ -336,8 +341,8 @@ const MealDetails = () => {
             <button onClick={() => toggleForm(mealId)}>Comment</button>
             {visibleForm === mealId && (
               <CommentForm
-                handleAddComment={() => {
-                  handleAddComment;
+                handleAddComment={(formData) => {
+                  handleAddComment(formData);
                   setVisibleForm(null);
                 }}
                 onCancel={() => toggleForm(mealId)}
@@ -377,7 +382,7 @@ const MealDetails = () => {
                 </button>
                 <button
                   onClick={() =>
-                    toggleEditMode("MealComment", editState.data, comment._id)
+                    toggleEditMode("Comment", editState.data, comment._id)
                   }
                 >
                   Edit
@@ -389,8 +394,8 @@ const MealDetails = () => {
                 <button onClick={() => toggleForm(comment._id)}>Reply</button>
                 {visibleForm === comment._id && (
                   <CommentForm
-                    handleAddComment={() => {
-                      handleAddReply;
+                    handleAddComment={(formData) => {
+                      handleAddReply(formData);
                       setVisibleForm(null);
                     }}
                     onCancel={() => toggleForm(comment._id)}
@@ -434,7 +439,7 @@ const MealDetails = () => {
                         <button
                           onClick={() =>
                             toggleEditMode(
-                              "MealReply",
+                              "Reply",
                               editState.data,
                               rep._id,
                               comment._id

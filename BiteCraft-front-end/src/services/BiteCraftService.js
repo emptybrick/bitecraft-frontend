@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const Meals_URL = `${ import.meta.env.VITE_BACK_END_SERVER_URL }/meals`;
 const Recipes_URL = `${ import.meta.env.VITE_BACK_END_SERVER_URL }/recipes`;
-const Collections_URL = `${ import.meta.env.VITE_BACK_END_SERVER_URL }/collections`;
+const TRIMMED_URL = `${ import.meta.env.VITE_BACK_END_SERVER_URL }`;
 // const RecipeCollection_URL = `${ import.meta.env.VITE_BACK_END_SERVER_URL }/collections/:userId/recipes-collection`;
 // const MealsCollection_URL = `${ import.meta.env.VITE_BACK_END_SERVER_URL }/collections/:userId/meals-collection`;
 
@@ -13,9 +13,9 @@ const Index = async (type, userId) => {
         else if (type === "Recipe") { BASE_URL = Recipes_URL; }
         else {
             if (type === "RecipeCollection") {
-                BASE_URL = `${ Collections_URL }/${ userId }/recipes-collection`;
+                BASE_URL = `${ TRIMMED_URL }/${ userId }/recipes-collection`;
             } else if (type === "MealCollection") {
-                BASE_URL = `${ Collections_URL }/${ userId }/meals-collection`;
+                BASE_URL = `${ TRIMMED_URL }/${ userId }/meals-collection`;
             } else {
                 throw new Error("Type not set");
             }
@@ -84,10 +84,10 @@ const Delete = async (type, itemId, commentId, replyId) => {
     try {
         switch (type) {
             case "Meal":
-                BASE_URL = `${ Meals_URL } / ${ itemId }`;
+                BASE_URL = `${ Meals_URL }/${ itemId }`;
                 break;
             case "Recipe":
-                BASE_URL = `${ Recipes_URL } / ${ itemId }`;
+                BASE_URL = `${ Recipes_URL }/${ itemId }`;
                 break;
             case "RecipeComment":
                 BASE_URL = `${ Recipes_URL }/${ itemId }/comments/${ commentId }`;
@@ -118,10 +118,10 @@ const Update = async (type, formData, itemId, commentId, replyId) => {
     try {
         switch (type) {
             case "Meal":
-                BASE_URL = `${ Meals_URL } / ${ itemId }`;
+                BASE_URL = `${ Meals_URL }/${ itemId }`;
                 break;
             case "Recipe":
-                BASE_URL = `${ Recipes_URL } / ${ itemId }`;
+                BASE_URL = `${ Recipes_URL }/${ itemId }`;
                 break;
             case "RecipeComment":
                 BASE_URL = `${ Recipes_URL }/${ itemId }/comments/${ commentId }`;
@@ -138,6 +138,7 @@ const Update = async (type, formData, itemId, commentId, replyId) => {
             default:
                 throw new Error("Type not set");
         }
+        console.log(BASE_URL)
         const res = await axios.put(BASE_URL, formData, {
             headers: { Authorization: `Bearer ${ localStorage.getItem("token") }` },
         });

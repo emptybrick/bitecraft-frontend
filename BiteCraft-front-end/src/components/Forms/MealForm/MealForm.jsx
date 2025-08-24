@@ -36,8 +36,9 @@ const MealForm = () => {
     }
   };
 
-  const sideRecipes = recipes.filter((recipe) => recipe.category === "Side");
-  const mainRecipes = recipes.filter((recipe) => recipe.category === "Main");
+  const sideRecipes = [...recipes.filter((recipe) => recipe.category === "Side")];
+  const mainRecipes = [ ...recipes.filter((recipe) => recipe.category === "Main") ];
+  console.log(mainRecipes)
 
   return (
     <main>
@@ -72,7 +73,7 @@ const MealForm = () => {
             Select a Recipe
           </option>
           {mainRecipes.map((recipe) => {
-            <option value={recipe._id}>{recipe.name}</option>;
+            return <option value={recipe._id}>{recipe.name}</option>;
           })}
         </select>
         <label htmlFor="side1-input">Side Dish 1:</label>
@@ -87,7 +88,7 @@ const MealForm = () => {
             Select a Recipe
           </option>
           {sideRecipes.map((recipe) => {
-            <option value={recipe._id}>{recipe.name}</option>;
+            return <option value={recipe._id}>{recipe.name}</option>;
           })}
         </select>
         <label htmlFor="side2-input">Side Dish 2:</label>
@@ -102,7 +103,7 @@ const MealForm = () => {
             Select a Recipe
           </option>
           {sideRecipes.map((recipe) => {
-            <option value={recipe._id}>{recipe.name}</option>;
+            return <option value={recipe._id}>{recipe.name}</option>;
           })}
         </select>
         <button type="Submit">Submit</button>
