@@ -12,7 +12,6 @@ const CommentForm = ({
   };
 
   const handleSubmit = (event, commentId, recipeId) => {
-    console.log("comment form handle submit comment Id", commentId)
     event.preventDefault();
     handleAddComment(formData, commentId, recipeId);
     setFormData({ text: "" });

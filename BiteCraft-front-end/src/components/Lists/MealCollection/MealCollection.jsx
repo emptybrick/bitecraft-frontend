@@ -19,6 +19,9 @@ const MealCollection = () => {
   return (
     <main>
       <h1>Welcome to {user.username}'s Meals Collection</h1>
+      <Link to="/meals/new">
+        <button>Add New Meal</button>
+      </Link>
       {meals.length > 0 ? (
         meals.map((meal) => (
           <Link key={meal._id} to={`/meals/${meal._id}`}>
@@ -26,7 +29,7 @@ const MealCollection = () => {
               <header>
                 <h2>{meal.name}</h2>
                 <p>{`${meal.author.username} posted on ${new Date(
-                  meal.createAt
+                  meal.createdAt
                 ).toLocaleDateString()}`}</p>
               </header>
               <p>{meal.details}</p>

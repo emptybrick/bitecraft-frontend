@@ -13,9 +13,9 @@ const Index = async (type, userId) => {
         else if (type === "Recipe") { BASE_URL = Recipes_URL; }
         else {
             if (type === "RecipeCollection") {
-                BASE_URL = `${ TRIMMED_URL }/${ userId }/recipes-collection`;
+                BASE_URL = `${ TRIMMED_URL }/users/${ userId }/recipes-collection`;
             } else if (type === "MealCollection") {
-                BASE_URL = `${ TRIMMED_URL }/${ userId }/meals-collection`;
+                BASE_URL = `${ TRIMMED_URL }/users/${ userId }/meals-collection`;
             } else {
                 throw new Error("Type not set");
             }
@@ -23,7 +23,6 @@ const Index = async (type, userId) => {
         const res = await axios.get(BASE_URL, {
             headers: { Authorization: `Bearer ${ localStorage.getItem("token") }` },
         });
-
         return res.data;
     } catch (error) {
         console.log(error);
@@ -70,7 +69,6 @@ const Create = async (type, formData, itemId, commentId) => {
             default:
                 throw new Error("Type not set");
         }
-        console.log(BASE_URL)
         const res = await axios.post(BASE_URL, formData, {
             headers: { Authorization: `Bearer ${ localStorage.getItem("token") }` },
         });
@@ -139,7 +137,6 @@ const Update = async (type, formData, itemId, commentId, replyId) => {
             default:
                 throw new Error("Type not set");
         }
-        console.log(BASE_URL)
         const res = await axios.put(BASE_URL, formData, {
             headers: { Authorization: `Bearer ${ localStorage.getItem("token") }` },
         });
@@ -149,4 +146,42 @@ const Update = async (type, formData, itemId, commentId, replyId) => {
     }
 };
 
-export { Index, Show, Create, Delete, Update };
+const AddToCollection = async (type, itemId, userId) => {
+    let BASE_URL = null;
+    try {
+        if (type === "Recipe") {
+            BASE_URL = `${ TRIMMED_URL }/users/${ userId }/recipes-collection`;
+        } else if (type === "Meal") {
+            BASE_URL = `${ TRIMMED_URL }/users/${ userId }/meals-collection`;
+        } else {
+            throw new Error("Type not set");
+        }
+        const res = await axios.post(BASE_URL, itemId, {
+            headers: { Authorization: `Bearer ${ localStorage.getItem("token") }` },
+        });
+        return res.data;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+const RemoveFromCollection = async (type, itemId, userId) => {
+    let BASE_URL = null;
+    try {
+        if (type === "Recipe") {
+            BASE_URL = `${ TRIMMED_URL }/users/${ userId }/recipes-collection/${ itemId }`;
+        } else if (type === "Meal") {
+            BASE_URL = `${ TRIMMED_URL }/users/${ userId }/meals-collection/${ itemId }`;
+        } else {
+            throw new Error("Type not set");
+        }
+        const res = await axios.delete(BASE_URL, {
+            headers: { Authorization: `Bearer ${ localStorage.getItem("token") }` },
+        });
+        return res.data;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export { Index, Show, Create, Delete, Update, AddToCollection, RemoveFromCollection };

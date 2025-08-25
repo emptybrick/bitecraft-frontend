@@ -40,7 +40,6 @@ const MealDetails = () => {
     itemId = null,
     commentId = null
   ) => {
-    console.log("trying to toggle edit mode")
     setEditState({
       isEditing:
         !editState.isEditing ||

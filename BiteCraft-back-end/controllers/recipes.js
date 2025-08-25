@@ -2,11 +2,18 @@ const express = require('express');
 const router = express.Router();
 const verifyToken = require("../middleware/verify-token.js");
 const Recipe = require('../models/recipe');
+const User = require('../models/user.js');
 
 router.post('/', verifyToken, async (req, res) => {
     try {
         req.body.author = req.user._id;
         const recipe = await Recipe.create(req.body);
+        await User.findByIdAndUpdate(
+            { _id: req.user._id },
+            { $push: { recipesCollection: recipe._id } },
+            { new: true, runValidators: true }
+        );
+
         recipe._doc.author = req.user;
         res.status(201).json(recipe);
     } catch (error) {
@@ -131,7 +138,6 @@ router.delete('/:recipeId/comments/:commentId', verifyToken, async (req, res) =>
 });
 
 router.post('/:recipeId/comments/:commentId/reply', verifyToken, async (req, res) => {
-    console.log("trying to add reply")
     try {
         req.body.author = req.user._id;
         const updateRecipe = await Recipe.findById(req.params.recipeId)
@@ -182,7 +188,6 @@ router.delete('/:recipeId/comments/:commentId/reply/:replyId', verifyToken, asyn
         if (reply.author.toString() !== req.user._id) {
             return res.status(403).json({ message: "You are not authorized to delete this comment" });
         }
-        console.log(recipe)
         comment.reply.remove({ _id: req.params.replyId });
         await recipe.save();
         res.status(200).json({ message: "Comment deleted successfully" });

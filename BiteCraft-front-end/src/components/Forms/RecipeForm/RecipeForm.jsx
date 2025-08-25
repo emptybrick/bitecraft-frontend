@@ -11,7 +11,7 @@ const RecipeForm = () => {
     details: "",
     instructions: "",
     ingredients: "",
-    category: "",
+    category: "Main",
   });
 
   const handleChange = (event) => {
@@ -40,9 +40,6 @@ const RecipeForm = () => {
           value={formData.category}
           onChange={handleChange}
         >
-          <option value="" disabled selected>
-            Select a Category
-          </option>
           <option value="Main">Main Dish</option>
           <option value="Side">Side Dish</option>
         </select>

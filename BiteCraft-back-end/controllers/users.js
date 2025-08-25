@@ -95,14 +95,18 @@ router.delete('/:userId/planner/:id', verifyToken, async (req, res) => {
 });
 
 router.get('/:userId/recipes-collection', verifyToken, async (req, res) => {
-  console.log("made it to recipe collection");
   try {
-    const user = await User.find(req.params.userId);
+    const user = await User.findById(req.params.userId).populate([
+      { path: 'recipesCollection' },
+      {
+        path: 'recipesCollection',
+        populate: { path: 'author' }
+      },
+    ]);
     if (!user) {
       return res.status(404).json({ err: 'User not found.' });
     }
     const recipes = user.recipesCollection;
-    console.log(recipes);
     res.status(200).json(recipes);
   } catch (error) {
     res.status(500).json(error);
@@ -111,7 +115,13 @@ router.get('/:userId/recipes-collection', verifyToken, async (req, res) => {
 
 router.get('/:userId/meals-collection', verifyToken, async (req, res) => {
   try {
-    const user = await User.find(req.params.userId);
+    const user = await User.findById(req.params.userId).populate([
+      { path: 'mealsCollection' },
+      {
+        path: 'mealsCollection',
+        populate: { path: 'author' }
+      },
+    ]);
     if (!user) {
       return res.status(404).json({ err: 'User not found.' });
     }
@@ -124,18 +134,13 @@ router.get('/:userId/meals-collection', verifyToken, async (req, res) => {
 
 router.post('/:userId/meals-collection', verifyToken, async (req, res) => {
   try {
-    const user = await User.find(req.params.userId);
-
-    if (!user) {
-      return res.status(404).json({ err: 'User not found.' });
-    }
     if (req.user._id !== req.params.userId) {
-      return res.status(403).send("You're not allowed to do that!");
+      return res.status(403).json({ err: "Unauthorized" });
     }
 
     const updateMealCollection = await User.findByIdAndUpdate(
       { _id: req.params.userId },
-      { $push: { mealsCollection: req.body } },
+      { $push: { mealsCollection: req.body._id } },
       { new: true, runValidators: true }
     );
 
@@ -152,18 +157,13 @@ router.post('/:userId/meals-collection', verifyToken, async (req, res) => {
 
 router.post('/:userId/recipes-collection', verifyToken, async (req, res) => {
   try {
-    const user = await User.find(req.params.userId);
-
-    if (!user) {
-      return res.status(404).json({ err: 'User not found.' });
-    }
     if (req.user._id !== req.params.userId) {
-      return res.status(403).send("You're not allowed to do that!");
+      return res.status(403).json({ err: "Unauthorized" });
     }
 
     const updateRecipeCollection = await User.findByIdAndUpdate(
       { _id: req.params.userId },
-      { $push: { recipesCollection: req.body } },
+      { $push: { recipesCollection: req.body._id } },
       { new: true, runValidators: true }
     );
 
@@ -178,15 +178,14 @@ router.post('/:userId/recipes-collection', verifyToken, async (req, res) => {
 
 router.delete('/:userId/recipes-collection/:recipeId', verifyToken, async (req, res) => {
   try {
-    const user = await User.find(req.params.userId);
-
+    const user = await User.findById(req.params.userId);
     if (!user) {
       return res.status(404).json({ err: 'User not found.' });
     }
     if (req.user._id !== req.params.userId) {
       return res.status(403).send("You're not allowed to do that!");
     }
-
+    
     user.recipesCollection.remove({ _id: req.params.recipeId });
     await user.save();
     res.status(200).json({ message: "Recipe removed from collection successfully" });
@@ -197,7 +196,7 @@ router.delete('/:userId/recipes-collection/:recipeId', verifyToken, async (req, 
 
 router.delete('/:userId/meals-collection/:recipeId', verifyToken, async (req, res) => {
   try {
-    const user = await User.find(req.params.userId);
+    const user = await User.findById(req.params.userId);
 
     if (!user) {
       return res.status(404).json({ err: 'User not found.' });

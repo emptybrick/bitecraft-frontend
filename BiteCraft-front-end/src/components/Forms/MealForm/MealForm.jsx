@@ -38,7 +38,6 @@ const MealForm = () => {
 
   const sideRecipes = [...recipes.filter((recipe) => recipe.category === "Side")];
   const mainRecipes = [ ...recipes.filter((recipe) => recipe.category === "Main") ];
-  console.log(mainRecipes)
 
   return (
     <main>

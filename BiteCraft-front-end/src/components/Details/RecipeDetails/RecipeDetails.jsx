@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from "react";
-import { useParams, useNavigate, data } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import CommentForm from "../../Forms/CommentForm/CommentForm";
 import * as biteCraftService from "../../../services/BiteCraftService";
 import { UserContext } from "../../../contexts/UserContext";
@@ -17,9 +17,11 @@ const RecipeDetails = () => {
     data: null,
   });
   const [recipe, setRecipe] = useState(null);
+  const [recipesInCollection, setRecipesInCollection] = useState([]); // not setting state
   const recipeId = params.recipeId;
   const [visibleForm, setVisibleForm] = useState(null);
-  const [addNewComment, setAddNewComment] = useState(false);
+  const [ addNewComment, setAddNewComment ] = useState(false);
+  // let recipeArray = [] // quick fix for recipesInCollection
 
   useEffect(() => {
     const getData = async () => {
@@ -29,6 +31,14 @@ const RecipeDetails = () => {
         ...prev,
         data: prev.type === "Recipe" ? recipeToShow : prev.data,
       }));
+      if (recipesInCollection.length < 1) {
+        const recipesToGet = await biteCraftService.Index(
+          "RecipeCollection",
+          user._id
+        );
+        const recipeArray = recipesToGet.map((item) => item._id);
+        setRecipesInCollection(recipeArray);
+      }
     };
     if (!editState.isEditing) {
       getData();
@@ -46,16 +56,12 @@ const RecipeDetails = () => {
     commentId = null
   ) => {
     setEditState({
-      isEditing:
-        !editState.isEditing ||
-        editState.type !== type ||
-        editState.itemId !== itemId,
+      isEditing: !editState.isEditing,
       type,
       data,
       itemId,
       commentId,
     });
-    console.log("edit mode on, edit state is: ", editState);
   };
 
   const toggleForm = (itemId) => {
@@ -71,16 +77,12 @@ const RecipeDetails = () => {
 
   // comment handlers
   const handleAddComment = async (commentFormData) => {
-    console.log("add comment data", commentFormData);
     const newComment = await biteCraftService.Create(
       "RecipeComment",
       commentFormData,
       recipeId
     );
     toggleNewComment();
-    console.log(addNewComment);
-    console.log("new comment", newComment);
-    console.log("new comment id", newComment._id);
     setRecipe({ ...recipe, comments: [...recipe.comments, newComment] });
   };
 
@@ -124,7 +126,6 @@ const RecipeDetails = () => {
 
   // reply handlers
   const handleAddReply = async (commentFormData, commentId) => {
-    console.log("addreply recipe details:", commentFormData, commentId);
     const newReply = await biteCraftService.Create(
       "RecipeReply",
       commentFormData,
@@ -143,9 +144,6 @@ const RecipeDetails = () => {
   };
 
   const handleUpdateReply = async (formData, commentId, replyId) => {
-    console.log("form data", formData);
-    console.log("commentID", commentId);
-    console.log("replyId", replyId);
     try {
       if (editState.type === "Reply" && editState.itemId === replyId) {
         await biteCraftService.Update(
@@ -176,7 +174,6 @@ const RecipeDetails = () => {
   };
 
   const handleDeleteReply = async (commentId, replyId) => {
-    console.log("handle delete reply id", replyId);
     try {
       await biteCraftService.Delete(
         "RecipeReply",
@@ -225,6 +222,15 @@ const RecipeDetails = () => {
       console.log(error);
     }
   };
+
+  const handleAddToCollection = async () => {
+    try {
+      await biteCraftService.AddToCollection("Recipe", recipe, user._id)
+      navigate(`/${user._id}/recipes-collection`);
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   if (!recipe) return <main>Loading...</main>;
 
@@ -299,24 +305,32 @@ const RecipeDetails = () => {
             <p>{recipe.instructions}</p>
             <h4>Ingredients:</h4>
             <p>{recipe.ingredients}</p>
-            {recipe.author._id === user._id && (
-              <>
-                <button onClick={handleDeleteRecipe}>Delete</button>
-                <button
-                  onClick={() => toggleEditMode("Recipe", recipe, recipeId)}
-                >
-                  Edit
-                </button>
-              </>
-            )}
+            {recipe.author._id === user._id &&
+              !editState.isEditing &&
+              !visibleForm && (
+                <>
+                  <button onClick={handleDeleteRecipe}>Delete</button>
+                  <button
+                    onClick={() => toggleEditMode("Recipe", recipe, recipeId)}
+                  >
+                    Edit
+                  </button>
+                </>
+              )}
           </>
+        )}
+        {
+          !recipesInCollection.includes(recipeId) && (
+          <button onClick={handleAddToCollection}>Add to Collection</button>
         )}
       </section>
       <section>
         <h2>Comments</h2>
         {recipe.author._id !== user._id && (
           <>
-            <button onClick={() => toggleForm(recipeId)}>Comment</button>
+            {!visibleForm && !editState.isEditing && (
+              <button onClick={() => toggleForm(recipeId)}>Comment</button>
+            )}
             {visibleForm === recipeId && (
               <CommentForm
                 handleAddComment={(formData) => {
@@ -353,23 +367,27 @@ const RecipeDetails = () => {
             ) : (
               <p>{comment.text}</p>
             )}
-            {comment.author._id === user._id && (
-              <>
-                <button onClick={() => handleDeleteComment(comment._id)}>
-                  Delete
-                </button>
-                <button
-                  onClick={() =>
-                    toggleEditMode("Comment", comment, comment._id)
-                  }
-                >
-                  Edit
-                </button>
-              </>
-            )}
+            {comment.author._id === user._id &&
+              !editState.isEditing &&
+              !visibleForm && (
+                <>
+                  <button onClick={() => handleDeleteComment(comment._id)}>
+                    Delete
+                  </button>
+                  <button
+                    onClick={() =>
+                      toggleEditMode("Comment", comment, comment._id)
+                    }
+                  >
+                    Edit
+                  </button>
+                </>
+              )}
             {recipe.author._id === user._id && (
               <>
-                <button onClick={() => toggleForm(comment._id)}>Reply</button>
+                {!visibleForm && !editState.isEditing && (
+                  <button onClick={() => toggleForm(comment._id)}>Reply</button>
+                )}
                 {visibleForm === comment._id && (
                   <CommentForm
                     handleAddComment={(formData) => {
@@ -407,24 +425,26 @@ const RecipeDetails = () => {
                     ) : (
                       <p>{rep.text}</p>
                     )}
-                    {rep.author._id === user._id && (
-                      <>
-                        <button
-                          onClick={() =>
-                            handleDeleteReply(comment._id, rep._id)
-                          }
-                        >
-                          Delete
-                        </button>
-                        <button
-                          onClick={() =>
-                            toggleEditMode("Reply", rep, rep._id, comment._id)
-                          }
-                        >
-                          Edit
-                        </button>
-                      </>
-                    )}
+                    {rep.author._id === user._id &&
+                      !editState.isEditing &&
+                      !visibleForm && (
+                        <>
+                          <button
+                            onClick={() =>
+                              handleDeleteReply(comment._id, rep._id)
+                            }
+                          >
+                            Delete
+                          </button>
+                          <button
+                            onClick={() =>
+                              toggleEditMode("Reply", rep, rep._id, comment._id)
+                            }
+                          >
+                            Edit
+                          </button>
+                        </>
+                      )}
                   </article>
                 ))}
               </div>

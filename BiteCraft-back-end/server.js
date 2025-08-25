@@ -32,8 +32,6 @@ app.use('/auth', authRouter);
 app.use('/users', usersRouter);
 app.use('/meals', mealsRouter);
 app.use('/recipes', recipesRouter)
-// app.use('/collections', collectionsRouter);
-// app.use('/mealplan', mealPlansRouter)
 
 // Start the server and listen on port 3000
 app.listen(3000, () => {

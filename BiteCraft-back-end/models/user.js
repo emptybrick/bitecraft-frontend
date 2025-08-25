@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
   recipesCollection: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Recipe' } ],
-  mealsColleciton: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Meal' } ],
+  mealsCollection: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Meal' } ],
   mealPlan: [
     {
     meals: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Meal' } ],
