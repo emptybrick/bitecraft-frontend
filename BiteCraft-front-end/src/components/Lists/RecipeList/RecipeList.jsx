@@ -5,7 +5,8 @@ import { UserContext } from "../../../contexts/UserContext";
 
 const RecipeList = () => {
   const { user } = useContext(UserContext);
-  const [recipes, setRecipes] = useState([]);
+  const [ recipes, setRecipes ] = useState([]);
+  
   useEffect(() => {
     const fetchAllRecipes = async () => {
       const recipesData = await biteCraftService.Index("Recipe");

@@ -20,7 +20,10 @@ const MealForm = () => {
       setRecipes(recipesData);
     };
     if (user) fetchAllRecipes();
-  }, [user]);
+  }, [ user ]);
+  
+  const sideRecipes = [ ...recipes.filter((recipe) => recipe.category === "Side") ];
+  const mainRecipes = [ ...recipes.filter((recipe) => recipe.category === "Main") ];
 
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
@@ -30,14 +33,13 @@ const MealForm = () => {
     event.preventDefault();
     try {
       await biteCraftService.Create("Meal", formData);
-      navigate(`/collections/${user._id}/meals-collection`);
+      navigate(`/${user._id}/meals-collection`);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const sideRecipes = [...recipes.filter((recipe) => recipe.category === "Side")];
-  const mainRecipes = [ ...recipes.filter((recipe) => recipe.category === "Main") ];
+
 
   return (
     <main>
@@ -68,11 +70,8 @@ const MealForm = () => {
           value={formData.main}
           onChange={handleChange}
         >
-          <option value="" disabled selected>
-            Select a Recipe
-          </option>
-          {mainRecipes.map((recipe) => {
-            return <option value={recipe._id}>{recipe.name}</option>;
+          {mainRecipes.map((recipe, idx) => {
+            return <option key={idx} value={recipe._id}>{recipe.name}</option>;
           })}
         </select>
         <label htmlFor="side1-input">Side Dish 1:</label>
@@ -81,13 +80,10 @@ const MealForm = () => {
           name="side1"
           id="side1-input"
           value={formData.side1}
-          onChange={handleChange}
+          onChange={ handleChange }
         >
-          <option value="" disabled selected>
-            Select a Recipe
-          </option>
-          {sideRecipes.map((recipe) => {
-            return <option value={recipe._id}>{recipe.name}</option>;
+          {sideRecipes.map((recipe, idx) => {
+            return <option key={idx} value={recipe._id}>{recipe.name}</option>;
           })}
         </select>
         <label htmlFor="side2-input">Side Dish 2:</label>
@@ -96,13 +92,10 @@ const MealForm = () => {
           name="side2"
           id="side2-input"
           value={formData.side2}
-          onChange={handleChange}
+          onChange={ handleChange }
         >
-          <option value="" disabled selected>
-            Select a Recipe
-          </option>
-          {sideRecipes.map((recipe) => {
-            return <option value={recipe._id}>{recipe.name}</option>;
+          {sideRecipes.map((recipe, idx) => {
+            return <option key={idx} value={recipe._id}>{recipe.name}</option>;
           })}
         </select>
         <button type="Submit">Submit</button>

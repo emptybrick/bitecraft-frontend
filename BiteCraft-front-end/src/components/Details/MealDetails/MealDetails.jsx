@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router";
 import CommentForm from "../../Forms/CommentForm/CommentForm";
 import * as biteCraftService from "../../../services/BiteCraftService";
 import { UserContext } from "../../../contexts/UserContext";
-import { Link } from 'react-router'
+import { Link } from "react-router";
 
 const MealDetails = () => {
   const navigate = useNavigate();
@@ -17,8 +17,12 @@ const MealDetails = () => {
     data: null,
   });
   const [meal, setMeal] = useState(null);
+  const [mealsInCollection, setMealsInCollection] = useState([]);
   const mealId = params.mealId;
   const [visibleForm, setVisibleForm] = useState(null);
+  const [addNewComment, setAddNewComment] = useState(false);
+  const [sideRecipes, setSideRecipes] = useState([]);
+  const [mainRecipes, setMainRecipes] = useState([]);
 
   useEffect(() => {
     const getData = async () => {
@@ -28,11 +32,34 @@ const MealDetails = () => {
         ...prev,
         data: prev.type === "Meal" ? mealToShow : prev.data,
       }));
+      if (mainRecipes.length < 1 || sideRecipes.length < 1) {
+        const recipesData = await biteCraftService.Index("Recipe");
+        const mains = [...recipesData].filter(
+          (recipe) => recipe.category === "Main"
+        );
+        const sides = [...recipesData].filter(
+          (recipe) => recipe.category === "Side"
+        );
+        setSideRecipes(sides);
+        setMainRecipes(mains);
+      }
+      if (mealsInCollection.length < 1) {
+        const mealsToGet = await biteCraftService.Index(
+          "MealCollection",
+          user._id
+        );
+        const recipeArray = mealsToGet.map((item) => item._id);
+        setMealsInCollection(recipeArray);
+      }
     };
     if (!editState.isEditing) {
       getData();
     }
-  }, [mealId, editState.isEditing]);
+  }, [mealId, editState.isEditing, addNewComment]);
+
+  const toggleNewComment = () => {
+    setAddNewComment(!addNewComment);
+  };
 
   const toggleEditMode = (
     type = null,
@@ -41,10 +68,7 @@ const MealDetails = () => {
     commentId = null
   ) => {
     setEditState({
-      isEditing:
-        !editState.isEditing ||
-        editState.type !== type ||
-        editState.itemId !== itemId,
+      isEditing: !editState.isEditing,
       type,
       data,
       itemId,
@@ -53,11 +77,7 @@ const MealDetails = () => {
   };
 
   const toggleForm = (itemId) => {
-    if (!itemId) {
-      setVisibleForm((prev) => (prev === mealId ? null : mealId));
-    } else {
-      setVisibleForm((prev) => (prev === itemId ? null : itemId));
-    }
+    setVisibleForm((prev) => (prev === itemId ? null : itemId));
   };
 
   const handleChange = (event) => {
@@ -74,26 +94,26 @@ const MealDetails = () => {
       commentFormData,
       mealId
     );
-    setMeal({ ...meal, comments: [meal.comments, newComment] });
+    toggleNewComment();
+    setMeal({ ...meal, comments: [...meal.comments, newComment] });
   };
 
-  const handleUpdateComment = async (event, commentId) => {
-    event.preventDefault();
+  const handleUpdateComment = async (formData) => {
     try {
-      if (editState.type === "Comment" && editState.itemId === commentId) {
+      if (editState.type === "Comment") {
         await biteCraftService.Update(
           "MealComment",
-          editState.data,
+          formData,
           mealId,
-          commentId
+          editState.itemId
         );
         setMeal({
           ...meal,
-          comments: meal.comments.map((comment) => {
-            comment._id === commentId
-              ? { ...comment, text: editState.data.text }
-              : comment;
-          }),
+          comments: meal.comments.map((comment) =>
+            comment._id === editState.itemId
+              ? { ...comment, text: formData.text }
+              : comment
+          ),
         });
         toggleEditMode();
       }
@@ -122,41 +142,39 @@ const MealDetails = () => {
       mealId,
       commentId
     );
+    toggleNewComment();
     setMeal({
       ...meal,
-      comments: meal.comments.map((comment) => {
+      comments: meal.comments.map((comment) =>
         comment._id === commentId
           ? { ...comment, reply: [...(comment.reply || []), newReply] }
-          : comment;
-      }),
+          : comment
+      ),
     });
   };
 
-  const handleUpdateReply = async (event, commentId, replyId) => {
-    event.preventDefault();
+  const handleUpdateReply = async (formData, commentId, replyId) => {
     try {
       if (editState.type === "Reply" && editState.itemId === replyId) {
         await biteCraftService.Update(
           "MealReply",
-          editState.data,
+          formData,
           mealId,
           commentId,
           replyId
         );
         setMeal({
           ...meal,
-          comments: meal.comments.map((comment) => {
+          comments: meal.comments.map((comment) =>
             comment._id === commentId
               ? {
                   ...comment,
-                  reply: comment.reply.map((rep) => {
-                    rep._id === replyId
-                      ? { ...rep, text: editState.data.text }
-                      : rep;
-                  }),
+                  reply: comment.reply.map((rep) =>
+                    rep._id === replyId ? { ...rep, text: formData.text } : rep
+                  ),
                 }
-              : comment;
-          }),
+              : comment
+          ),
         });
         toggleEditMode();
       }
@@ -170,7 +188,7 @@ const MealDetails = () => {
       await biteCraftService.Delete("MealReply", mealId, commentId, replyId);
       setMeal({
         ...meal,
-        comments: meal.comments.map((comment) => {
+        comments: meal.comments.map((comment) =>
           comment._id === commentId
             ? {
                 ...comment,
@@ -178,8 +196,8 @@ const MealDetails = () => {
                   rep._id !== replyId;
                 }),
               }
-            : comment;
-        }),
+            : comment
+        ),
       });
     } catch (error) {
       console.log(error);
@@ -204,6 +222,15 @@ const MealDetails = () => {
     try {
       await biteCraftService.Delete("Meal", mealId);
       navigate(`/collections/${user._id}/meals-collection`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleAddToCollection = async () => {
+    try {
+      await biteCraftService.AddToCollection("Meal", meal, user._id);
+      navigate(`/${user._id}/meals-collection`);
     } catch (error) {
       console.log(error);
     }
@@ -240,14 +267,14 @@ const MealDetails = () => {
               name="main"
               id="main-input"
               value={editState.data.main}
-              onChange={handleChange}
+              onChange={ handleChange }
             >
-              <option value="" disabled selected>
-                Select a Recipe
-              </option>
-              {mainRecipes.map((recipe) => {
-                <option value={recipe._id}>{recipe.name}</option>;
-              })}
+              {
+                mainRecipes.map((recipe, idx) => 
+                <option key={idx} value={recipe._id}>
+                  {recipe.name}
+                </option>
+              )}
             </select>
             <label htmlFor="side1-input">Side Dish 1:</label>
             <select
@@ -257,12 +284,11 @@ const MealDetails = () => {
               value={editState.data.side1}
               onChange={handleChange}
             >
-              <option value="" disabled selected>
-                Select a Recipe
-              </option>
-              {sideRecipes.map((recipe) => {
-                <option value={recipe._id}>{recipe.name}</option>;
-              })}
+              {sideRecipes.map((recipe, idx) => 
+                <option key={idx} value={recipe._id}>
+                  {recipe.name}
+                </option>
+              )}
             </select>
             <label htmlFor="side2-input">Side Dish 2:</label>
             <select
@@ -272,12 +298,11 @@ const MealDetails = () => {
               value={editState.data.side2}
               onChange={handleChange}
             >
-              <option value="" disabled selected>
-                Select a Recipe
-              </option>
-              {sideRecipes.map((recipe) => {
-                <option value={recipe._id}>{recipe.name}</option>;
-              })}
+              {sideRecipes.map((recipe, idx) => 
+                <option key={idx} value={recipe._id}>
+                  {recipe.name}
+                </option>
+              )}
             </select>
             <button type="Submit">Save</button>
             <button type="button" onClick={() => toggleEditMode()}>
@@ -295,49 +320,59 @@ const MealDetails = () => {
             </header>
             <h3>Recipes:</h3>
             <div>
+              Main Dish:
               <Link key={meal.main._id} to={`/recipes/${meal.main._id}`}>
-                Main Dish: {meal.main.name}
+                {meal.main.name}
               </Link>
-              <p>Author: {meal.main.author.username}</p>
+              {/* <p>Author: {meal.main.author.username}</p>
               <h4>Details:</h4>
-              <p>{meal.main.details}</p>
+              <p>{meal.main.details}</p> */}
             </div>
             <div>
+              Side Dish:
               <Link key={meal.side1._id} to={`/recipes/${meal.side1._id}`}>
-                Side Dish: {meal.side1.name}
+                {meal.side1.name}
               </Link>
-              <p>Author: {meal.side1.author.username}</p>
+              {/* <p>Author: {meal.side1.author.username}</p>
               <h4>Details:</h4>
-              <p>{meal.side1.details}</p>
+              <p>{meal.side1.details}</p> */}
             </div>
             {meal.side2 ? (
               <div>
+                Side Dish:
                 <Link key={meal.side2._id} to={`/recipes/${meal.side2._id}`}>
-                  Side Dish: {meal.side2.name}
+                  {meal.side2.name}
                 </Link>
-                <p>Author: {meal.side2.author.username}</p>
+                {/* <p>Author: {meal.side2.author.username}</p>
                 <h4>Details:</h4>
-                <p>{meal.side2.details}</p>
+                <p>{meal.side2.details}</p> */}
               </div>
             ) : (
               <></>
             )}
-            {meal.author._id === user._id && (
-              <>
-                <button onClick={handleDeleteMeal}>Delete</button>
-                <button onClick={() => toggleEditMode("Meal", meal, mealId)}>
-                  Edit
-                </button>
-              </>
-            )}
+            {meal.author._id === user._id &&
+              !editState.isEditing &&
+              !visibleForm && (
+                <>
+                  <button onClick={handleDeleteMeal}>Delete</button>
+                  <button onClick={() => toggleEditMode("Meal", meal, mealId)}>
+                    Edit
+                  </button>
+                </>
+              )}
           </>
+        )}
+        {!mealsInCollection.includes(mealId) && (
+          <button onClick={handleAddToCollection}>Add to Collection</button>
         )}
       </section>
       <section>
         <h2>Comments</h2>
         {meal.author._id !== user._id && (
           <>
-            <button onClick={() => toggleForm(mealId)}>Comment</button>
+            {!visibleForm && !editState.isEditing && (
+              <button onClick={() => toggleForm(mealId)}>Comment</button>
+            )}
             {visibleForm === mealId && (
               <CommentForm
                 handleAddComment={(formData) => {
@@ -349,8 +384,8 @@ const MealDetails = () => {
             )}
           </>
         )}
-        {meal.comments.map((comment) => (
-          <article key={comment._id}>
+        {meal.comments.map((comment, idx) => (
+          <article key={idx}>
             <header>
               <p>
                 {`${comment.author.username} posted on
@@ -359,42 +394,46 @@ const MealDetails = () => {
             </header>
             {editState.isEditing &&
             editState.type === "Comment" &&
-            editState.id === comment._id &&
+            editState.itemId === comment._id &&
             comment.author._id === user._id ? (
               <div>
                 <CommentForm
                   initialText={editState.data.text}
-                  handleAddComment={(e) => handleUpdateComment(e, comment._id)}
+                  handleAddComment={(formData, commentId) =>
+                    handleUpdateComment(formData, commentId)
+                  }
                   buttonText="Save"
+                  onCancel={() => toggleEditMode()}
                 />
-                <button type="button" onClick={() => toggleEditMode()}>
-                  Cancel
-                </button>
               </div>
             ) : (
               <p>{comment.text}</p>
             )}
-            {comment.author._id === user._id && (
-              <>
-                <button onClick={() => handleDeleteComment(comment._id)}>
-                  Delete
-                </button>
-                <button
-                  onClick={() =>
-                    toggleEditMode("Comment", editState.data, comment._id)
-                  }
-                >
-                  Edit
-                </button>
-              </>
-            )}
+            {comment.author._id === user._id &&
+              !editState.isEditing &&
+              !visibleForm && (
+                <>
+                  <button onClick={() => handleDeleteComment(comment._id)}>
+                    Delete
+                  </button>
+                  <button
+                    onClick={() =>
+                      toggleEditMode("Comment", comment, comment._id)
+                    }
+                  >
+                    Edit
+                  </button>
+                </>
+              )}
             {meal.author._id === user._id && (
               <>
-                <button onClick={() => toggleForm(comment._id)}>Reply</button>
+                {!visibleForm && !editState.isEditing && (
+                  <button onClick={() => toggleForm(comment._id)}>Reply</button>
+                )}
                 {visibleForm === comment._id && (
                   <CommentForm
                     handleAddComment={(formData) => {
-                      handleAddReply(formData);
+                      handleAddReply(formData, comment._id);
                       setVisibleForm(null);
                     }}
                     onCancel={() => toggleForm(comment._id)}
@@ -404,8 +443,8 @@ const MealDetails = () => {
             )}
             {comment.reply && comment.reply.length > 0 && (
               <div>
-                {comment.reply.map((rep) => (
-                  <article key={rep._id}>
+                {comment.reply.map((rep, idx) => (
+                  <article key={idx}>
                     <header>
                       <p>{`${rep.author.username} posted on ${new Date(
                         rep.createdAt
@@ -413,42 +452,41 @@ const MealDetails = () => {
                     </header>
                     {editState.isEditing &&
                     editState.type === "Reply" &&
-                    editState.id === rep._id &&
-                    comment.author._id === user._id ? (
+                    editState.itemId === rep._id &&
+                    rep.author._id === user._id ? (
                       <div>
                         <CommentForm
                           initialText={editState.data.text}
-                          handleAddComment={(e) =>
-                            handleUpdateReply(e, comment._id, rep._id)
+                          handleAddComment={(formData) =>
+                            handleUpdateReply(formData, comment._id, rep._id)
                           }
                           buttonText="Save"
+                          onCancel={() => toggleEditMode()}
                         />
-                        <button type="button" onClick={() => toggleEditMode()}>
-                          Cancel
-                        </button>
                       </div>
                     ) : (
                       <p>{rep.text}</p>
                     )}
-                    {rep.author._id === user._id && (
-                      <>
-                        <button onClick={() => handleDeleteReply(rep._id)}>
-                          Delete
-                        </button>
-                        <button
-                          onClick={() =>
-                            toggleEditMode(
-                              "Reply",
-                              editState.data,
-                              rep._id,
-                              comment._id
-                            )
-                          }
-                        >
-                          Edit
-                        </button>
-                      </>
-                    )}
+                    {rep.author._id === user._id &&
+                      !editState.isEditing &&
+                      !visibleForm && (
+                        <>
+                          <button
+                            onClick={() =>
+                              handleDeleteReply(comment._id, rep._id)
+                            }
+                          >
+                            Delete
+                          </button>
+                          <button
+                            onClick={() =>
+                              toggleEditMode("Reply", rep, rep._id, comment._id)
+                            }
+                          >
+                            Edit
+                          </button>
+                        </>
+                      )}
                   </article>
                 ))}
               </div>

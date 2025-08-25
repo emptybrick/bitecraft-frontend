@@ -22,8 +22,8 @@ const RecipeForm = () => {
     event.preventDefault();
     try {
       await biteCraftService.Create("Recipe", formData);
-      navigate('/recipes')
-      // navigate(`/collections/${user._id}/recipes-collection`);
+      // navigate('/recipes')
+      navigate(`/${user._id}/recipes-collection`);
     } catch (error) {
       console.log(error);
     }

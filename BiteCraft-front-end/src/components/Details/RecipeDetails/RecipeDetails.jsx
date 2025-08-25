@@ -17,11 +17,10 @@ const RecipeDetails = () => {
     data: null,
   });
   const [recipe, setRecipe] = useState(null);
-  const [recipesInCollection, setRecipesInCollection] = useState([]); // not setting state
+  const [recipesInCollection, setRecipesInCollection] = useState([]);
   const recipeId = params.recipeId;
   const [visibleForm, setVisibleForm] = useState(null);
-  const [ addNewComment, setAddNewComment ] = useState(false);
-  // let recipeArray = [] // quick fix for recipesInCollection
+  const [addNewComment, setAddNewComment] = useState(false);
 
   useEffect(() => {
     const getData = async () => {
@@ -216,8 +215,8 @@ const RecipeDetails = () => {
   const handleDeleteRecipe = async () => {
     try {
       await biteCraftService.Delete("Recipe", recipeId);
-      navigate("/recipes");
-      // navigate(`/collections/${user._id}/recipes-collection`);
+      // navigate("/recipes");
+      navigate(`/collections/${user._id}/recipes-collection`);
     } catch (error) {
       console.log(error);
     }
@@ -225,12 +224,12 @@ const RecipeDetails = () => {
 
   const handleAddToCollection = async () => {
     try {
-      await biteCraftService.AddToCollection("Recipe", recipe, user._id)
+      await biteCraftService.AddToCollection("Recipe", recipe, user._id);
       navigate(`/${user._id}/recipes-collection`);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   if (!recipe) return <main>Loading...</main>;
 
@@ -319,8 +318,7 @@ const RecipeDetails = () => {
               )}
           </>
         )}
-        {
-          !recipesInCollection.includes(recipeId) && (
+        {!recipesInCollection.includes(recipeId) && (
           <button onClick={handleAddToCollection}>Add to Collection</button>
         )}
       </section>
