@@ -5,10 +5,10 @@ import { UserContext } from "../../../contexts/UserContext";
 
 const MealCollection = () => {
   const { user } = useContext(UserContext);
-  const [ meals, setMeals ] = useState([]);
-    const params = useParams();
-    const [toggleEffect, setToggleEffect] = useState(false);
-  
+  const [meals, setMeals] = useState([]);
+  const params = useParams();
+  const [toggleEffect, setToggleEffect] = useState(false);
+
   useEffect(() => {
     const fetchAllMeals = async () => {
       const mealsData = await biteCraftService.Index(
@@ -20,16 +20,16 @@ const MealCollection = () => {
       }
     };
     if (user) fetchAllMeals();
-  }, [ user, toggleEffect ]);
-  
-    const handleRemoveFromCollection = async (mealId) => {
-      try {
-        await biteCraftService.RemoveFromCollection("Meal", mealId, user._id);
-        setToggleEffect(!toggleEffect)
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  }, [user, toggleEffect]);
+
+  const handleRemoveFromCollection = async (mealId) => {
+    try {
+      await biteCraftService.RemoveFromCollection("Meal", mealId, user._id);
+      setToggleEffect(!toggleEffect);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <main>
@@ -48,29 +48,11 @@ const MealCollection = () => {
                 meal.createdAt
               ).toLocaleDateString()}`}</p>
             </header>
-            {user._id === params.userId && (
+            {user._id === params.userId && meal.author._id !== user._id && (
               <button onClick={() => handleRemoveFromCollection(meal._id)}>
                 Remove from Collection
               </button>
             )}
-            {/* <p>{meal.details}</p>
-            <h3>Recipes:</h3>
-            <p>
-              Main Dish:{" "}
-              <Link to={`/recipes/${meal.main._id}`}>{meal.main.name}</Link>
-            </p>
-            <p>
-              Side Dish:{" "}
-              <Link to={`/recipes/${meal.side1._id}`}>{meal.side1.name}</Link>
-            </p>
-            {meal.side2 ? (
-              <p>
-                Side Dish:{" "}
-                <Link to={`/recipes/${meal.side2._id}`}>{meal.side2.name}</Link>
-              </p>
-            ) : (
-              ""
-            )} */}
           </article>
         ))
       ) : (

@@ -33,15 +33,20 @@ const MealDetails = () => {
         data: prev.type === "Meal" ? mealToShow : prev.data,
       }));
       if (mainRecipes.length < 1 || sideRecipes.length < 1) {
-        const recipesData = await biteCraftService.Index("Recipe");
-        const mains = [...recipesData].filter(
-          (recipe) => recipe.category === "Main"
+        const recipesData = await biteCraftService.Index(
+          "RecipeCollection",
+          user._id
         );
-        const sides = [...recipesData].filter(
-          (recipe) => recipe.category === "Side"
-        );
-        setSideRecipes(sides);
-        setMainRecipes(mains);
+        if (recipesData.length >= 1) {
+          const mains = [...recipesData].filter(
+            (recipe) => recipe.category === "Main"
+          );
+          const sides = [...recipesData].filter(
+            (recipe) => recipe.category === "Side"
+          );
+          setSideRecipes(sides);
+          setMainRecipes(mains);
+        }
       }
       if (mealsInCollection.length < 1) {
         const mealsToGet = await biteCraftService.Index(
@@ -146,33 +151,20 @@ const MealDetails = () => {
     setMeal({
       ...meal,
       comments: meal.comments.map((comment) =>
-        comment._id === commentId
-          ? { ...comment, reply: [...(comment.reply || []), newReply] }
-          : comment
+        comment._id === commentId ? { ...comment, reply: newReply } : comment
       ),
     });
   };
 
-  const handleUpdateReply = async (formData, commentId, replyId) => {
+  const handleUpdateReply = async (formData, commentId) => {
     try {
-      if (editState.type === "Reply" && editState.itemId === replyId) {
-        await biteCraftService.Update(
-          "MealReply",
-          formData,
-          mealId,
-          commentId,
-          replyId
-        );
+      if (editState.type === "Reply" && editState.itemId === commentId) {
+        await biteCraftService.Update("MealReply", formData, mealId, commentId);
         setMeal({
           ...meal,
           comments: meal.comments.map((comment) =>
             comment._id === commentId
-              ? {
-                  ...comment,
-                  reply: comment.reply.map((rep) =>
-                    rep._id === replyId ? { ...rep, text: formData.text } : rep
-                  ),
-                }
+              ? { ...comment, reply: { ...comment.reply, text: formData.text } }
               : comment
           ),
         });
@@ -183,20 +175,13 @@ const MealDetails = () => {
     }
   };
 
-  const handleDeleteReply = async (commentId, replyId) => {
+  const handleDeleteReply = async (commentId) => {
     try {
-      await biteCraftService.Delete("MealReply", mealId, commentId, replyId);
+      await biteCraftService.Delete("MealReply", mealId, commentId);
       setMeal({
         ...meal,
         comments: meal.comments.map((comment) =>
-          comment._id === commentId
-            ? {
-                ...comment,
-                reply: comment.reply.filter((rep) => {
-                  rep._id !== replyId;
-                }),
-              }
-            : comment
+          comment._id === commentId ? { ...comment, reply: null } : comment
         ),
       });
     } catch (error) {
@@ -207,6 +192,8 @@ const MealDetails = () => {
   // meal handlers
   const handleUpdateMeal = async (event) => {
     event.preventDefault();
+    if (!editState.data.main || !editState.data.side1 || !editState.data.side2)
+      return;
     try {
       if (editState.type === "Meal") {
         await biteCraftService.Update("Meal", editState.data, mealId);
@@ -221,7 +208,7 @@ const MealDetails = () => {
   const handleDeleteMeal = async () => {
     try {
       await biteCraftService.Delete("Meal", mealId);
-      navigate(`/collections/${user._id}/meals-collection`);
+      navigate(`/${user._id}/meals-collection`);
     } catch (error) {
       console.log(error);
     }
@@ -242,73 +229,91 @@ const MealDetails = () => {
     <main>
       <section>
         {editState.type === "Meal" && editState.isEditing ? (
-          <form onSubmit={handleUpdateMeal}>
-            <label htmlFor="name-input">Name:</label>
-            <input
-              required
-              type="text"
-              name="name"
-              id="name-input"
-              value={editState.data.name}
-              onChange={handleChange}
-            />
-            <label htmlFor="details-input">Details:</label>
-            <textarea
-              type="text"
-              name="details"
-              id="details-input"
-              value={editState.data.details}
-              onChange={handleChange}
-              required
-            ></textarea>
-            <label htmlFor="main-input">Main Dish:</label>
-            <select
-              required
-              name="main"
-              id="main-input"
-              value={editState.data.main}
-              onChange={ handleChange }
-            >
-              {
-                mainRecipes.map((recipe, idx) => 
-                <option key={idx} value={recipe._id}>
-                  {recipe.name}
+          mainRecipes.length < 1 || sideRecipes.length < 1 ? (
+            <main>
+              <h2>Not enough recipes found in your collection!</h2>
+              <h3>
+                Add some recipes from other users to your collection, or create
+                a new recipe! Make sure you have atleast 1 Main and 1 Side recipe.
+              </h3>
+            </main>
+          ) : (
+            <form onSubmit={handleUpdateMeal}>
+              <label htmlFor="name-input">Name:</label>
+              <input
+                required
+                type="text"
+                name="name"
+                id="name-input"
+                value={editState.data.name}
+                onChange={handleChange}
+              />
+              <label htmlFor="details-input">Details:</label>
+              <textarea
+                type="text"
+                name="details"
+                id="details-input"
+                value={editState.data.details}
+                onChange={handleChange}
+                required
+              ></textarea>
+              <label htmlFor="main-input">Main Dish:</label>
+              <select
+                required
+                name="main"
+                id="main-input"
+                value={editState.data.main ? editState.data.main : ""}
+                onChange={handleChange}
+              >
+                <option value="" disabled>
+                  Select a Recipe
                 </option>
-              )}
-            </select>
-            <label htmlFor="side1-input">Side Dish 1:</label>
-            <select
-              required
-              name="side1"
-              id="side1-input"
-              value={editState.data.side1}
-              onChange={handleChange}
-            >
-              {sideRecipes.map((recipe, idx) => 
-                <option key={idx} value={recipe._id}>
-                  {recipe.name}
+                {mainRecipes.map((recipe, idx) => (
+                  <option key={idx} value={recipe._id}>
+                    {recipe.name}
+                  </option>
+                ))}
+              </select>
+              <label htmlFor="side1-input">Side Dish 1:</label>
+              <select
+                required
+                name="side1"
+                id="side1-input"
+                value={editState.data.side1 ? editState.data.side1 : ""}
+                onChange={handleChange}
+              >
+                <option value="" disabled>
+                  Select a Recipe
                 </option>
-              )}
-            </select>
-            <label htmlFor="side2-input">Side Dish 2:</label>
-            <select
-              required
-              name="side2"
-              id="side2-input"
-              value={editState.data.side2}
-              onChange={handleChange}
-            >
-              {sideRecipes.map((recipe, idx) => 
-                <option key={idx} value={recipe._id}>
-                  {recipe.name}
+                {sideRecipes.map((recipe, idx) => (
+                  <option key={idx} value={recipe._id}>
+                    {recipe.name}
+                  </option>
+                ))}
+              </select>
+              <label htmlFor="side2-input">Side Dish 2:</label>
+              <select
+                required
+                name="side2"
+                id="side2-input"
+                value={editState.data.side2 ? editState.data.side2 : ""}
+                onChange={handleChange}
+              >
+                <option value="" disabled>
+                  Select a Recipe
                 </option>
-              )}
-            </select>
-            <button type="Submit">Save</button>
-            <button type="button" onClick={() => toggleEditMode()}>
-              Cancel
-            </button>
-          </form>
+                {sideRecipes.map((recipe, idx) => (
+                  <option key={idx} value={recipe._id}>
+                    {recipe.name}
+                  </option>
+                ))}
+              </select>
+              <button type="Submit">Save</button>
+              <button type="button" onClick={() => toggleEditMode()}>
+                Cancel
+              </button>
+            </form>
+          )
         ) : (
           <>
             <header>
@@ -321,35 +326,34 @@ const MealDetails = () => {
             <h3>Recipes:</h3>
             <div>
               Main Dish:
-              <Link key={meal.main._id} to={`/recipes/${meal.main._id}`}>
-                {meal.main.name}
-              </Link>
-              {/* <p>Author: {meal.main.author.username}</p>
-              <h4>Details:</h4>
-              <p>{meal.main.details}</p> */}
+              {meal.main ? (
+                <Link key={meal.main._id} to={`/recipes/${meal.main._id}`}>
+                  {meal.main.name}
+                </Link>
+              ) : (
+                "Recipe is no longer available."
+              )}
             </div>
             <div>
               Side Dish:
-              <Link key={meal.side1._id} to={`/recipes/${meal.side1._id}`}>
-                {meal.side1.name}
-              </Link>
-              {/* <p>Author: {meal.side1.author.username}</p>
-              <h4>Details:</h4>
-              <p>{meal.side1.details}</p> */}
+              {meal.side1 ? (
+                <Link key={meal.side1._id} to={`/recipes/${meal.side1._id}`}>
+                  {meal.side1.name}
+                </Link>
+              ) : (
+                "Recipe is no longer available."
+              )}
             </div>
-            {meal.side2 ? (
-              <div>
-                Side Dish:
+            <div>
+              Side Dish:
+              {meal.side2 ? (
                 <Link key={meal.side2._id} to={`/recipes/${meal.side2._id}`}>
                   {meal.side2.name}
                 </Link>
-                {/* <p>Author: {meal.side2.author.username}</p>
-                <h4>Details:</h4>
-                <p>{meal.side2.details}</p> */}
-              </div>
-            ) : (
-              <></>
-            )}
+              ) : (
+                "Recipe is no longer available."
+              )}
+            </div>
             {meal.author._id === user._id &&
               !editState.isEditing &&
               !visibleForm && (
@@ -441,55 +445,47 @@ const MealDetails = () => {
                 )}
               </>
             )}
-            {comment.reply && comment.reply.length > 0 && (
-              <div>
-                {comment.reply.map((rep, idx) => (
-                  <article key={idx}>
-                    <header>
-                      <p>{`${rep.author.username} posted on ${new Date(
-                        rep.createdAt
-                      ).toLocaleDateString()}`}</p>
-                    </header>
-                    {editState.isEditing &&
-                    editState.type === "Reply" &&
-                    editState.itemId === rep._id &&
-                    rep.author._id === user._id ? (
-                      <div>
-                        <CommentForm
-                          initialText={editState.data.text}
-                          handleAddComment={(formData) =>
-                            handleUpdateReply(formData, comment._id, rep._id)
-                          }
-                          buttonText="Save"
-                          onCancel={() => toggleEditMode()}
-                        />
-                      </div>
-                    ) : (
-                      <p>{rep.text}</p>
-                    )}
-                    {rep.author._id === user._id &&
-                      !editState.isEditing &&
-                      !visibleForm && (
-                        <>
-                          <button
-                            onClick={() =>
-                              handleDeleteReply(comment._id, rep._id)
-                            }
-                          >
-                            Delete
-                          </button>
-                          <button
-                            onClick={() =>
-                              toggleEditMode("Reply", rep, rep._id, comment._id)
-                            }
-                          >
-                            Edit
-                          </button>
-                        </>
-                      )}
-                  </article>
-                ))}
-              </div>
+            {comment.reply && (
+              <article>
+                <header>
+                  <p>{`${comment.reply.author.username} posted on ${new Date(
+                    comment.reply.createdAt
+                  ).toLocaleDateString()}`}</p>
+                </header>
+                {editState.isEditing &&
+                editState.type === "Reply" &&
+                editState.itemId === comment._id &&
+                comment.reply.author._id === user._id ? (
+                  <div>
+                    <CommentForm
+                      initialText={editState.data.text}
+                      handleAddComment={(formData) =>
+                        handleUpdateReply(formData, comment._id)
+                      }
+                      buttonText="Save"
+                      onCancel={() => toggleEditMode()}
+                    />
+                  </div>
+                ) : (
+                  <p>{comment.reply.text}</p>
+                )}
+                {comment.reply.author._id === user._id &&
+                  !editState.isEditing &&
+                  !visibleForm && (
+                    <>
+                      <button onClick={() => handleDeleteReply(comment._id)}>
+                        Delete
+                      </button>
+                      <button
+                        onClick={() =>
+                          toggleEditMode("Reply", comment.reply, comment._id)
+                        }
+                      >
+                        Edit
+                      </button>
+                    </>
+                  )}
+              </article>
             )}
           </article>
         ))}

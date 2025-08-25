@@ -5,12 +5,15 @@ import { UserContext } from "../../../contexts/UserContext";
 
 const MealList = () => {
   const { user } = useContext(UserContext);
-  const [ meals, setMeals ] = useState([]);
-  
+  const [meals, setMeals] = useState([]);
+
   useEffect(() => {
     const fetchAllMeals = async () => {
       const mealsData = await biteCraftService.Index("Meal");
-      setMeals(mealsData);
+      const filteredMeals = mealsData.filter(
+        (meal) => meal.main && meal.side1 && meal.side2
+      );
+      setMeals(filteredMeals);
     };
     if (user) fetchAllMeals();
   }, [user]);
@@ -32,23 +35,6 @@ const MealList = () => {
             ).toLocaleDateString()}`}</p>
           </header>
           <p>{meal.details}</p>
-          {/* <h3>Recipes:</h3>
-          <p>
-            Main Dish:{" "}
-            <Link to={`/recipes/${meal.main._id}`}>{meal.main.name}</Link>
-          </p>
-          <p>
-            Side Dish:{" "}
-            <Link to={`/recipes/${meal.side1._id}`}>{meal.side1.name}</Link>
-          </p>
-          {meal.side2 ? (
-            <p>
-              Side Dish:{" "}
-              <Link to={`/recipes/${meal.side2._id}`}>{meal.side2.name}</Link>
-            </p>
-          ) : (
-            ""
-          )} */}
         </article>
       ))}
     </main>

@@ -7,23 +7,34 @@ const MealForm = () => {
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
   const [formData, setFormData] = useState({
-    main: null,
-    side1: null,
-    side2: null,
+    main: "",
+    side1: "",
+    side2: "",
     name: "",
     details: "",
   });
-  const [recipes, setRecipes] = useState([]);
+  const [sideRecipes, setSideRecipes] = useState([]);
+  const [mainRecipes, setMainRecipes] = useState([]);
+
   useEffect(() => {
     const fetchAllRecipes = async () => {
-      const recipesData = await biteCraftService.Index("Recipe");
-      setRecipes(recipesData);
+      const recipesData = await biteCraftService.Index(
+        "RecipeCollection",
+        user._id
+      );
+      if (recipesData.length >= 1) {
+        const mains = [...recipesData].filter(
+          (recipe) => recipe.category === "Main"
+        );
+        const sides = [...recipesData].filter(
+          (recipe) => recipe.category === "Side"
+        );
+        setSideRecipes(sides);
+        setMainRecipes(mains);
+      }
     };
     if (user) fetchAllRecipes();
-  }, [ user ]);
-  
-  const sideRecipes = [ ...recipes.filter((recipe) => recipe.category === "Side") ];
-  const mainRecipes = [ ...recipes.filter((recipe) => recipe.category === "Main") ];
+  }, [user]);
 
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
@@ -31,6 +42,7 @@ const MealForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!formData.main || !formData.side1 || !formData.side2) return;
     try {
       await biteCraftService.Create("Meal", formData);
       navigate(`/${user._id}/meals-collection`);
@@ -39,7 +51,17 @@ const MealForm = () => {
     }
   };
 
-
+  if (mainRecipes.length < 1 || sideRecipes.length < 1) {
+    return (
+      <main>
+        <h2>Not enough recipes found in your collection!</h2>
+        <h3>
+          Add some recipes from other users to your collection, or create a new
+          recipe! Make sure you have atleast 1 Main and 1 Side recipe.
+        </h3>
+      </main>
+    );
+  }
 
   return (
     <main>
@@ -70,8 +92,15 @@ const MealForm = () => {
           value={formData.main}
           onChange={handleChange}
         >
+          <option value="" disabled>
+            Select a Recipe
+          </option>
           {mainRecipes.map((recipe, idx) => {
-            return <option key={idx} value={recipe._id}>{recipe.name}</option>;
+            return (
+              <option key={idx} value={recipe._id}>
+                {recipe.name}
+              </option>
+            );
           })}
         </select>
         <label htmlFor="side1-input">Side Dish 1:</label>
@@ -80,10 +109,17 @@ const MealForm = () => {
           name="side1"
           id="side1-input"
           value={formData.side1}
-          onChange={ handleChange }
+          onChange={handleChange}
         >
+          <option value="" disabled>
+            Select a Recipe
+          </option>
           {sideRecipes.map((recipe, idx) => {
-            return <option key={idx} value={recipe._id}>{recipe.name}</option>;
+            return (
+              <option key={idx} value={recipe._id}>
+                {recipe.name}
+              </option>
+            );
           })}
         </select>
         <label htmlFor="side2-input">Side Dish 2:</label>
@@ -92,10 +128,17 @@ const MealForm = () => {
           name="side2"
           id="side2-input"
           value={formData.side2}
-          onChange={ handleChange }
+          onChange={handleChange}
         >
+          <option value="" disabled>
+            Select a Recipe
+          </option>
           {sideRecipes.map((recipe, idx) => {
-            return <option key={idx} value={recipe._id}>{recipe.name}</option>;
+            return (
+              <option key={idx} value={recipe._id}>
+                {recipe.name}
+              </option>
+            );
           })}
         </select>
         <button type="Submit">Submit</button>

@@ -136,32 +136,26 @@ const RecipeDetails = () => {
       ...recipe,
       comments: recipe.comments.map((comment) =>
         comment._id === commentId
-          ? { ...comment, reply: [...(comment.reply || []), newReply] }
+          ? { ...comment, reply: newReply }
           : comment
       ),
     });
   };
 
-  const handleUpdateReply = async (formData, commentId, replyId) => {
+  const handleUpdateReply = async (formData, commentId) => {
     try {
-      if (editState.type === "Reply" && editState.itemId === replyId) {
+      if (editState.type === "Reply" && editState.itemId === commentId) {
         await biteCraftService.Update(
           "RecipeReply",
           formData,
           recipeId,
-          commentId,
-          replyId
+          commentId
         );
         setRecipe({
           ...recipe,
           comments: recipe.comments.map((comment) =>
             comment._id === commentId
-              ? {
-                  ...comment,
-                  reply: comment.reply.map((rep) =>
-                    rep._id === replyId ? { ...rep, text: formData.text } : rep
-                  ),
-                }
+              ? { ...comment, reply: { ...comment.reply, text: formData.text } }
               : comment
           ),
         });
@@ -172,25 +166,13 @@ const RecipeDetails = () => {
     }
   };
 
-  const handleDeleteReply = async (commentId, replyId) => {
+  const handleDeleteReply = async (commentId) => {
     try {
-      await biteCraftService.Delete(
-        "RecipeReply",
-        recipeId,
-        commentId,
-        replyId
-      );
+      await biteCraftService.Delete("RecipeReply", recipeId, commentId);
       setRecipe({
         ...recipe,
         comments: recipe.comments.map((comment) =>
-          comment._id === commentId
-            ? {
-                ...comment,
-                reply: comment.reply.filter((rep) => {
-                  rep._id !== replyId;
-                }),
-              }
-            : comment
+          comment._id === commentId ? { ...comment, reply: null } : comment
         ),
       });
     } catch (error) {
@@ -216,7 +198,7 @@ const RecipeDetails = () => {
     try {
       await biteCraftService.Delete("Recipe", recipeId);
       // navigate("/recipes");
-      navigate(`/collections/${user._id}/recipes-collection`);
+      navigate(`/${user._id}/recipes-collection`);
     } catch (error) {
       console.log(error);
     }
@@ -383,7 +365,7 @@ const RecipeDetails = () => {
               )}
             {recipe.author._id === user._id && (
               <>
-                {!visibleForm && !editState.isEditing && (
+                {!visibleForm && !editState.isEditing && !comment.reply && (
                   <button onClick={() => toggleForm(comment._id)}>Reply</button>
                 )}
                 {visibleForm === comment._id && (
@@ -397,55 +379,58 @@ const RecipeDetails = () => {
                 )}
               </>
             )}
-            {comment.reply && comment.reply.length > 0 && (
-              <div>
-                {comment.reply.map((rep, idx) => (
-                  <article key={idx}>
-                    <header>
-                      <p>{`${rep.author.username} posted on ${new Date(
-                        rep.createdAt
-                      ).toLocaleDateString()}`}</p>
-                    </header>
-                    {editState.isEditing &&
-                    editState.type === "Reply" &&
-                    editState.itemId === rep._id &&
-                    rep.author._id === user._id ? (
-                      <div>
-                        <CommentForm
-                          initialText={editState.data.text}
-                          handleAddComment={(formData) =>
-                            handleUpdateReply(formData, comment._id, rep._id)
-                          }
-                          buttonText="Save"
-                          onCancel={() => toggleEditMode()}
-                        />
-                      </div>
-                    ) : (
-                      <p>{rep.text}</p>
-                    )}
-                    {rep.author._id === user._id &&
-                      !editState.isEditing &&
-                      !visibleForm && (
-                        <>
-                          <button
-                            onClick={() =>
-                              handleDeleteReply(comment._id, rep._id)
-                            }
-                          >
-                            Delete
-                          </button>
-                          <button
-                            onClick={() =>
-                              toggleEditMode("Reply", rep, rep._id, comment._id)
-                            }
-                          >
-                            Edit
-                          </button>
-                        </>
-                      )}
-                  </article>
-                ))}
-              </div>
+            {comment.reply && (
+              <article>
+                <header>
+                  <p>{`${comment.reply.author.username} posted on ${new Date(
+                    comment.reply.createdAt
+                  ).toLocaleDateString()}`}</p>
+                </header>
+                {editState.isEditing &&
+                editState.type === "Reply" &&
+                editState.itemId === comment._id &&
+                comment.reply.author._id === user._id ? (
+                  <div>
+                    <CommentForm
+                      initialText={editState.data.text}
+                      handleAddComment={(formData) =>
+                        handleUpdateReply(
+                          formData,
+                          comment._id,
+                        )
+                      }
+                      buttonText="Save"
+                      onCancel={() => toggleEditMode()}
+                    />
+                  </div>
+                ) : (
+                  <p>{comment.reply.text}</p>
+                )}
+                {comment.reply.author._id === user._id &&
+                  !editState.isEditing &&
+                  !visibleForm && (
+                    <>
+                      <button
+                        onClick={() =>
+                          handleDeleteReply(comment._id)
+                        }
+                      >
+                        Delete
+                      </button>
+                      <button
+                        onClick={() =>
+                          toggleEditMode(
+                            "Reply",
+                            comment.reply,
+                            comment._id
+                          )
+                        }
+                      >
+                        Edit
+                      </button>
+                    </>
+                  )}
+              </article>
             )}
           </article>
         ))}

@@ -78,7 +78,7 @@ const Create = async (type, formData, itemId, commentId) => {
     }
 };
 
-const Delete = async (type, itemId, commentId, replyId) => {
+const Delete = async (type, itemId, commentId) => {
     let BASE_URL = null;
     try {
         switch (type) {
@@ -95,10 +95,10 @@ const Delete = async (type, itemId, commentId, replyId) => {
                 BASE_URL = `${ Meals_URL }/${ itemId }/comments/${ commentId }`;
                 break;
             case "RecipeReply":
-                BASE_URL = `${ Recipes_URL }/${ itemId }/comments/${ commentId }/reply/${ replyId }`;
+                BASE_URL = `${ Recipes_URL }/${ itemId }/comments/${ commentId }/reply`;
                 break;
             case "MealReply":
-                BASE_URL = `${ Meals_URL }/${ itemId }/comments/${ commentId }/reply/${ replyId }`;
+                BASE_URL = `${ Meals_URL }/${ itemId }/comments/${ commentId }/reply`;
                 break;
             default:
                 throw new Error("Type not set");
@@ -112,7 +112,7 @@ const Delete = async (type, itemId, commentId, replyId) => {
     }
 };
 
-const Update = async (type, formData, itemId, commentId, replyId) => {
+const Update = async (type, formData, itemId, commentId) => {
     let BASE_URL = null;
     try {
         switch (type) {
@@ -129,10 +129,10 @@ const Update = async (type, formData, itemId, commentId, replyId) => {
                 BASE_URL = `${ Meals_URL }/${ itemId }/comments/${ commentId }`;
                 break;
             case "RecipeReply":
-                BASE_URL = `${ Recipes_URL }/${ itemId }/comments/${ commentId }/reply/${ replyId }`;
+                BASE_URL = `${ Recipes_URL }/${ itemId }/comments/${ commentId }/reply`;
                 break;
             case "MealReply":
-                BASE_URL = `${ Meals_URL }/${ itemId }/comments/${ commentId }/reply/${ replyId }`;
+                BASE_URL = `${ Meals_URL }/${ itemId }/comments/${ commentId }/reply`;
                 break;
             default:
                 throw new Error("Type not set");

@@ -20,6 +20,7 @@ const RecipeForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!formData.category) return;
     try {
       await biteCraftService.Create("Recipe", formData);
       // navigate('/recipes')

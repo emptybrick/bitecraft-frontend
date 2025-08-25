@@ -48,7 +48,7 @@ const RecipeCollection = () => {
                 recipe.createdAt
               ).toLocaleDateString()}`}</p>
             </header>
-            {user._id === params.userId && (
+            {user._id === params.userId && recipe.author._id !== user._id && (
               <button onClick={() => handleRemoveFromCollection(recipe._id)}>
                 Remove from Collection
               </button>
