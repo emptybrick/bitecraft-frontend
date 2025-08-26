@@ -31,6 +31,12 @@ const RecipeCollection = () => {
     }
   };
 
+  if (!user) {
+    return (
+      <h2>Loading...</h2>
+    )
+  }
+
   return (
     <main>
       <h1>Welcome to {user.username}'s Recipes Collection</h1>

@@ -6,6 +6,7 @@ import { UserContext } from "../../../contexts/UserContext";
 import { Link } from "react-router";
 import MealForm from "../../Forms/MealForm/MealForm";
 import CommentsAndReplies from "../Comments/Comments";
+import Header from "../../Component/Header/Header";
 
 const MealDetails = () => {
   const navigate = useNavigate();
@@ -109,13 +110,7 @@ const MealDetails = () => {
           />
         ) : (
           <>
-            <header>
-              <h2>{meal.name}</h2>
-              <p>{`${meal.author.username} posted on ${new Date(
-                meal.createdAt
-              ).toLocaleDateString()}`}</p>
-              <p>{meal.details}</p>
-            </header>
+          <Header item={meal}/>
             <h3>Recipes:</h3>
             <div>
               Main Dish:

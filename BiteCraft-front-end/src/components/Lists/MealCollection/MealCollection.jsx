@@ -31,6 +31,10 @@ const MealCollection = () => {
     }
   };
 
+  if (!user) {
+    return <h2>Loading...</h2>;
+  }
+
   return (
     <main>
       <h1>Welcome to {user.username}'s Meals Collection</h1>

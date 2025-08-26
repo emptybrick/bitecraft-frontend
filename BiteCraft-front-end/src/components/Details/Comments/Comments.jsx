@@ -2,9 +2,9 @@ import { useEffect, useState, useContext } from "react";
 import * as biteCraftService from "../../../services/BiteCraftService";
 import CommentForm from "../../Forms/CommentForm/CommentForm";
 import { UserContext } from "../../../contexts/UserContext";
+import Footer from "../../Component/Footer/Footer";
 
-const CommentsAndReplies = ({
-    item, itemId, type }) => {
+const CommentsAndReplies = ({ item, itemId, type }) => {
   const [visibleForm, setVisibleForm] = useState(null);
   const { user } = useContext(UserContext);
   const [comments, setComments] = useState([]);
@@ -53,10 +53,13 @@ const CommentsAndReplies = ({
       itemId
     );
     newComment.author = user;
-    newComment.createdAt = new Date();
-    const updatedComments = [...comments, newComment];
-    updatedComments.sort((a, b) => b.createdAt - a.createdAt);
-    setComments(updatedComments);
+    newComment.createdAt = new Date().toISOString();
+    const updatedComments = [ ...comments, newComment ];
+    const sortedComments = updatedComments.sort(
+      (a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+    );
+    console.log("sort:", sortedComments)
+    setComments(sortedComments);
   };
 
   const handleUpdateComment = async (formData) => {
@@ -173,12 +176,6 @@ const CommentsAndReplies = ({
       )}
       {comments.map((comment, idx) => (
         <article key={idx}>
-          <header>
-            <p>
-              {`${comment.author.username} posted on
-                ${new Date(comment.createdAt).toLocaleDateString()}`}
-            </p>
-          </header>
           {editState.isEditing &&
           editState.type === "Comment" &&
           editState.itemId === comment._id &&
@@ -194,7 +191,10 @@ const CommentsAndReplies = ({
               />
             </div>
           ) : (
-            <p>{comment.text}</p>
+            <div>
+              <p>{comment.text}</p>
+              <Footer item={comment} />
+            </div>
           )}
           {comment.author._id === user._id &&
             !editState.isEditing &&
@@ -230,11 +230,6 @@ const CommentsAndReplies = ({
           )}
           {comment.reply && (
             <article>
-              <header>
-                <p>{`${comment.reply.author.username} posted on ${new Date(
-                  comment.reply.createdAt
-                ).toLocaleDateString()}`}</p>
-              </header>
               {editState.isEditing &&
               editState.type === "Reply" &&
               editState.itemId === comment._id &&
@@ -250,7 +245,10 @@ const CommentsAndReplies = ({
                   />
                 </div>
               ) : (
-                <p>{comment.reply.text}</p>
+                <div>
+                  <p>{comment.reply.text}</p>
+                  <Footer item={comment.reply} />
+                </div>
               )}
               {comment.reply.author._id === user._id &&
                 !editState.isEditing &&

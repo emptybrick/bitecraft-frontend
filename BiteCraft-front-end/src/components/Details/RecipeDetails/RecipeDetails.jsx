@@ -4,6 +4,7 @@ import * as biteCraftService from "../../../services/BiteCraftService";
 import { UserContext } from "../../../contexts/UserContext";
 import RecipeForm from "../../Forms/RecipeForm/RecipeForm";
 import CommentsAndReplies from "../Comments/Comments";
+import Header from "../../Component/Header/Header";
 
 const RecipeDetails = () => {
   const navigate = useNavigate();
@@ -82,17 +83,11 @@ const RecipeDetails = () => {
             onCancel={() => toggleRecipeForm()}
           />
         ) : (
-          <>
-            <header>
-              <h2>{recipe.category} Dish</h2>
-              <h2>{recipe.name}</h2>
-              <p>{`${recipe.author.username} posted on ${new Date(
-                recipe.createdAt
-              ).toLocaleDateString()}`}</p>
-              <p>{recipe.details}</p>
-            </header>
+            <>
+              <Header item={recipe}/>
             <div>
-              <div>
+                <div>
+                  {/* need to map through these */}
                 <h4>Ingredients</h4>
                 <p>{recipe.ingredients}</p>
               </div>
