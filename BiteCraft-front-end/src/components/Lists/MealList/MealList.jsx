@@ -21,9 +21,6 @@ const MealList = () => {
   return (
     <main>
       <h1>List of All Meals!</h1>
-      <Link to="/meals/new">
-        <button>Add New Meal</button>
-      </Link>
       {meals.map((meal, idx) => (
         <article key={idx}>
           <header>

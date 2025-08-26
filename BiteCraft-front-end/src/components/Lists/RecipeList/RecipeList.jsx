@@ -18,9 +18,6 @@ const RecipeList = () => {
   return (
     <main>
       <h1>List of All Recipes!</h1>
-      <Link to="/recipes/new">
-        <button>Add New Recipe</button>
-      </Link>
       {recipes.map((recipe, idx) => (
         <article key={idx}>
           <header>

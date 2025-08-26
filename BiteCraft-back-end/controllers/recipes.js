@@ -3,6 +3,8 @@ const router = express.Router();
 const verifyToken = require("../middleware/verify-token.js");
 const Recipe = require('../models/recipe');
 const User = require('../models/user.js');
+const mongoose = require('mongoose')
+const { ObjectId} = mongoose.Types
 
 router.post('/', verifyToken, async (req, res) => {
     try {
@@ -89,6 +91,7 @@ router.delete('/:recipeId', verifyToken, async (req, res) => {
 router.post('/:recipeId/comments', verifyToken, async (req, res) => {
     try {
         const comment = {
+            _id: new ObjectId(),
             text: req.body.text,
             author: req.user._id,
         };
@@ -160,7 +163,7 @@ router.post('/:recipeId/comments/:commentId/reply', verifyToken, async (req, res
             { $set: { "comments.$.reply": reply } },
             { new: true, runValidators: true }
         );
-        
+
         if (!updatedRecipe) {
             const recipe = await Recipe.findById(req.params.recipeId);
             if (!recipe) {

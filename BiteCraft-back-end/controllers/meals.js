@@ -3,6 +3,8 @@ const router = express.Router();
 const verifyToken = require("../middleware/verify-token.js");
 const Meal = require('../models/meal');
 const User = require('../models/user.js');
+const mongoose = require('mongoose');
+const { ObjectId } = mongoose.Types;
 
 router.post('/', verifyToken, async (req, res) => {
     try {
@@ -115,6 +117,7 @@ router.delete('/:mealId', verifyToken, async (req, res) => {
 router.post('/:mealId/comments', verifyToken, async (req, res) => {
     try {
         const comment = {
+            _id: new ObjectId(),
             text: req.body.text,
             author: req.user._id,
         };
