@@ -2,6 +2,7 @@ import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router";
 import * as biteCraftService from "../../../services/BiteCraftService";
 import { UserContext } from "../../../contexts/UserContext";
+import Button from "../../Component/Button/Button";
 
 const MealForm = ({
   onCancel,
@@ -25,13 +26,12 @@ const MealForm = ({
         }
   );
   const [sideRecipes, setSideRecipes] = useState(sidesFromDetails);
-  const [mainRecipes, setMainRecipes ] = useState(mainsFromDetails);
+  const [mainRecipes, setMainRecipes] = useState(mainsFromDetails);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setIsLoading(true)
+    setIsLoading(true);
     const fetchAllRecipes = async () => {
-      console.log("fetching meal form data")
       setIsLoading(true);
       const recipesData = await biteCraftService.Index(
         "RecipeCollection",
@@ -47,7 +47,7 @@ const MealForm = ({
         setSideRecipes(sides);
         setMainRecipes(mains);
       }
-      setIsLoading(false)
+      setIsLoading(false);
     };
     if (user) fetchAllRecipes();
   }, [user]);
@@ -77,7 +77,7 @@ const MealForm = ({
 
   return (
     <>
-      {!isLoading && mainRecipes.length < 1 || sideRecipes.length < 1 ? (
+      {(!isLoading && mainRecipes.length < 1) || sideRecipes.length < 1 ? (
         <div>
           <h2>Not enough recipes found in your collection!</h2>
           <h3>
@@ -173,13 +173,12 @@ const MealForm = ({
             </select>
           </div>
           <div>
-            <button type="Submit">{buttonText}</button>
-            <button
+            <Button type="Submit" buttonText={buttonText} />
+            <Button
               type="button"
               onClick={onCancel ? onCancel : () => handleNavigation()}
-            >
-              Cancel
-            </button>
+              buttonText="Cancel"
+            />
           </div>
         </form>
       )}

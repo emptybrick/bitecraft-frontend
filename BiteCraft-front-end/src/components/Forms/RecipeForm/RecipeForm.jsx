@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import { useNavigate } from "react-router";
 import * as biteCraftService from "../../../services/BiteCraftService";
 import { UserContext } from "../../../contexts/UserContext";
+import Button from "../../Component/Button/Button";
 
 const RecipeForm = ({
   onCancel = null,
@@ -18,7 +19,23 @@ const RecipeForm = ({
           name: "",
           details: "",
           instructions: [""],
-          ingredients: ["", "", ""],
+          ingredients: [
+            {
+              name: "",
+              unit: "",
+              quantity: "",
+            },
+            {
+              name: "",
+              unit: "",
+              quantity: "",
+            },
+            {
+              name: "",
+              unit: "",
+              quantity: "",
+            },
+          ],
           category: "Main",
         }
   );
@@ -29,19 +46,42 @@ const RecipeForm = ({
 
   const handleChange = (event, index, type) => {
     if (type) {
-      let newItem;
+      let updatedItem;
       if (type === "instruction") {
-        newItem = [...formData.instructions];
-        newItem[index] = event.target.value;
-        setFormData({ ...formData, instructions: newItem });
+        updatedItem = [...formData.instructions];
+        updatedItem[index] = event.target.value;
+        setFormData({ ...formData, instructions: updatedItem });
       } else {
-        newItem = [...formData.ingredients];
-        newItem[index] = event.target.value;
-        setFormData({ ...formData, ingredients: newItem });
+        updatedItem = [...formData.ingredients];
+        if (type === "Name") {
+          updatedItem[index] = {
+            ...updatedItem[index],
+            name: event.target.value,
+          };
+        } else if (type === "Quantity") {
+          updatedItem[index] = {
+            ...updatedItem[index],
+            quantity: event.target.value,
+          };
+        } else {
+          updatedItem[index] = {
+            ...updatedItem[index],
+            unit: event.target.value,
+          };
+        }
+        setFormData({ ...formData, ingredients: updatedItem });
       }
     } else {
       setFormData({ ...formData, [event.target.name]: event.target.value });
     }
+  };
+
+  const handleInput = (e) => {
+    e.target.value = e.target.value.replace(/[^a-zA-Z]/g, "");
+  };
+
+  const handleInputQuantity = (e) => {
+    e.target.value = e.target.value.replace(/[^1-9][0-9]*/g, "");
   };
 
   const addInstruction = () => {
@@ -49,7 +89,15 @@ const RecipeForm = ({
   };
 
   const addIngredient = () => {
-    setFormData({ ...formData, ingredients: [...formData.ingredients, ""] });
+    const newRow = {
+      name: "",
+      unit: "",
+      quantity: "",
+    };
+    setFormData({
+      ...formData,
+      ingredients: [...formData.ingredients, newRow],
+    });
   };
 
   const removeInstruction = (index) => {
@@ -105,6 +153,7 @@ const RecipeForm = ({
           id="name-input"
           value={formData.name}
           onChange={handleChange}
+          onInput={handleInput}
         />
       </div>
       <div>
@@ -119,6 +168,64 @@ const RecipeForm = ({
         ></textarea>
       </div>
       <div>
+        <h3>Ingredients</h3>
+        <div className="ingredient-table-categories">
+          <h4>Unit</h4>
+          <h4>Amount</h4>
+          <h4>Name</h4>
+        </div>
+        <label htmlFor="ingredients-input"></label>
+        {formData.ingredients.map((ingredient, index) => (
+          <div key={index}>
+            <select
+              required
+              name={`unit-${index}`}
+              id={`unit-input-${index}`}
+              value={ingredient.unit}
+              onChange={(e) => handleChange(e, index, "Unit")}
+            >
+              <option value="Tablespoon">Tablespoon</option>
+              <option value="Teaspoon">Teaspoon</option>
+            </select>
+            <input
+              className="number-input"
+              type="number"
+              required
+              name={`quantity-${index}`}
+              id={`quantity-input-${index}`}
+              value={ingredient.quantity}
+              onChange={(e) => handleChange(e, index, "Quantity")}
+              step={1}
+              min={1}
+              placeholder="1"
+              onInput={handleInputQuantity}
+            />
+            <input
+              type="text"
+              name={`ingredients-${index}`}
+              id={`ingredients-input-${index}`}
+              value={ingredient.name}
+              onChange={(e) => handleChange(e, index, "Name")}
+              placeholder={"e.g. Flour, Sugar, Eggs"}
+              required
+              onInput={handleInput}
+            ></input>
+            {formData.ingredients.length > 1 && (
+              <Button
+                type="button"
+                onClick={() => removeIngredient(index)}
+                buttonText="Remove"
+              />
+            )}
+          </div>
+        ))}
+        <Button
+          type="button"
+          onClick={() => addIngredient()}
+          buttonText="Add Ingredient"
+        />
+      </div>
+      <div>
         <label htmlFor="instructions-input">Instructions:</label>
         {formData.instructions.map((instruction, index) => (
           <div key={index}>
@@ -128,51 +235,30 @@ const RecipeForm = ({
               id={`instructions-input-${index}`}
               value={instruction}
               onChange={(e) => handleChange(e, index, "instruction")}
-              placeholder={`Instruction ${index + 1}`}
+              placeholder={`Step ${index + 1}:`}
               required
             ></textarea>
             {formData.instructions.length > 1 && (
-              <button type="button" onClick={() => removeInstruction(index)}>
-                Remove
-              </button>
+              <Button
+                type="button"
+                onClick={() => removeInstruction(index)}
+                buttonText="Remove"
+              />
             )}
           </div>
         ))}
-        <button type="button" onClick={addInstruction}>
-          Add Step
-        </button>
+        <Button
+          type="button"
+          onClick={() => addInstruction()}
+          buttonText="Add Step"
+        />
       </div>
-      <div>
-        <label htmlFor="ingredients-input">Ingredients:</label>
-        {formData.ingredients.map((ingredient, index) => (
-          <div key={index}>
-            <input
-              type="text"
-              name={`ingredients-${index}`}
-              id={`ingredients-input-${index}`}
-              value={ingredient}
-              onChange={(e) => handleChange(e, index, "ingredient")}
-              placeholder={"e.g. 1 cup flour"}
-              required
-            ></input>
-            {formData.ingredients.length > 1 && (
-              <button type="button" onClick={() => removeIngredient(index)}>
-                Remove
-              </button>
-            )}
-          </div>
-        ))}
-        <button type="button" onClick={addIngredient}>
-          Add Ingredient
-        </button>
-      </div>
-      <button type="submit">{buttonText}</button>
-      <button
+      <Button type="submit" buttonText={buttonText} />
+      <Button
         type="button"
         onClick={onCancel ? onCancel : () => handleNavigation()}
-      >
-        Cancel
-      </button>
+        buttonText="Cancel"
+      />
     </form>
   );
 };

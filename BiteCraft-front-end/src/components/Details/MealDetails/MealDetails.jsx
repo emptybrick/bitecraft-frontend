@@ -1,12 +1,12 @@
 import { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router";
-import CommentForm from "../../Forms/CommentForm/CommentForm";
 import * as biteCraftService from "../../../services/BiteCraftService";
 import { UserContext } from "../../../contexts/UserContext";
 import { Link } from "react-router";
 import MealForm from "../../Forms/MealForm/MealForm";
 import CommentsAndReplies from "../Comments/Comments";
 import Header from "../../Component/Header/Header";
+import Button from "../../Component/Button/Button";
 
 const MealDetails = () => {
   const navigate = useNavigate();
@@ -17,12 +17,12 @@ const MealDetails = () => {
   const mealId = params.mealId;
   const [visibleMealForm, setVisibleMealForm] = useState(null);
   const [sideRecipes, setSideRecipes] = useState([]);
-  const [ mainRecipes, setMainRecipes ] = useState([]);
-  const [isLoading, setIsLoading] = useState(false)
+  const [mainRecipes, setMainRecipes] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const getData = async () => {
-      setIsLoading(true)
+      setIsLoading(true);
       const mealToShow = await biteCraftService.Show("Meal", mealId);
       setMeal(mealToShow);
       if (mainRecipes.length < 1 || sideRecipes.length < 1) {
@@ -49,13 +49,12 @@ const MealDetails = () => {
         const recipeArray = mealsToGet.map((item) => item._id);
         setMealsInCollection(recipeArray);
       }
-      setIsLoading(false)
+      setIsLoading(false);
     };
     if (!visibleMealForm) {
       getData();
     }
   }, [mealId]);
-
 
   const toggleMealForm = () => {
     setVisibleMealForm(!visibleMealForm);
@@ -63,12 +62,11 @@ const MealDetails = () => {
 
   // meal handlers
   const handleUpdateMeal = async (formData) => {
-    if (!formData.main || !formData.side1 || !formData.side2)
-      return;
+    if (!formData.main || !formData.side1 || !formData.side2) return;
     try {
-        await biteCraftService.Update("Meal", formData, mealId);
-        setMeal(formData);
-        toggleMealForm();
+      await biteCraftService.Update("Meal", formData, mealId);
+      setMeal(formData);
+      toggleMealForm();
     } catch (error) {
       console.log(error);
     }
@@ -104,13 +102,13 @@ const MealDetails = () => {
               handleUpdateMeal(formData);
             }}
             buttonText="Save"
-            onCancel={ () => toggleMealForm() }
-            sidesFromDetails={ sideRecipes }
+            onCancel={() => toggleMealForm()}
+            sidesFromDetails={sideRecipes}
             mainsFromDetails={mainRecipes}
           />
         ) : (
           <>
-          <Header item={meal}/>
+            <Header item={meal} />
             <h3>Recipes:</h3>
             <div>
               Main Dish:
@@ -142,19 +140,19 @@ const MealDetails = () => {
                 "Recipe is no longer available."
               )}
             </div>
-            {meal.author._id === user._id &&
-              !visibleMealForm && (
-                <>
-                  <button onClick={handleDeleteMeal}>Delete</button>
-                  <button onClick={() => toggleMealForm()}>
-                    Edit
-                  </button>
-                </>
-              )}
+            {meal.author._id === user._id && !visibleMealForm && (
+              <>
+                <Button onClick={handleDeleteMeal} buttonText="Delete" />
+                <Button onClick={toggleMealForm} buttonText="Edit" />
+              </>
+            )}
           </>
         )}
         {!mealsInCollection.includes(mealId) && (
-          <button onClick={handleAddToCollection}>Add to Collection</button>
+          <Button
+            onClick={handleAddToCollection}
+            buttonText="Add to Collection"
+          />
         )}
       </section>
       <CommentsAndReplies item={meal} itemId={mealId} type={"Meal"} />

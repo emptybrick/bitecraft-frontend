@@ -36,19 +36,12 @@ const recipeSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        // simple instructions for now, eventually want an array or way of enforcing step instructions easier
         instructions: [ String ],
-        // instructions: [ {
-        //     stepNumber: Number,
-        //     description: String
-        // } ],
-        // need to figure out how to get ingredients input properly
-        ingredients: [ String ],
-        // ingredients: [ {
-        //     name: String,
-        //     quantity: Number,
-        //     unit: String,
-        // } ],
+        ingredients: [ {
+            name: String,
+            quantity: Number,
+            unit: String,
+        } ],
         category: {
             type: String,
             required: true,

@@ -3,6 +3,7 @@ import * as biteCraftService from "../../../services/BiteCraftService";
 import CommentForm from "../../Forms/CommentForm/CommentForm";
 import { UserContext } from "../../../contexts/UserContext";
 import Footer from "../../Component/Footer/Footer";
+import Button from "../../Component/Button/Button";
 
 const CommentsAndReplies = ({ item, itemId, type }) => {
   const [visibleForm, setVisibleForm] = useState(null);
@@ -54,11 +55,11 @@ const CommentsAndReplies = ({ item, itemId, type }) => {
     );
     newComment.author = user;
     newComment.createdAt = new Date().toISOString();
-    const updatedComments = [ ...comments, newComment ];
+    const updatedComments = [...comments, newComment];
     const sortedComments = updatedComments.sort(
       (a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
     );
-    console.log("sort:", sortedComments)
+    console.log("sort:", sortedComments);
     setComments(sortedComments);
   };
 
@@ -161,7 +162,7 @@ const CommentsAndReplies = ({ item, itemId, type }) => {
       {item.author._id !== user._id && (
         <>
           {!visibleForm && !editState.isEditing && (
-            <button onClick={() => toggleForm(itemId)}>Comment</button>
+            <Button onClick={() => toggleForm(itemId)} buttonText="Comment" />
           )}
           {visibleForm === itemId && (
             <CommentForm
@@ -199,23 +200,26 @@ const CommentsAndReplies = ({ item, itemId, type }) => {
           {comment.author._id === user._id &&
             !editState.isEditing &&
             !visibleForm && (
-              <>
-                <button onClick={() => handleDeleteComment(comment._id)}>
-                  Delete
-                </button>
-                <button
+              <div>
+                <Button
+                  onClick={() => handleDeleteComment(comment._id)}
+                  buttonText="Delete"
+                />
+                <Button
                   onClick={() =>
                     toggleEditMode("Comment", comment, comment._id)
                   }
-                >
-                  Edit
-                </button>
-              </>
+                  buttonText="Edit"
+                />
+              </div>
             )}
           {item.author._id === user._id && (
             <>
               {!visibleForm && !editState.isEditing && !comment.reply && (
-                <button onClick={() => toggleForm(comment._id)}>Reply</button>
+                <Button
+                  onClick={() => toggleForm(comment._id)}
+                  buttonText="Reply"
+                />
               )}
               {visibleForm === comment._id && (
                 <CommentForm
@@ -253,18 +257,18 @@ const CommentsAndReplies = ({ item, itemId, type }) => {
               {comment.reply.author._id === user._id &&
                 !editState.isEditing &&
                 !visibleForm && (
-                  <>
-                    <button onClick={() => handleDeleteReply(comment._id)}>
-                      Delete
-                    </button>
-                    <button
+                  <div>
+                    <Button
+                      onClick={() => handleDeleteReply(comment._id)}
+                      buttonText="Delete"
+                    />
+                    <Button
                       onClick={() =>
                         toggleEditMode("Reply", comment.reply, comment._id)
                       }
-                    >
-                      Edit
-                    </button>
-                  </>
+                      buttonText="Edit"
+                    />
+                  </div>
                 )}
             </article>
           )}

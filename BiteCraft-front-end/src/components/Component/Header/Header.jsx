@@ -5,6 +5,9 @@ const Header = ({item}) => {
       <h2>{item.name}</h2>
       <p>{`${item.author.username} posted on ${new Date(
         item.createdAt
+        ).toLocaleDateString() }` }</p>
+        <p>{`Last updated on ${new Date(
+        item.updatedAt
       ).toLocaleDateString()}`}</p>
       <p>{item.details}</p>
     </header>

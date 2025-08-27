@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router';
 import { signIn } from '../../../services/authService';
 
 import { UserContext } from '../../../contexts/UserContext';
+import Button from '../../Component/Button/Button';
 
 const SignInForm = () => {
   const navigate = useNavigate();
@@ -60,8 +61,8 @@ const SignInForm = () => {
           />
         </div>
         <div>
-          <button>Sign In</button>
-          <button onClick={() => navigate('/')}>Cancel</button>
+          <Button type='submit' buttonText="Sign In"/>
+          <Button onClick={() => navigate('/')} buttonText='Cancel'/>
         </div>
       </form>
     </main>

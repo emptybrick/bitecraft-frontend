@@ -1,10 +1,11 @@
 import { useState } from "react";
+import Button from "../../Component/Button/Button";
 
 const CommentForm = ({
   handleAddComment,
   onCancel,
   buttonText = "Submit",
-  initialText = '',
+  initialText = "",
 }) => {
   const [formData, setFormData] = useState({ text: initialText });
   const handleChange = (event) => {
@@ -18,21 +19,19 @@ const CommentForm = ({
   };
 
   return (
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="text-input">Your comment:</label>
-        <textarea
-          name="text"
-          id="text-input"
-          value={formData.text}
-          onChange={handleChange}
-          required
-          placeholder="Enter your comment here"
-        ></textarea>
-        <button type="submit">{buttonText}</button>
-        <button type="button" onClick={onCancel}>
-          Cancel
-        </button>
-      </form>
+    <form onSubmit={handleSubmit}>
+      <label htmlFor="text-input">Your comment:</label>
+      <textarea
+        name="text"
+        id="text-input"
+        value={formData.text}
+        onChange={handleChange}
+        required
+        placeholder="Enter your comment here"
+      ></textarea>
+      <Button type="submit" buttonText={buttonText} />
+      <Button type="button" onClick={onCancel} buttonText="Cancel" />
+    </form>
   );
 };
 

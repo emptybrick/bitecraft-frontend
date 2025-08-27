@@ -5,6 +5,7 @@ import { UserContext } from "../../../contexts/UserContext";
 import RecipeForm from "../../Forms/RecipeForm/RecipeForm";
 import CommentsAndReplies from "../Comments/Comments";
 import Header from "../../Component/Header/Header";
+import Button from "../../Component/Button/Button";
 
 const RecipeDetails = () => {
   const navigate = useNavigate();
@@ -83,13 +84,13 @@ const RecipeDetails = () => {
             onCancel={() => toggleRecipeForm()}
           />
         ) : (
-            <>
-              <Header item={recipe}/>
+          <>
+            <Header item={recipe} />
             <div>
-                <div>
-                  {/* need to map through these */}
+              <div>
+                {/* need to map through these */}
                 <h4>Ingredients</h4>
-                <p>{recipe.ingredients}</p>
+                {/* <p>{recipe.ingredients}</p> */}
               </div>
               <div>
                 <h4>Instructions</h4>
@@ -98,14 +99,17 @@ const RecipeDetails = () => {
             </div>
             {recipe.author._id === user._id && !visibleRecipeForm && (
               <>
-                <button onClick={handleDeleteRecipe}>Delete</button>
-                <button onClick={() => toggleRecipeForm()}>Edit</button>
+                <Button onClick={handleDeleteRecipe} buttonText="Delete" />
+                <Button onClick={() => toggleRecipeForm()} buttonText="Edit" />
               </>
             )}
           </>
         )}
         {!recipesInCollection.includes(recipeId) && (
-          <button onClick={handleAddToCollection}>Add to Collection</button>
+          <Button
+            onClick={handleAddToCollection}
+            buttonText="Add to Collection"
+          />
         )}
       </section>
       <CommentsAndReplies item={recipe} itemId={recipeId} type={"Recipe"} />

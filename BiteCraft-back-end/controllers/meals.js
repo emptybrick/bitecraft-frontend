@@ -15,7 +15,6 @@ router.post('/', verifyToken, async (req, res) => {
             { $push: { mealsCollection: meal._id } },
             { new: true, runValidators: true }
         );
-
         meal._doc.author = req.user;
         res.status(201).json(meal);
     } catch (error) {

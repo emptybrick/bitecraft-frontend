@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { Link, useParams } from "react-router";
 import * as biteCraftService from "../../../services/BiteCraftService";
 import { UserContext } from "../../../contexts/UserContext";
+import Button from "../../Component/Button/Button";
 
 const RecipeCollection = () => {
   const { user } = useContext(UserContext);
@@ -41,7 +42,7 @@ const RecipeCollection = () => {
     <main>
       <h1>Welcome to {user.username}'s Recipes Collection</h1>
       <Link to="/recipes/new">
-        <button>Add New Recipe</button>
+        <Button buttonText="Create New Recipe"/>
       </Link>
       {recipes.length > 0 ? (
         recipes.map((recipe, idx) => (
@@ -55,9 +56,7 @@ const RecipeCollection = () => {
               ).toLocaleDateString()}`}</p>
             </header>
             {user._id === params.userId && recipe.author._id !== user._id && (
-              <button onClick={() => handleRemoveFromCollection(recipe._id)}>
-                Remove from Collection
-              </button>
+              <Button onClick={() => handleRemoveFromCollection(recipe._id)} buttonText="Remove from Collection"/>
             )}
           </article>
         ))
