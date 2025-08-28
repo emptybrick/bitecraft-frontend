@@ -1,8 +1,9 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router";
 import * as biteCraftService from "../../../services/BiteCraftService";
 import { UserContext } from "../../../contexts/UserContext";
 import Button from "../../Component/Button/Button";
+import CreatableSelect from "react-select/creatable";
 
 const RecipeForm = ({
   onCancel = null,
@@ -12,6 +13,7 @@ const RecipeForm = ({
 }) => {
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
+  const [ingredientsData, setIngredientsData] = useState([]);
   const [formData, setFormData] = useState(
     initialData
       ? initialData
@@ -40,11 +42,20 @@ const RecipeForm = ({
         }
   );
 
+  useEffect(() => {
+    const getData = async () => {
+      const getIngredients = await biteCraftService.Index("Ingredient");
+      setIngredientsData(getIngredients);
+    };
+    if (user) getData();
+  }, [user]);
+
   const handleNavigation = () => {
     navigate(`/${user._id}/recipes-collection`);
   };
 
   const handleChange = (event, index, type) => {
+    console.log(event)
     if (type) {
       let updatedItem;
       if (type === "instruction") {
@@ -56,17 +67,22 @@ const RecipeForm = ({
         if (type === "Name") {
           updatedItem[index] = {
             ...updatedItem[index],
-            name: event.target.value,
+            name: event.value,
           };
         } else if (type === "Quantity") {
           updatedItem[index] = {
             ...updatedItem[index],
             quantity: event.target.value,
           };
-        } else {
+        } else if (type === "Unit") {
           updatedItem[index] = {
             ...updatedItem[index],
             unit: event.target.value,
+          };
+        } else {
+          updatedItem[index] = {
+            ...updatedItem[index],
+            fraction: event.target.value,
           };
         }
         setFormData({ ...formData, ingredients: updatedItem });
@@ -74,10 +90,11 @@ const RecipeForm = ({
     } else {
       setFormData({ ...formData, [event.target.name]: event.target.value });
     }
+    console.log(formData.ingredients)
   };
 
   const handleInput = (e) => {
-    e.target.value = e.target.value.replace(/[^a-zA-Z]/g, "");
+    e.target.value = e.target.value.replace(/[^a-zA-Z_ -]/g, "");
   };
 
   const handleInputQuantity = (e) => {
@@ -129,6 +146,15 @@ const RecipeForm = ({
     }
   };
 
+  const handleCreateIngredient = async (inputValue) => {
+    console.log("something happened", inputValue)
+    // event.preventDefault();
+  };
+
+  if (!ingredientsData) {
+    return <h2>Loading...</h2>;
+  }
+
   return (
     <form onSubmit={handleSubmit}>
       <div>
@@ -171,7 +197,7 @@ const RecipeForm = ({
         <h3>Ingredients</h3>
         <div className="ingredient-table-categories">
           <h4>Unit</h4>
-          <h4>Amount</h4>
+          <h4>Amount/Fraction</h4>
           <h4>Name</h4>
         </div>
         <label htmlFor="ingredients-input"></label>
@@ -184,8 +210,20 @@ const RecipeForm = ({
               value={ingredient.unit}
               onChange={(e) => handleChange(e, index, "Unit")}
             >
-              <option value="Tablespoon">Tablespoon</option>
-              <option value="Teaspoon">Teaspoon</option>
+              <option value="null">n/a</option>
+              <option value="Tsp">Tsp</option>
+              <option value="Tbsp">Tbsp</option>
+              <option value="Cup">Cup</option>
+              <option value="Pint">Pint</option>
+              <option value="Quart">Quart</option>
+              <option value="Fl Oz">Fl Oz</option>
+              <option value="Oz">Oz</option>
+              <option value="lb">lb</option>
+              <option value="g">g</option>
+              <option value="kg">kg</option>
+              <option value="mL">mL</option>
+              <option value="L">L</option>
+              <option value="Stick">Stick</option>
             </select>
             <input
               className="number-input"
@@ -200,16 +238,40 @@ const RecipeForm = ({
               placeholder="1"
               onInput={handleInputQuantity}
             />
-            <input
-              type="text"
+            <select
+              required
+              name={`fraction-${index}`}
+              id={`fraction-input-${index}`}
+              value={ingredient.fraction}
+              onChange={(e) => handleChange(e, index, "Fraction")}
+            >
+              <option value="null">n/a</option>
+              <option value="1/8">1/8</option>
+              <option value="1/4">1/4</option>
+              <option value="3/8">3/8</option>
+              <option value="1/2">1/2</option>
+              <option value="5/8">5/8</option>
+              <option value="3/4">3/4</option>
+              <option value="7/8">7/8</option>
+            </select>
+            <CreatableSelect
+              isClearable
+              onChange={(e) => handleChange(e, index, "Name")}
+              onCreateOption={handleCreateIngredient}
               name={`ingredients-${index}`}
               id={`ingredients-input-${index}`}
-              value={ingredient.name}
-              onChange={(e) => handleChange(e, index, "Name")}
+              options={ingredientsData.map((ing) => ({
+                label: ing.name,
+                value: ing.name,
+              }))}
+              value={
+                ingredient.name
+                  ? { value: ingredient.name, label: ingredient.name }
+                  : null
+              }
               placeholder={"e.g. Flour, Sugar, Eggs"}
               required
-              onInput={handleInput}
-            ></input>
+            />
             {formData.ingredients.length > 1 && (
               <Button
                 type="button"

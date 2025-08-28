@@ -90,7 +90,7 @@ const RecipeDetails = () => {
               <div>
                 {/* need to map through these */}
                 <h4>Ingredients</h4>
-                {/* <p>{recipe.ingredients}</p> */}
+                <p>{recipe.ingredients.map(ing => ing.name)}</p>
               </div>
               <div>
                 <h4>Instructions</h4>
@@ -100,7 +100,7 @@ const RecipeDetails = () => {
             {recipe.author._id === user._id && !visibleRecipeForm && (
               <>
                 <Button onClick={handleDeleteRecipe} buttonText="Delete" />
-                <Button onClick={() => toggleRecipeForm()} buttonText="Edit" />
+                <Button onClick={toggleRecipeForm} buttonText="Edit" />
               </>
             )}
           </>

@@ -11,6 +11,7 @@ const Index = async (type, userId) => {
     try {
         if (type === "Meal") { BASE_URL = Meals_URL; }
         else if (type === "Recipe") { BASE_URL = Recipes_URL; }
+        else if (type === "Ingredient") { BASE_URL = `${ TRIMMED_URL }/ingredients`; }
         else {
             if (type === "RecipeCollection") {
                 BASE_URL = `${ TRIMMED_URL }/users/${ userId }/recipes-collection`;

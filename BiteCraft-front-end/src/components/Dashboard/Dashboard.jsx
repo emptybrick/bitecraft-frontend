@@ -21,16 +21,36 @@ const Dashboard = () => {
   }, [user]);
 
   return (
-    <main>
-      <h1>Welcome, {user.username} to BiteCraft!</h1>
-      <p>
-        This is the dashboard page where you can see a list of all the users.
-      </p>
-      <ul>
-        {users.map((user) => (
-          <li key={user._id}>{user.username}</li>
-        ))}
-      </ul>
+    <main className="section">
+      <div className="container">
+        <div className="box has-text-centered">
+          <h1 className="title is-2 mb-3">
+            Welcome to BiteCraft!
+          </h1>
+          <p className="subtitle is-5 mb-5">
+            This is the dashboard page where you can see a list of all the
+            users.
+          </p>
+          <div className="card">
+            <header className="card-header">
+              <p className="card-header-title">All Users</p>
+            </header>
+            <div className="card-content">
+              <div className="content">
+                <ul>
+                  {users.map((user) => (
+                    <li key={user._id} className="mb-2">
+                      <span className="tag is-info is-medium">
+                        {user.username}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
   );
 };
