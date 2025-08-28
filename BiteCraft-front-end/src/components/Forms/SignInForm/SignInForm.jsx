@@ -32,39 +32,63 @@ const SignInForm = () => {
   };
 
   return (
-    <main>
-      <h1>Sign In</h1>
-      <p>{message}</p>
-      <form autoComplete='off' onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor='email'>Username:</label>
-          <input
-            type='text'
-            autoComplete='off'
-            id='username'
-            value={formData.username}
-            name='username'
-            onChange={handleChange}
-            required
-          />
+    <main className="section">
+      <div className="container">
+        <div className="box">
+          <h1 className="title has-text-centered">Sign In</h1>
+          {message && (
+            <div className="notification is-danger is-light">{message}</div>
+          )}
+          <form autoComplete="off" onSubmit={handleSubmit}>
+            <div className="field">
+              <label className="label" htmlFor="username">
+                Username
+              </label>
+              <div className="control">
+                <input
+                  className="input"
+                  type="text"
+                  autoComplete="off"
+                  id="username"
+                  value={formData.username}
+                  name="username"
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
+            <div className="field">
+              <label className="label" htmlFor="password">
+                Password
+              </label>
+              <div className="control">
+                <input
+                  className="input"
+                  type="password"
+                  autoComplete="off"
+                  id="password"
+                  value={formData.password}
+                  name="password"
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
+            <div className="field is-grouped is-grouped-centered">
+              <div className="control">
+                <Button type="submit" buttonText="Sign In" className="button is-primary" />
+              </div>
+              <div className="control">
+                <Button
+                  onClick={() => navigate('/')}
+                  buttonText="Cancel"
+                  className="button is-light"
+                />
+              </div>
+            </div>
+          </form>
         </div>
-        <div>
-          <label htmlFor='password'>Password:</label>
-          <input
-            type='password'
-            autoComplete='off'
-            id='password'
-            value={formData.password}
-            name='password'
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <Button type='submit' buttonText="Sign In"/>
-          <Button onClick={() => navigate('/')} buttonText='Cancel'/>
-        </div>
-      </form>
+      </div>
     </main>
   );
 };

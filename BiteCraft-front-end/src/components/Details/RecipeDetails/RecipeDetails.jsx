@@ -6,6 +6,7 @@ import RecipeForm from "../../Forms/RecipeForm/RecipeForm";
 import CommentsAndReplies from "../Comments/Comments";
 import Header from "../../Component/Header/Header";
 import Button from "../../Component/Button/Button";
+import ProgressBar from "../../Component/ProgressBar/ProgressBar";
 
 const RecipeDetails = () => {
   const navigate = useNavigate();
@@ -69,7 +70,8 @@ const RecipeDetails = () => {
     }
   };
 
-  if (!recipe || isLoading) return <main>Loading...</main>;
+  if (!recipe || isLoading) return <ProgressBar/>
+
 
   return (
     <main>
@@ -94,7 +96,7 @@ const RecipeDetails = () => {
               </div>
               <div>
                 <h4>Instructions</h4>
-                <p>{recipe.instructions}</p>
+                <p>{recipe.instructions.map(ing => ing.instructions)}</p>
               </div>
             </div>
             {recipe.author._id === user._id && !visibleRecipeForm && (

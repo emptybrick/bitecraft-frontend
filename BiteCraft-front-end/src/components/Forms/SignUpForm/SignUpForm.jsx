@@ -37,48 +37,86 @@ const SignUpForm = () => {
   };
 
   return (
-    <main>
-      <h1>Sign Up</h1>
-      <p>{message}</p>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="username">Username:</label>
-          <input
-            type="text"
-            id="name"
-            value={username}
-            name="username"
-            onChange={handleChange}
-            required
-          />
+    <main className="section">
+      <div className="container">
+        <div className="box">
+          <h1 className="title is-3 has-text-centered">Sign Up</h1>
+          {message && (
+            <div className="notification is-danger is-light">{message}</div>
+          )}
+          <form onSubmit={handleSubmit}>
+            <div className="field">
+              <label htmlFor="username" className="label">
+                Username
+              </label>
+              <div className="control">
+                <input
+                  className="input"
+                  type="text"
+                  id="name"
+                  value={username}
+                  name="username"
+                  onChange={handleChange}
+                  required
+                  placeholder="Enter your username"
+                />
+              </div>
+            </div>
+            <div className="field">
+              <label htmlFor="password" className="label">
+                Password
+              </label>
+              <div className="control">
+                <input
+                  className="input"
+                  type="password"
+                  id="password"
+                  value={password}
+                  name="password"
+                  onChange={handleChange}
+                  required
+                  placeholder="Enter your password"
+                />
+              </div>
+            </div>
+            <div className="field">
+              <label htmlFor="confirm" className="label">
+                Confirm Password
+              </label>
+              <div className="control">
+                <input
+                  className="input"
+                  type="password"
+                  id="confirm"
+                  value={passwordConf}
+                  name="passwordConf"
+                  onChange={handleChange}
+                  required
+                  placeholder="Confirm your password"
+                />
+              </div>
+            </div>
+            <div className="field is-grouped is-grouped-centered">
+              <div className="control">
+                <button
+                  className="button is-primary"
+                  disabled={isFormInvalid()}
+                  type="submit"
+                >
+                  Sign Up
+                </button>
+              </div>
+              <div className="control">
+                <Button
+                  className="button is-light"
+                  onClick={() => navigate("/")}
+                  buttonText="Cancel"
+                />
+              </div>
+            </div>
+          </form>
         </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            name="password"
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="confirm">Confirm Password:</label>
-          <input
-            type="password"
-            id="confirm"
-            value={passwordConf}
-            name="passwordConf"
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <button disabled={isFormInvalid()}>Sign Up</button>
-          <Button onClick={() => navigate("/")} buttonText="Cancel" />
-        </div>
-      </form>
+      </div>
     </main>
   );
 };

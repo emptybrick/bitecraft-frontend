@@ -4,6 +4,7 @@ import * as biteCraftService from "../../../services/BiteCraftService";
 import { UserContext } from "../../../contexts/UserContext";
 import Button from "../../Component/Button/Button";
 import CreatableSelect from "react-select/creatable";
+import ProgressBar from "../../Component/ProgressBar/ProgressBar";
 
 const RecipeForm = ({
   onCancel = null,
@@ -55,7 +56,7 @@ const RecipeForm = ({
   };
 
   const handleChange = (event, index, type) => {
-    console.log(event)
+    console.log(event);
     if (type) {
       let updatedItem;
       if (type === "instruction") {
@@ -90,7 +91,7 @@ const RecipeForm = ({
     } else {
       setFormData({ ...formData, [event.target.name]: event.target.value });
     }
-    console.log(formData.ingredients)
+    console.log(formData.ingredients);
   };
 
   const handleInput = (e) => {
@@ -147,181 +148,232 @@ const RecipeForm = ({
   };
 
   const handleCreateIngredient = async (inputValue) => {
-    console.log("something happened", inputValue)
+    console.log("something happened", inputValue);
     // event.preventDefault();
   };
 
-  if (!ingredientsData) {
-    return <h2>Loading...</h2>;
-  }
+  if (!ingredientsData) return <ProgressBar />;
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="category-input">Category:</label>
-        <select
-          required
-          name="category"
-          id="category-input"
-          value={formData.category}
-          onChange={handleChange}
-        >
-          <option value="Main">Main Dish</option>
-          <option value="Side">Side Dish</option>
-        </select>
-      </div>
-      <div>
-        <label htmlFor="name-input">Name:</label>
-        <input
-          required
-          type="text"
-          name="name"
-          id="name-input"
-          value={formData.name}
-          onChange={handleChange}
-          onInput={handleInput}
-        />
-      </div>
-      <div>
-        <label htmlFor="details-input">Details:</label>
-        <textarea
-          type="text"
-          name="details"
-          id="details-input"
-          value={formData.details}
-          onChange={handleChange}
-          required
-        ></textarea>
-      </div>
-      <div>
-        <h3>Ingredients</h3>
-        <div className="ingredient-table-categories">
-          <h4>Unit</h4>
-          <h4>Amount/Fraction</h4>
-          <h4>Name</h4>
-        </div>
-        <label htmlFor="ingredients-input"></label>
-        {formData.ingredients.map((ingredient, index) => (
-          <div key={index}>
-            <select
-              required
-              name={`unit-${index}`}
-              id={`unit-input-${index}`}
-              value={ingredient.unit}
-              onChange={(e) => handleChange(e, index, "Unit")}
-            >
-              <option value="null">n/a</option>
-              <option value="Tsp">Tsp</option>
-              <option value="Tbsp">Tbsp</option>
-              <option value="Cup">Cup</option>
-              <option value="Pint">Pint</option>
-              <option value="Quart">Quart</option>
-              <option value="Fl Oz">Fl Oz</option>
-              <option value="Oz">Oz</option>
-              <option value="lb">lb</option>
-              <option value="g">g</option>
-              <option value="kg">kg</option>
-              <option value="mL">mL</option>
-              <option value="L">L</option>
-              <option value="Stick">Stick</option>
-            </select>
-            <input
-              className="number-input"
-              type="number"
-              required
-              name={`quantity-${index}`}
-              id={`quantity-input-${index}`}
-              value={ingredient.quantity}
-              onChange={(e) => handleChange(e, index, "Quantity")}
-              step={1}
-              min={1}
-              placeholder="1"
-              onInput={handleInputQuantity}
-            />
-            <select
-              required
-              name={`fraction-${index}`}
-              id={`fraction-input-${index}`}
-              value={ingredient.fraction}
-              onChange={(e) => handleChange(e, index, "Fraction")}
-            >
-              <option value="null">n/a</option>
-              <option value="1/8">1/8</option>
-              <option value="1/4">1/4</option>
-              <option value="3/8">3/8</option>
-              <option value="1/2">1/2</option>
-              <option value="5/8">5/8</option>
-              <option value="3/4">3/4</option>
-              <option value="7/8">7/8</option>
-            </select>
-            <CreatableSelect
-              isClearable
-              onChange={(e) => handleChange(e, index, "Name")}
-              onCreateOption={handleCreateIngredient}
-              name={`ingredients-${index}`}
-              id={`ingredients-input-${index}`}
-              options={ingredientsData.map((ing) => ({
-                label: ing.name,
-                value: ing.name,
-              }))}
-              value={
-                ingredient.name
-                  ? { value: ingredient.name, label: ingredient.name }
-                  : null
-              }
-              placeholder={"e.g. Flour, Sugar, Eggs"}
-              required
-            />
-            {formData.ingredients.length > 1 && (
-              <Button
-                type="button"
-                onClick={() => removeIngredient(index)}
-                buttonText="Remove"
-              />
-            )}
+    <div className="container">
+      <h2 className="title is-4 pt-5 has-text-centered">Recipe Form</h2>
+      <form onSubmit={handleSubmit} className="box">
+        <div className="field">
+          <label htmlFor="category-input" className="label">
+            Category:
+          </label>
+          <div className="control">
+            <div className="select">
+              <select
+                required
+                name="category"
+                id="category-input"
+                value={formData.category}
+                onChange={handleChange}
+              >
+                <option value="Main">Main Dish</option>
+                <option value="Side">Side Dish</option>
+              </select>
+            </div>
           </div>
-        ))}
-        <Button
-          type="button"
-          onClick={() => addIngredient()}
-          buttonText="Add Ingredient"
-        />
-      </div>
-      <div>
-        <label htmlFor="instructions-input">Instructions:</label>
-        {formData.instructions.map((instruction, index) => (
-          <div key={index}>
+        </div>
+        <div className="field">
+          <label htmlFor="name-input" className="label">
+            Name:
+          </label>
+          <div className="control">
+            <input
+              required
+              type="text"
+              name="name"
+              id="name-input"
+              value={formData.name}
+              onChange={handleChange}
+              onInput={handleInput}
+              className="input"
+              placeholder="Recipe name"
+            />
+          </div>
+        </div>
+        <div className="field">
+          <label htmlFor="details-input" className="label">
+            Details:
+          </label>
+          <div className="control">
             <textarea
               type="text"
-              name={`instructions-${index}`}
-              id={`instructions-input-${index}`}
-              value={instruction}
-              onChange={(e) => handleChange(e, index, "instruction")}
-              placeholder={`Step ${index + 1}:`}
+              name="details"
+              id="details-input"
+              value={formData.details}
+              onChange={handleChange}
               required
+              placeholder="Describe your recipe"
+              className="textarea"
             ></textarea>
-            {formData.instructions.length > 1 && (
-              <Button
-                type="button"
-                onClick={() => removeInstruction(index)}
-                buttonText="Remove"
-              />
-            )}
+          </div>
+        </div>
+        <div className="field">
+          <h3 className="title is-5">Ingredients</h3>
+          <div className="columns is-mobile has-text-weight-semibold mb-2">
+            <div className="column is-3">Unit</div>
+            <div className="column is-3">Amount/Fraction</div>
+            <div className="column is-4">Name</div>
+            <div className="column is-2"></div>
+          </div>
+          {formData.ingredients.map((ingredient, index) => (
+            <div className="columns is-mobile mb-2" key={index}>
+              <div className="column is-3">
+                <div className="select is-fullwidth">
+                  <select
+                    required
+                    name={`unit-${index}`}
+                    id={`unit-input-${index}`}
+                    value={ingredient.unit}
+                    onChange={(e) => handleChange(e, index, "Unit")}
+                  >
+                    <option value="null">n/a</option>
+                    <option value="Tsp">Tsp</option>
+                    <option value="Tbsp">Tbsp</option>
+                    <option value="Cup">Cup</option>
+                    <option value="Pint">Pint</option>
+                    <option value="Quart">Quart</option>
+                    <option value="Fl Oz">Fl Oz</option>
+                    <option value="Oz">Oz</option>
+                    <option value="lb">lb</option>
+                    <option value="g">g</option>
+                    <option value="kg">kg</option>
+                    <option value="mL">mL</option>
+                    <option value="L">L</option>
+                    <option value="Stick">Stick</option>
+                  </select>
+                </div>
+              </div>
+              <div className="column is-3 is-flex">
+                <input
+                  className="input mr-2"
+                  type="number"
+                  required
+                  name={`quantity-${index}`}
+                  id={`quantity-input-${index}`}
+                  value={ingredient.quantity}
+                  onChange={(e) => handleChange(e, index, "Quantity")}
+                  step={1}
+                  min={1}
+                  placeholder="1"
+                  onInput={handleInputQuantity}
+                />
+                <div className="select is-fullwidth">
+                  <select
+                    required
+                    name={`fraction-${index}`}
+                    id={`fraction-input-${index}`}
+                    value={ingredient.fraction}
+                    onChange={(e) => handleChange(e, index, "Fraction")}
+                  >
+                    <option value="null">n/a</option>
+                    <option value="1/8">1/8</option>
+                    <option value="1/4">1/4</option>
+                    <option value="3/8">3/8</option>
+                    <option value="1/2">1/2</option>
+                    <option value="5/8">5/8</option>
+                    <option value="3/4">3/4</option>
+                    <option value="7/8">7/8</option>
+                  </select>
+                </div>
+              </div>
+              <div className="column is-4">
+                <CreatableSelect
+                  isClearable
+                  onChange={(e) => handleChange(e, index, "Name")}
+                  onCreateOption={handleCreateIngredient}
+                  name={`ingredients-${index}`}
+                  id={`ingredients-input-${index}`}
+                  options={ingredientsData.map((ing) => ({
+                    label: ing.name,
+                    value: ing.name,
+                  }))}
+                  value={
+                    ingredient.name
+                      ? { value: ingredient.name, label: ingredient.name }
+                      : null
+                  }
+                  placeholder={"e.g. Flour, Sugar, Eggs"}
+                  required
+                  classNamePrefix="react-select"
+                />
+              </div>
+              <div className="column is-2 is-flex is-align-items-center">
+                {formData.ingredients.length > 1 && (
+                  <Button
+                    type="button"
+                    onClick={() => removeIngredient(index)}
+                    buttonText="Remove"
+                    className="button is-danger is-light is-small"
+                  />
+                )}
+              </div>
+            </div>
+          ))}
+          <div className="mt-2">
+            <Button
+              type="button"
+              onClick={() => addIngredient()}
+              buttonText="Add Ingredient"
+              className="button is-link is-light"
+            />
+          </div>
+        </div>
+        <div className="field"></div>
+        <label htmlFor="instructions-input" className="label">
+          Instructions:
+        </label>
+        {formData.instructions.map((instruction, index) => (
+          <div className="field is-grouped mb-2" key={index}>
+            <div className="control is-expanded">
+              <textarea
+                type="text"
+                name={`instructions-${index}`}
+                id={`instructions-input-${index}`}
+                value={instruction}
+                onChange={(e) => handleChange(e, index, "instruction")}
+                placeholder={`Step ${index + 1}:`}
+                required
+                className="textarea"
+              ></textarea>
+            </div>
+            <div className="control">
+              {formData.instructions.length > 1 && (
+                <Button
+                  type="button"
+                  onClick={() => removeInstruction(index)}
+                  buttonText="Remove"
+                  className="button is-danger is-light is-small"
+                />
+              )}
+            </div>
           </div>
         ))}
-        <Button
-          type="button"
-          onClick={() => addInstruction()}
-          buttonText="Add Step"
-        />
-      </div>
-      <Button type="submit" buttonText={buttonText} />
-      <Button
-        type="button"
-        onClick={onCancel ? onCancel : () => handleNavigation()}
-        buttonText="Cancel"
-      />
-    </form>
+        <div>
+          <Button
+            type="button"
+            onClick={() => addInstruction()}
+            buttonText="Add Step"
+          />
+        </div>
+        <div className="field is-grouped mt-4 is-grouped-right">
+          <div className="control">
+            <Button type="submit" buttonText={buttonText} />
+          </div>
+          <div className="control">
+            <Button
+              type="button"
+              onClick={onCancel ? onCancel : () => handleNavigation()}
+              buttonText="Cancel"
+            />
+          </div>
+        </div>
+      </form>
+    </div>
   );
 };
 

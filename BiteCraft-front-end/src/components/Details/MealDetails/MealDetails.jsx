@@ -7,6 +7,7 @@ import MealForm from "../../Forms/MealForm/MealForm";
 import CommentsAndReplies from "../Comments/Comments";
 import Header from "../../Component/Header/Header";
 import Button from "../../Component/Button/Button";
+import ProgressBar from "../../Component/ProgressBar/ProgressBar";
 
 const MealDetails = () => {
   const navigate = useNavigate();
@@ -90,7 +91,7 @@ const MealDetails = () => {
     }
   };
 
-  if (!meal || isLoading) return <main>Loading...</main>;
+  if (!meal || isLoading) return <ProgressBar />;
 
   return (
     <main>
