@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router';
 import { UserProvider } from './contexts/UserContext.jsx';
 import "../node_modules/bulma/css/bulma.css";
+import "./styles/_overrides.css"
 import App from './App.jsx';
 
 

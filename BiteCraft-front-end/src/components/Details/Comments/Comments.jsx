@@ -54,7 +54,7 @@ const CommentsAndReplies = ({ item, itemId, type }) => {
       itemId
     );
     newComment.author = user;
-    newComment.createdAt = new Date().toISOString();
+    newComment.createdAt = newComment.updatedAt = new Date().toISOString();
     const updatedComments = [...comments, newComment];
     const sortedComments = updatedComments.sort(
       (a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
@@ -104,7 +104,7 @@ const CommentsAndReplies = ({ item, itemId, type }) => {
       commentId
     );
     newReply.author = user;
-    newReply.createdAt = new Date();
+    newReply.createdAt = newReply.updatedAt = new Date().toISOString();
     setComments(
       comments.map((comment) =>
         comment._id === commentId ? { ...comment, reply: newReply } : comment
@@ -158,122 +158,186 @@ const CommentsAndReplies = ({ item, itemId, type }) => {
 
   return (
     <section>
-      <h2>Comments</h2>
-      {item.author._id !== user._id && (
-        <>
-          {!visibleForm && !editState.isEditing && (
-            <Button onClick={() => toggleForm(itemId)} buttonText="Comment" />
-          )}
-          {visibleForm === itemId && (
-            <CommentForm
-              handleAddComment={(formData) => {
-                handleAddComment(formData);
-                setVisibleForm(null);
-              }}
-              onCancel={() => toggleForm(itemId)}
-            />
-          )}
-        </>
-      )}
-      {comments.map((comment, idx) => (
-        <article key={idx}>
-          {editState.isEditing &&
-          editState.type === "Comment" &&
-          editState.itemId === comment._id &&
-          comment.author._id === user._id ? (
-            <div>
-              <CommentForm
-                initialText={editState.data.text}
-                handleAddComment={(formData, commentId) => {
-                  handleUpdateComment(formData, commentId);
-                }}
-                buttonText="Save"
-                onCancel={() => toggleEditMode()}
-              />
-            </div>
-          ) : (
-            <div>
-              <p>{comment.text}</p>
-              <Footer item={comment} />
-            </div>
-          )}
-          {comment.author._id === user._id &&
-            !editState.isEditing &&
-            !visibleForm && (
-              <div>
-                <Button
-                  onClick={() => handleDeleteComment(comment._id)}
-                  buttonText="Delete"
-                />
-                <Button
-                  onClick={() =>
-                    toggleEditMode("Comment", comment, comment._id)
-                  }
-                  buttonText="Edit"
-                />
-              </div>
-            )}
-          {item.author._id === user._id && (
-            <>
-              {!visibleForm && !editState.isEditing && !comment.reply && (
-                <Button
-                  onClick={() => toggleForm(comment._id)}
-                  buttonText="Reply"
-                />
-              )}
-              {visibleForm === comment._id && (
-                <CommentForm
-                  handleAddComment={(formData) => {
-                    handleAddReply(formData, comment._id);
-                    setVisibleForm(null);
-                  }}
-                  onCancel={() => toggleForm(comment._id)}
-                />
-              )}
-            </>
-          )}
-          {comment.reply && (
-            <article>
-              {editState.isEditing &&
-              editState.type === "Reply" &&
-              editState.itemId === comment._id &&
-              comment.reply.author._id === user._id ? (
-                <div>
+      <div className="container">
+        <div className="box">
+          <h2 className="subtitle is-4 has-text-centered has-text-weight-bold is-underlined">
+            Comments
+          </h2>
+          <div className="content">
+            {comments.map((comment, idx) => (
+              <article className="media ml-5 mr-5" key={idx}>
+                <div className="media-content ml-2 mr-2">
+                  <div className="box has-background-light">
+                    <div className="box">
+                      {editState.isEditing &&
+                      editState.type === "Comment" &&
+                      editState.itemId === comment._id &&
+                      comment.author._id === user._id ? (
+                        <div>
+                          <CommentForm
+                            initialText={editState.data.text}
+                            handleAddComment={(formData, commentId) => {
+                              handleUpdateComment(formData, commentId);
+                            }}
+                            buttonText="Save"
+                            onCancel={() => toggleEditMode()}
+                          />
+                        </div>
+                      ) : (
+                        <div>
+                          <p className="has-text-weight-bold">
+                            {comment.author.username}
+                          </p>
+                          <p>{comment.text}</p>
+                        </div>
+                      )}
+                      {!visibleForm &&
+                        !editState.isEditing &&
+                        !comment.reply && comment.author._id !== user._id && (
+                          <Button
+                            className="button is-small is-info is-light mt-4"
+                            onClick={() => toggleForm(comment._id)}
+                            buttonText="Reply"
+                          />
+                        )}
+                      {comment.author._id === user._id &&
+                        !editState.isEditing &&
+                        !visibleForm && (
+                          <div className="level is-align-items-center mt-6">
+                            <div className="level-left">
+                              <div className="buttons mb-0">
+                                <Button
+                                  className="button is-small is-danger is-light"
+                                  onClick={() =>
+                                    handleDeleteComment(comment._id)
+                                  }
+                                  buttonText="Delete"
+                                />
+                                <Button
+                                  onClick={() =>
+                                    toggleEditMode(
+                                      "Comment",
+                                      comment,
+                                      comment._id
+                                    )
+                                  }
+                                  className="button is-small is-warning is-light"
+                                  buttonText="Edit"
+                                />
+                              </div>
+                            </div>
+                            <div className="level-right">
+                              <Footer item={comment} />
+                            </div>
+                          </div>
+                        )}
+                    </div>
+                    {item.author._id === user._id && (
+                      <>
+                        { visibleForm === comment._id && (
+                          <div className="box">
+                          <CommentForm
+                            handleAddComment={(formData) => {
+                              handleAddReply(formData, comment._id);
+                              setVisibleForm(null);
+                            }}
+                            onCancel={() => toggleForm(comment._id)}
+                            />
+                          </div>
+                        )}
+                      </>
+                    )}
+                    {comment.reply && (
+                      <article className="media ml-6">
+                        <div className="media-content ml-4">
+                          <div className="box">
+                            {editState.isEditing &&
+                            editState.type === "Reply" &&
+                            editState.itemId === comment._id &&
+                            comment.reply.author._id === user._id ? (
+                              <div>
+                                <CommentForm
+                                  initialText={editState.data.text}
+                                  handleAddComment={(formData) =>
+                                    handleUpdateReply(formData, comment._id)
+                                  }
+                                  buttonText="Save"
+                                  onCancel={() => toggleEditMode()}
+                                />
+                              </div>
+                            ) : (
+                              <div>
+                                <p className="has-text-weight-bold">
+                                  {comment.reply.author.username}
+                                </p>
+                                <p>{comment.reply.text}</p>
+                              </div>
+                            )}
+                            {comment.reply.author._id === user._id &&
+                              !editState.isEditing &&
+                              !visibleForm && (
+                                <div className="level is-align-items-center mt-4">
+                                  <div className="level-left">
+                                    <div className="buttons mb-0">
+                                      <Button
+                                        className="button is-small is-danger is-light"
+                                        onClick={() =>
+                                          handleDeleteReply(comment._id)
+                                        }
+                                        buttonText="Delete"
+                                      />
+                                      <Button
+                                        className="button is-small is-warning is-light"
+                                        onClick={() =>
+                                          toggleEditMode(
+                                            "Reply",
+                                            comment.reply,
+                                            comment._id
+                                          )
+                                        }
+                                        buttonText="Edit"
+                                      />
+                                    </div>
+                                  </div>
+                                  <div className="level-right">
+                                    <Footer item={comment.reply} />
+                                  </div>
+                                </div>
+                              )}
+                          </div>
+                        </div>
+                      </article>
+                    )}
+                  </div>
+                </div>
+              </article>
+            ))}
+            {item.author._id !== user._id && (
+              <>
+                { !visibleForm && !editState.isEditing && (
+                  <div className="has-text-centered">
+                  <Button
+                    onClick={() => toggleForm(itemId)}
+                    buttonText="Add New Comment"
+                    className="button is-medium is-info"
+                  /></div>
+                )}
+                { visibleForm === itemId && (
+                  <div className="box has-background-light">
                   <CommentForm
-                    initialText={editState.data.text}
-                    handleAddComment={(formData) =>
-                      handleUpdateReply(formData, comment._id)
-                    }
-                    buttonText="Save"
-                    onCancel={() => toggleEditMode()}
-                  />
-                </div>
-              ) : (
-                <div>
-                  <p>{comment.reply.text}</p>
-                  <Footer item={comment.reply} />
-                </div>
-              )}
-              {comment.reply.author._id === user._id &&
-                !editState.isEditing &&
-                !visibleForm && (
-                  <div>
-                    <Button
-                      onClick={() => handleDeleteReply(comment._id)}
-                      buttonText="Delete"
-                    />
-                    <Button
-                      onClick={() =>
-                        toggleEditMode("Reply", comment.reply, comment._id)
-                      }
-                      buttonText="Edit"
+                    handleAddComment={(formData) => {
+                      handleAddComment(formData);
+                      setVisibleForm(null);
+                    }}
+                    onCancel={() => toggleForm(itemId)}
                     />
                   </div>
                 )}
-            </article>
-          )}
-        </article>
-      ))}
+              </>
+            )}
+          </div>
+        </div>
+      </div>
     </section>
   );
 };

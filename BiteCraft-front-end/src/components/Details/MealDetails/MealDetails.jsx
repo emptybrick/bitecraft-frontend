@@ -66,7 +66,8 @@ const MealDetails = () => {
     if (!formData.main || !formData.side1 || !formData.side2) return;
     try {
       await biteCraftService.Update("Meal", formData, mealId);
-      setMeal(formData);
+      const mealToShow = await biteCraftService.Show("Meal", mealId);
+      setMeal(mealToShow);
       toggleMealForm();
     } catch (error) {
       console.log(error);
@@ -95,7 +96,7 @@ const MealDetails = () => {
 
   return (
     <main>
-      <section>
+      <section className="section">
         {visibleMealForm ? (
           <MealForm
             initialData={meal}
@@ -110,50 +111,117 @@ const MealDetails = () => {
         ) : (
           <>
             <Header item={meal} />
-            <h3>Recipes:</h3>
-            <div>
-              Main Dish:
-              {meal.main ? (
-                <Link key={meal.main._id} to={`/recipes/${meal.main._id}`}>
-                  {meal.main.name}
-                </Link>
-              ) : (
-                "Recipe is no longer available."
-              )}
+            <div className="container mt-2">
+              <div className="box">
+                <h4 className="subtitle is-3 mb-5 has-text-weight-bold has-text-centered">
+                  Recipes:
+                </h4>
+                <div className="content">
+                  <div className="content">
+                    <div>
+                      <span className="has-text-weight-semibold is-size-5">
+                        Main Dish:{" "}
+                      </span>
+                      {meal.main ? (
+                        <Link
+                          key={meal.main._id}
+                          to={`/recipes/${meal.main._id}`}
+                          className="has-text-link has-text-weight-semibold is-size-5"
+                        >
+                          {meal.main.name}
+                        </Link>
+                      ) : (
+                        <span className="has-text-grey-light">
+                          Recipe is no longer available.
+                        </span>
+                      )}
+                    </div>
+                    <div className="mt-1">
+                      {meal.main ? (
+                        <p className="is-size-6 has-text-grey">
+                          {meal.main.details}
+                        </p>
+                      ) : (
+                        ""
+                      )}
+                    </div>
+                  </div>
+                  <div className="content">
+                    <div>
+                      <span className="has-text-weight-semibold is-size-5">
+                        Side Dish:{" "}
+                      </span>
+                      {meal.side1 ? (
+                        <Link
+                          key={meal.side1._id}
+                          to={`/recipes/${meal.side1._id}`}
+                          className="has-text-link has-text-weight-semibold is-size-5"
+                        >
+                          {meal.side1.name}
+                        </Link>
+                      ) : (
+                        <span className="has-text-grey-light">
+                          Recipe is no longer available.
+                        </span>
+                      )}
+                      <div className="mt-1">
+                        {meal.side1 ? (
+                          <p className="is-size-6 has-text-grey">
+                            {meal.side1.details}
+                          </p>
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="content">
+                    <div>
+                      <span className="has-text-weight-semibold is-size-5">
+                        Side Dish:{" "}
+                      </span>
+                      {meal.side2 ? (
+                        <Link
+                          key={meal.side2._id}
+                          to={`/recipes/${meal.side2._id}`}
+                          className="has-text-link has-text-weight-semibold is-size-5"
+                        >
+                          {meal.side2.name}
+                        </Link>
+                      ) : (
+                        <span className="has-text-grey-light">
+                          Recipe is no longer available.
+                        </span>
+                      )}
+                      <div className="mt-1">
+                        {meal.side2 ? (
+                          <p className="is-size-6 has-text-grey">
+                            {meal.side2.details}
+                          </p>
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {meal.author._id === user._id && !visibleMealForm && (
+                  <div className="field mt-4 is-grouped is-grouped-right">
+                    <Button onClick={handleDeleteMeal} buttonText="Delete" />
+                    <Button onClick={toggleMealForm} buttonText="Edit" />
+                  </div>
+                )}
+                {!mealsInCollection.includes(mealId) && (
+                  <div className="mt-4">
+                    <Button
+                      onClick={handleAddToCollection}
+                      buttonText="Add to Collection"
+                    />
+                  </div>
+                )}
+              </div>
             </div>
-            <div>
-              Side Dish:
-              {meal.side1 ? (
-                <Link key={meal.side1._id} to={`/recipes/${meal.side1._id}`}>
-                  {meal.side1.name}
-                </Link>
-              ) : (
-                "Recipe is no longer available."
-              )}
-            </div>
-            <div>
-              Side Dish:
-              {meal.side2 ? (
-                <Link key={meal.side2._id} to={`/recipes/${meal.side2._id}`}>
-                  {meal.side2.name}
-                </Link>
-              ) : (
-                "Recipe is no longer available."
-              )}
-            </div>
-            {meal.author._id === user._id && !visibleMealForm && (
-              <>
-                <Button onClick={handleDeleteMeal} buttonText="Delete" />
-                <Button onClick={toggleMealForm} buttonText="Edit" />
-              </>
-            )}
           </>
-        )}
-        {!mealsInCollection.includes(mealId) && (
-          <Button
-            onClick={handleAddToCollection}
-            buttonText="Add to Collection"
-          />
         )}
       </section>
       <CommentsAndReplies item={meal} itemId={mealId} type={"Meal"} />

@@ -70,12 +70,11 @@ const RecipeDetails = () => {
     }
   };
 
-  if (!recipe || isLoading) return <ProgressBar/>
-
+  if (!recipe || isLoading || !user) return <ProgressBar />;
 
   return (
     <main>
-      <section>
+      <section className="section">
         {visibleRecipeForm ? (
           <RecipeForm
             initialData={recipe}
@@ -88,30 +87,53 @@ const RecipeDetails = () => {
         ) : (
           <>
             <Header item={recipe} />
-            <div>
-              <div>
-                {/* need to map through these */}
-                <h4>Ingredients</h4>
-                <p>{recipe.ingredients.map(ing => ing.name)}</p>
+            <div className="container mt-2">
+              <div className="columns is-desktop">
+                <div className="column is-one-third">
+                  <div className="box has-text-centered">
+                    <h4 className="subtitle is-5 mb-3 has-text-weight-bold is-underlined">
+                      Ingredients
+                    </h4>
+                    <ul className="content has-text-left">
+                      {recipe.ingredients.map((ing, idx) => (
+                        <li key={idx} className="mb-2">
+                            {`${ing.quantity} ${ing.unit} ${ing.name}`}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+                <div className="column">
+                  <div className="box has-text-centered">
+                    <h4 className="subtitle is-5 mb-3 has-text-weight-bold is-underlined">
+                      Instructions
+                    </h4>
+                    <ol className="content has-text-left pl-4 ml-2">
+                      {recipe.instructions.map((instruction, idx) => (
+                        <li key={idx} className="mb-2">
+                          <span className="is-size-6">{instruction}</span>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                </div>
               </div>
-              <div>
-                <h4>Instructions</h4>
-                <p>{recipe.instructions.map(ing => ing.instructions)}</p>
-              </div>
+              {recipe.author._id === user._id && !visibleRecipeForm && (
+                <div className="field mt-4 is-grouped is-grouped-right">
+                  <Button onClick={handleDeleteRecipe} buttonText="Delete" />
+                  <Button onClick={toggleRecipeForm} buttonText="Edit" />
+                </div>
+              )}
+              {!recipesInCollection.includes(recipeId) && (
+                <div className="mt-4">
+                  <Button
+                    onClick={handleAddToCollection}
+                    buttonText="Add to Collection"
+                  />
+                </div>
+              )}
             </div>
-            {recipe.author._id === user._id && !visibleRecipeForm && (
-              <>
-                <Button onClick={handleDeleteRecipe} buttonText="Delete" />
-                <Button onClick={toggleRecipeForm} buttonText="Edit" />
-              </>
-            )}
           </>
-        )}
-        {!recipesInCollection.includes(recipeId) && (
-          <Button
-            onClick={handleAddToCollection}
-            buttonText="Add to Collection"
-          />
         )}
       </section>
       <CommentsAndReplies item={recipe} itemId={recipeId} type={"Recipe"} />

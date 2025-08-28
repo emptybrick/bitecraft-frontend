@@ -57,17 +57,12 @@ const MealCollection = () => {
           Welcome to {user.username}'s Meals Collection
         </h1>
       </div>
-      {/* <div className="has-text-centered mt-4">
-        <Link to="/meals/new">
-          <Button buttonText="Create New Meal" />
-        </Link>
-      </div> */}
       <div className="container">
         <div className="box">
-          <div className="columns is-multiline is-centered mt-2 has-text-centered">
+          <div className="columns is-multiline mt-2 has-text-centered is-vcentered">
             {meals.length > 0 ? (
               meals.map((meal, idx) => (
-                <div className="column is-one-quarter" key={idx}>
+                <div className="column is-one-third" key={idx}>
                   <div
                     className={`modal ${
                       activeModal === `modal-${idx}` ? "is-active" : ""
@@ -149,16 +144,16 @@ const MealCollection = () => {
                             )}
                           </div>
                         </div>
-                        <div className="level">
-                          <p className="has-text-left pt-2">{`Total Comments: ${meal.comments.length}`}</p>
-                          <p className="has-text-right pt-2">{`${
+                      </section>
+                      <footer className="modal-card-foot pt-4 is-flex-direction-column">
+                        <div className="level mb-2 is-gap-8">
+                          <p className="has-text-left pt-2 mr-6 pr-6">{`Total Comments: ${meal.comments.length}`}</p>
+                          <p className="has-text-right pt-2 ml-6 pl-6">{`${
                             meal.author.username
                           } posted on ${new Date(
                             meal.createdAt
                           ).toLocaleDateString()}`}</p>
                         </div>
-                      </section>
-                      <footer className="modal-card-foot is-justify-content-center pt-2">
                         <div className="buttons">
                           <Button
                             onClick={(e) => handleCloseQuickView(e)}
@@ -183,7 +178,9 @@ const MealCollection = () => {
                         <div className="subtitle is-4 mb-2 pt-2">
                           {meal.name}
                         </div>
-                        <div className="is-6 pl-2 pr-2">{meal.details}</div>
+                        <div className="is-6 pl-2 pr-2 card-content-override-details">
+                          {meal.details}
+                        </div>
                         <div className="is-8 pt-3">
                           Created by:{" "}
                           <span className="has-text-weight-semibold">
@@ -191,9 +188,9 @@ const MealCollection = () => {
                           </span>
                         </div>
                       </div>
-                      <div className="buttons is-justify-content-center pb-3 mt-2 is-gapless">
+                      <div className="buttons is-grouped are-small is-centered mt-2">
                         <button
-                          className="button modal-trigger is-info mr-1"
+                          className="button modal-trigger is-info is-light"
                           id={`modal-trigger-${idx}`}
                           data-target={`modal-${idx}`}
                           onClick={(e) => handleShowQuickView(e)}
@@ -201,7 +198,10 @@ const MealCollection = () => {
                           Quick View
                         </button>
                         <Link className="ml-1" to={`/meals/${meal._id}`}>
-                          <Button buttonText="Go to Meal" />
+                          <Button
+                            className="button is-primary is-light"
+                            buttonText="Go to Meal"
+                          />
                         </Link>
                       </div>
                     </div>

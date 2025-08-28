@@ -1,0 +1,6 @@
+.card-content-override-details {
+  height: 75px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overflow-wrap: break-word;
+}

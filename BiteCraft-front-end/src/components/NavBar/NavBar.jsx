@@ -45,22 +45,13 @@ const NavBar = () => {
               <div className="navbar-item has-dropdown is-hoverable">
                 <a className="navbar-link">View</a>
                 <div className="navbar-dropdown">
-                  <Link
-                    to="/recipes"
-                    className="navbar-item"
-                  >
+                  <Link to="/recipes" className="navbar-item">
                     All Recipes
                   </Link>
-                  <Link
-                    to="/meals"
-                    className="navbar-item"
-                  >
+                  <Link to="/meals" className="navbar-item">
                     All Meals
                   </Link>
-                  <Link
-                    to={`/${user._id}/planner`}
-                    className="navbar-item"
-                  >
+                  <Link to={`/${user._id}/planner`} className="navbar-item">
                     Meal Planner
                   </Link>
                 </div>
@@ -68,26 +59,19 @@ const NavBar = () => {
               <div className="navbar-item has-dropdown is-hoverable">
                 <a className="navbar-link">Create</a>
                 <div className="navbar-dropdown">
-                  <Link
-                    to={`/recipes/new`}
-                    className="navbar-item"
-                  >
+                  <Link to={`/recipes/new`} className="navbar-item">
                     Create New Recipe
                   </Link>
-                  <Link
-                    to={`/meals/new`}
-                    className="navbar-item"
-                  >
+                  <Link to={`/meals/new`} className="navbar-item">
                     Create New Meal
                   </Link>
                 </div>
               </div>
             </div>
             <div className="navbar-end is-active">
-              <a className="navbar-item"
-                  onClick={handleSignOut}>
-                 Sign Out
-              </a>
+              <Link to="/" className="navbar-item" onClick={handleSignOut}>
+                Sign Out
+              </Link>
             </div>
           </div>
         ) : (

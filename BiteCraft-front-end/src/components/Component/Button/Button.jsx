@@ -1,6 +1,5 @@
-const Button = ({ onClick, buttonText = "Submit", type = "button" }) => {
+const Button = ({ onClick, buttonText = "Submit", type = "button", className="" }) => {
   const addButtons = [
-    "Add Step",
     "Add Ingredient",
     "Add",
     "Add to Collection",
@@ -17,27 +16,27 @@ const Button = ({ onClick, buttonText = "Submit", type = "button" }) => {
     "Cancel",
     "Remove from Collection",
   ];
-  if (addButtons.includes(buttonText)) {
+  if (addButtons.includes(buttonText) && !className) {
     return (
-      <button className="button is-primary" onClick={onClick} type={type}>
+      <button className="button has-background-primary-45" onClick={onClick} type={type}>
         {buttonText}
       </button>
     );
-  } else if (deleteButtons.includes(buttonText)) {
+  } else if (deleteButtons.includes(buttonText) && !className) {
     return (
-      <button className="button is-danger" onClick={onClick} type={type}>
+      <button className="button has-background-danger-75" onClick={onClick} type={type}>
         {buttonText}
       </button>
     );
-  } else if (editButtons.includes(buttonText)) {
+  } else if (editButtons.includes(buttonText) && !className) {
         return (
-    <button className="button is-warning" onClick={onClick} type={type}>
+    <button className="button has-background-warning-75" onClick={onClick} type={type}>
       {buttonText}
           </button>
         );
   } else {
         return (
-    <button className="button is-success" onClick={onClick} type={type}>
+    <button className={className} onClick={onClick} type={type}>
       {buttonText}
           </button>
       );

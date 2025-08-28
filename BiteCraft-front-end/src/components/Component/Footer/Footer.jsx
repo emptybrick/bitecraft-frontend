@@ -1,12 +1,16 @@
-const Footer = ({item}) => {
-    return (
-      <footer>
-        <p>
-          {`${item.author.username} posted on
+const Footer = ({ item }) => {
+  return (
+    <div>
+      <p className="has-text-right has-text-grey mb-0">
+        {`Posted on
                 ${new Date(item.createdAt).toLocaleDateString()}`}
-        </p>
-      </footer>
-    );
+      </p>
+      <p className="has-text-right has-text-grey">
+        {`Last Updated on
+                ${new Date(item.updatedAt).toLocaleDateString()}`}
+      </p>
+    </div>
+  );
 };
 
-export default Footer
+export default Footer;

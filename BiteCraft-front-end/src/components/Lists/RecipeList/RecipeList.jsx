@@ -72,7 +72,7 @@ const RecipeList = () => {
                   <td>
                     <Link
                       to={`/recipes/${recipe._id}`}
-                      className="has-text-link"
+                      className="has-text-info-40 has-text-weight-bold"
                     >
                       {recipe.name}
                     </Link>

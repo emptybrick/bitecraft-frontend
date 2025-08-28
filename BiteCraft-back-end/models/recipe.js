@@ -40,6 +40,7 @@ const recipeSchema = new mongoose.Schema(
         ingredients: [ {
             name: String,
             quantity: Number,
+            fraction: String,
             unit: String,
         } ],
         category: {

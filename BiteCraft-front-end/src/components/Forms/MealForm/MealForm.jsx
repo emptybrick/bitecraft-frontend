@@ -4,6 +4,7 @@ import * as biteCraftService from "../../../services/BiteCraftService";
 import { UserContext } from "../../../contexts/UserContext";
 import Button from "../../Component/Button/Button";
 import ProgressBar from "../../Component/ProgressBar/ProgressBar";
+import Select from "react-select";
 
 const MealForm = ({
   onCancel,
@@ -48,6 +49,9 @@ const MealForm = ({
         setSideRecipes(sides);
         setMainRecipes(mains);
       }
+      if (initialData) {
+        setFormData(initialData);
+      }
       setIsLoading(false);
     };
     if (user) fetchAllRecipes();
@@ -59,6 +63,10 @@ const MealForm = ({
 
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
+  };
+
+  const handleSelect = (event, option) => {
+    setFormData({ ...formData, [option]: event.value });
   };
 
   const handleSubmit = async (event) => {
@@ -76,7 +84,7 @@ const MealForm = ({
     }
   };
 
-  if (isLoading) return <ProgressBar />
+  if (isLoading) return <ProgressBar />;
 
   return (
     <>
@@ -113,8 +121,8 @@ const MealForm = ({
           </article>
         </div>
       ) : (
-          <div className="container">
-            <h2 className="title is-4 pt-5 has-text-centered">Meal Form</h2>
+        <div className="container">
+          <h2 className="title is-4 pt-5 has-text-centered">Meal Form</h2>
           <form onSubmit={handleSubmit} className="box mt-4">
             <div className="field">
               <label className="label" htmlFor="name-input">
@@ -155,24 +163,28 @@ const MealForm = ({
                 Main Dish
               </label>
               <div className="control">
-                <div className="select is-fullwidth">
-                  <select
-                    required
-                    name="main"
-                    id="main-input"
-                    value={formData.main}
-                    onChange={handleChange}
-                  >
-                    <option value="" disabled>
-                      Select a Recipe
-                    </option>
-                    {mainRecipes.map((recipe, idx) => (
-                      <option key={idx} value={recipe._id}>
-                        {recipe.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <Select
+                  className="is-fullwidth"
+                  isClearable
+                  onChange={(e) => handleSelect(e, "main")}
+                  name="main"
+                  id="main-input"
+                  options={mainRecipes.map((recipe) => ({
+                    label: recipe.name,
+                    value: recipe._id,
+                  }))}
+                  defaultValue={
+                    formData.main
+                      ? {
+                          value: formData.main._id,
+                          label: formData.main.name,
+                        }
+                      : null
+                  }
+                  placeholder="Select a Recipe"
+                  required
+                  classNamePrefix="react-select"
+                />
               </div>
             </div>
             <div className="field">
@@ -180,24 +192,28 @@ const MealForm = ({
                 Side Dish 1
               </label>
               <div className="control">
-                <div className="select is-fullwidth">
-                  <select
-                    required
-                    name="side1"
-                    id="side1-input"
-                    value={formData.side1}
-                    onChange={handleChange}
-                  >
-                    <option value="" disabled>
-                      Select a Recipe
-                    </option>
-                    {sideRecipes.map((recipe, idx) => (
-                      <option key={idx} value={recipe._id}>
-                        {recipe.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <Select
+                  className="is-fullwidth"
+                  isClearable
+                  onChange={(e) => handleSelect(e, "side1")}
+                  name="side1"
+                  id="side1-input"
+                  options={sideRecipes.map((recipe) => ({
+                    label: recipe.name,
+                    value: recipe._id,
+                  }))}
+                  defaultValue={
+                    formData.side1
+                      ? {
+                          value: formData.side1._id,
+                          label: formData.side1.name,
+                        }
+                      : null
+                  }
+                  placeholder="Select a Recipe"
+                  required
+                  classNamePrefix="react-select"
+                />
               </div>
             </div>
             <div className="field">
@@ -205,24 +221,28 @@ const MealForm = ({
                 Side Dish 2
               </label>
               <div className="control">
-                <div className="select is-fullwidth">
-                  <select
-                    required
-                    name="side2"
-                    id="side2-input"
-                    value={formData.side2}
-                    onChange={handleChange}
-                  >
-                    <option value="" disabled>
-                      Select a Recipe
-                    </option>
-                    {sideRecipes.map((recipe, idx) => (
-                      <option key={idx} value={recipe._id}>
-                        {recipe.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <Select
+                  className="is-fullwidth"
+                  isClearable
+                  onChange={(e) => handleSelect(e, "side2")}
+                  name="side2"
+                  id="side2-input"
+                  options={sideRecipes.map((recipe) => ({
+                    label: recipe.name,
+                    value: recipe._id,
+                  }))}
+                  defaultValue={
+                    formData.side2
+                      ? {
+                          value: formData.side2._id,
+                          label: formData.side2.name,
+                        }
+                      : null
+                  }
+                  placeholder="Select a Recipe"
+                  required
+                  classNamePrefix="react-select"
+                />
               </div>
             </div>
             <div className="field is-grouped is-grouped-right mt-5">
@@ -230,7 +250,7 @@ const MealForm = ({
                 <Button type="Submit" buttonText={buttonText} />
               </div>
               <div className="control">
-                <Button
+                  <Button
                   type="button"
                   onClick={onCancel ? onCancel : () => handleNavigation()}
                   buttonText="Cancel"

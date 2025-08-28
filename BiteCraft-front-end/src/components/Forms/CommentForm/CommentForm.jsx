@@ -20,17 +20,24 @@ const CommentForm = ({
 
   return (
     <form onSubmit={handleSubmit}>
-      <label htmlFor="text-input">Your comment:</label>
-      <textarea
-        name="text"
-        id="text-input"
-        value={formData.text}
-        onChange={handleChange}
-        required
-        placeholder="Enter your comment here"
-      ></textarea>
-      <Button type="submit" buttonText={buttonText} />
-      <Button type="button" onClick={onCancel} buttonText="Cancel" />
+      <div className="field">
+        <label htmlFor="text-input"></label>
+        <div className="control">
+          <textarea
+            className="textarea"
+            name="text"
+            id="text-input"
+            value={formData.text}
+            onChange={handleChange}
+            required
+            placeholder="Enter your comment here"
+          ></textarea>
+        </div>
+      </div>
+      <div className="field is-grouped is-grouped-center">
+        <Button type="submit" buttonText={buttonText} className="button has-background-primary-40" />
+        <Button type="button" onClick={onCancel} buttonText="Cancel" className="button has-background-danger-80" />
+      </div>
     </form>
   );
 };

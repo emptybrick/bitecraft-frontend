@@ -56,7 +56,6 @@ const RecipeForm = ({
   };
 
   const handleChange = (event, index, type) => {
-    console.log(event);
     if (type) {
       let updatedItem;
       if (type === "instruction") {
@@ -314,12 +313,12 @@ const RecipeForm = ({
               </div>
             </div>
           ))}
-          <div className="mt-2">
+          <div className="has-text-centered mt-2">
             <Button
               type="button"
               onClick={() => addIngredient()}
               buttonText="Add Ingredient"
-              className="button is-link is-light"
+              className="button is-info is-light"
             />
           </div>
         </div>
@@ -355,6 +354,7 @@ const RecipeForm = ({
         ))}
         <div>
           <Button
+            className="button is-info is-light"
             type="button"
             onClick={() => addInstruction()}
             buttonText="Add Step"

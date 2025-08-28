@@ -16,8 +16,8 @@ const Landing = () => {
           Join our community to save your culinary creations, explore new dishes, and connect with fellow food lovers!
         </p>
         <div className="buttons is-centered">
-          <a href="/signup" className="button is-primary is-medium">Sign Up</a>
-          <a href="/login" className="button is-medium">Sign In</a>
+          <a href="/sign-up" className="button is-primary is-medium">Sign Up</a>
+          <a href="/sign-in" className="button is-medium">Sign In</a>
         </div>
       </div>
     </main>

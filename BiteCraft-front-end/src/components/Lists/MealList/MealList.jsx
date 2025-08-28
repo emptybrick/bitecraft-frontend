@@ -54,7 +54,10 @@ const MealList = () => {
                 .map((meal) => (
                   <tr key={meal._id}>
                     <td>
-                      <Link to={`/meals/${meal._id}`} className="has-text-link">
+                      <Link
+                        to={`/meals/${meal._id}`}
+                        className="has-text-info-40 has-text-weight-bold"
+                      >
                         {meal.name}
                       </Link>
                     </td>
