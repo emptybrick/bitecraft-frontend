@@ -250,7 +250,7 @@ const MealForm = ({
                 <Button type="Submit" buttonText={buttonText} />
               </div>
               <div className="control">
-                  <Button
+                <Button
                   type="button"
                   onClick={onCancel ? onCancel : () => handleNavigation()}
                   buttonText="Cancel"

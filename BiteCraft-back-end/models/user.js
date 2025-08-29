@@ -11,29 +11,24 @@ const userSchema = new mongoose.Schema({
   },
   recipesCollection: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Recipe' } ],
   mealsCollection: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Meal' } ],
-  mealPlan: [
-    {
-    meals: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Meal' } ],
-      groceryList: {
-        week1: {
-          meals: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Meal' } ],
-          list: [ String ]
-        },
-        week2: {
-          meals: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Meal' } ],
-          list: [ String ]
-        },
-        week3: {
-          meals: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Meal' } ],
-          list: [ String ]
-        },
-        week4: {
-          meals: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Meal' } ],
-          list: [ String ]
-        },
-      },
-    }
-  ]
+  mealPlan: {
+    week1: {
+      meals: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Meal' } ],
+      list: [ String ]
+    },
+    week2: {
+      meals: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Meal' } ],
+      list: [ String ]
+    },
+    week3: {
+      meals: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Meal' } ],
+      list: [ String ]
+    },
+    week4: {
+      meals: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Meal' } ],
+      list: [ String ]
+    },
+  }
 });
 
 userSchema.set('toJSON', {
@@ -44,4 +39,4 @@ userSchema.set('toJSON', {
 
 const User = mongoose.model('User', userSchema);
 
-module.exports = User
+module.exports = User;

@@ -97,7 +97,7 @@ const RecipeDetails = () => {
                     <ul className="content has-text-left">
                       {recipe.ingredients.map((ing, idx) => (
                         <li key={idx} className="mb-2">
-                            {`${ing.quantity} ${ing.unit} ${ing.name}`}
+                          {`${ing.quantity} ${ing.unit} ${ing.name}`}
                         </li>
                       ))}
                     </ul>
@@ -125,8 +125,9 @@ const RecipeDetails = () => {
                 </div>
               )}
               {!recipesInCollection.includes(recipeId) && (
-                <div className="mt-4">
+                <div className="mt-4 has-text-centered">
                   <Button
+                    className="button has-background-primary-45 is-medium"
                     onClick={handleAddToCollection}
                     buttonText="Add to Collection"
                   />

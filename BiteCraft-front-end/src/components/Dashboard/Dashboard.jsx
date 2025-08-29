@@ -20,10 +20,10 @@ const Dashboard = () => {
       }
     };
     if (user) fetchUsers();
-  }, [ user ]);
-  
+  }, [user]);
+
   if (!user) return <ProgressBar />;
-  
+
   return (
     <main className="section">
       <div className="container">
@@ -87,6 +87,15 @@ const Dashboard = () => {
                 </div>
               </div>
             </div>
+          </div>
+          <div className="box">
+            <h2 className="title is-5 mb-4">Meal Plan</h2>
+            <Link
+              to={`/${user._id}/planner`}
+              className="button has-background-link-80 is-fullwidth"
+            >
+              Create a Meal Plan with the Meal Planner
+            </Link>
           </div>
         </div>
       </div>

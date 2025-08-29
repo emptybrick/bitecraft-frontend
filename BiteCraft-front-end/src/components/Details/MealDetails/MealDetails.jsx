@@ -212,8 +212,9 @@ const MealDetails = () => {
                   </div>
                 )}
                 {!mealsInCollection.includes(mealId) && (
-                  <div className="mt-4">
+                  <div className="mt-4 has-text-centered">
                     <Button
+                      className="button has-background-primary-45 is-medium"
                       onClick={handleAddToCollection}
                       buttonText="Add to Collection"
                     />

@@ -3,8 +3,6 @@ import axios from 'axios';
 const Meals_URL = `${ import.meta.env.VITE_BACK_END_SERVER_URL }/meals`;
 const Recipes_URL = `${ import.meta.env.VITE_BACK_END_SERVER_URL }/recipes`;
 const TRIMMED_URL = `${ import.meta.env.VITE_BACK_END_SERVER_URL }`;
-// const RecipeCollection_URL = `${ import.meta.env.VITE_BACK_END_SERVER_URL }/collections/:userId/recipes-collection`;
-// const MealsCollection_URL = `${ import.meta.env.VITE_BACK_END_SERVER_URL }/collections/:userId/meals-collection`;
 
 const Index = async (type, userId) => {
     let BASE_URL = null;
@@ -35,6 +33,9 @@ const Show = async (type, itemId) => {
     try {
         if (type === "Meal") { BASE_URL = Meals_URL; }
         else if (type === "Recipe") { BASE_URL = Recipes_URL; }
+        else if (type === "MealPlan") {
+            BASE_URL = `${ TRIMMED_URL }/${ itemId }/planner`;
+        }
         else { throw new Error("Type not set"); }
         const res = await axios.get(`${ BASE_URL }/${ itemId }`, {
             headers: { Authorization: `Bearer ${ localStorage.getItem("token") }` },
@@ -67,6 +68,8 @@ const Create = async (type, formData, itemId, commentId) => {
             case "MealReply":
                 BASE_URL = `${ Meals_URL }/${ itemId }/comments/${ commentId }/reply`;
                 break;
+            case "MealPlan":
+                BASE_URL = `${ TRIMMED_URL }/${ itemId }/planner`;
             default:
                 throw new Error("Type not set");
         }
@@ -101,6 +104,8 @@ const Delete = async (type, itemId, commentId) => {
             case "MealReply":
                 BASE_URL = `${ Meals_URL }/${ itemId }/comments/${ commentId }/reply`;
                 break;
+            case "MealPlan":
+                BASE_URL = `${ TRIMMED_URL }/${ itemId }/planner`;
             default:
                 throw new Error("Type not set");
         }

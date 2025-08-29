@@ -58,7 +58,7 @@ const MealCollection = () => {
         </h1>
       </div>
       <div className="container">
-        <div className="box">
+
           <div className="columns is-multiline mt-2 has-text-centered is-vcentered">
             {meals.length > 0 ? (
               meals.map((meal, idx) => (
@@ -162,9 +162,10 @@ const MealCollection = () => {
                           {user._id === params.userId &&
                             meal.author._id !== user._id && (
                               <Button
-                                onClick={() =>
-                                  handleRemoveFromCollection(meal._id)
-                                }
+                                onClick={(e) => {
+                                  handleCloseQuickView(e);
+                                  handleRemoveFromCollection(meal._id);
+                                }}
                                 buttonText="Remove from Collection"
                               />
                             )}
@@ -208,15 +209,29 @@ const MealCollection = () => {
                   </div>
                 </div>
               ))
-            ) : (
-              <div className="column is-full">
-                <h2 className="title is-4 has-text-grey-light">
-                  Meals Collection is Currently Empty!
-                </h2>
+          ) : (
+              <div className="container">
+              <div className="notification is-warning is-light has-text-centered">
+                <p className="is-size-4">
+                  There are no meals in your collection!
+                </p>
+                <p className="is-size-5 mt-2">
+                  <span role="img" aria-label="chef">
+                    👨‍🍳
+                  </span>{" "}
+                  Add meals from other users or create your own to get started!
+                </p>
+                <Link className="ml-1" to={`/meals`}>
+                  <Button
+                    className="button is-link is-light mt-4 is-medium"
+                    buttonText="View All Meals"
+                  />
+                </Link>
+                </div>
               </div>
             )}
           </div>
-        </div>
+
       </div>
     </main>
   );

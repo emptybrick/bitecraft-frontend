@@ -193,7 +193,8 @@ const CommentsAndReplies = ({ item, itemId, type }) => {
                       )}
                       {!visibleForm &&
                         !editState.isEditing &&
-                        !comment.reply && comment.author._id !== user._id && (
+                        !comment.reply &&
+                        comment.author._id !== user._id && (
                           <Button
                             className="button is-small is-info is-light mt-4"
                             onClick={() => toggleForm(comment._id)}
@@ -234,14 +235,14 @@ const CommentsAndReplies = ({ item, itemId, type }) => {
                     </div>
                     {item.author._id === user._id && (
                       <>
-                        { visibleForm === comment._id && (
+                        {visibleForm === comment._id && (
                           <div className="box">
-                          <CommentForm
-                            handleAddComment={(formData) => {
-                              handleAddReply(formData, comment._id);
-                              setVisibleForm(null);
-                            }}
-                            onCancel={() => toggleForm(comment._id)}
+                            <CommentForm
+                              handleAddComment={(formData) => {
+                                handleAddReply(formData, comment._id);
+                                setVisibleForm(null);
+                              }}
+                              onCancel={() => toggleForm(comment._id)}
                             />
                           </div>
                         )}
@@ -314,22 +315,23 @@ const CommentsAndReplies = ({ item, itemId, type }) => {
             ))}
             {item.author._id !== user._id && (
               <>
-                { !visibleForm && !editState.isEditing && (
+                {!visibleForm && !editState.isEditing && (
                   <div className="has-text-centered">
-                  <Button
-                    onClick={() => toggleForm(itemId)}
-                    buttonText="Add New Comment"
-                    className="button is-medium is-info"
-                  /></div>
+                    <Button
+                      onClick={() => toggleForm(itemId)}
+                      buttonText="Add New Comment"
+                      className="button is-medium is-info"
+                    />
+                  </div>
                 )}
-                { visibleForm === itemId && (
+                {visibleForm === itemId && (
                   <div className="box has-background-light">
-                  <CommentForm
-                    handleAddComment={(formData) => {
-                      handleAddComment(formData);
-                      setVisibleForm(null);
-                    }}
-                    onCancel={() => toggleForm(itemId)}
+                    <CommentForm
+                      handleAddComment={(formData) => {
+                        handleAddComment(formData);
+                        setVisibleForm(null);
+                      }}
+                      onCancel={() => toggleForm(itemId)}
                     />
                   </div>
                 )}
