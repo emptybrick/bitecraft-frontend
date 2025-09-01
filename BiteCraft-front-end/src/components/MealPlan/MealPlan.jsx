@@ -115,6 +115,10 @@ const MealPlan = () => {
     setActiveModal(null);
   };
 
+  const handlePrint = () => {
+    window.print()
+  }
+
   if (!user || isLoading) return <ProgressBar />;
 
   return (
@@ -334,10 +338,17 @@ const MealPlan = () => {
                                           </div>
                                         </section>
                                         <footer className="modal-card-foot pt-4 is-flex-direction-column">
-                                          <Button
-                                            onClick={handleCloseQuickView}
-                                            buttonText="Close"
-                                          />
+                                          <div className="buttons">
+                                            <Button
+                                              onClick={handleCloseQuickView}
+                                              buttonText="Close"
+                                            />
+                                            <Button
+                                              className="button"
+                                              onClick={handlePrint}
+                                              buttonText="Print"
+                                            />
+                                          </div>
                                         </footer>
                                       </div>
                                     </div>
@@ -370,19 +381,30 @@ const MealPlan = () => {
                                         </header>
                                         <section className="modal-card-body">
                                           <div className="box">
-                                            <div className="subtitle is-5 has-text-centered is-underlined">Shopping List</div>
+                                            <div className="subtitle is-5 has-text-centered is-underlined">
+                                              Shopping List
+                                            </div>
                                             <ul>
-                                              { mealPlan[ week ].list.map(item => (
-                                                <li>{ item }</li>
-                                              ))}
+                                              {mealPlan[week].list.map(
+                                                (item, idx) => (
+                                                  <li key={idx}>{item}</li>
+                                                )
+                                              )}
                                             </ul>
                                           </div>
                                         </section>
                                         <footer className="modal-card-foot pt-4 is-flex-direction-column">
-                                          <Button
-                                            onClick={handleCloseQuickView}
-                                            buttonText="Close"
-                                          />
+                                          <div className="buttons">
+                                            <Button
+                                              onClick={handleCloseQuickView}
+                                              buttonText="Close"
+                                            />
+                                            <Button
+                                              className="button"
+                                              onClick={handlePrint}
+                                              buttonText="Print"
+                                            />
+                                          </div>
                                         </footer>
                                       </div>
                                     </div>

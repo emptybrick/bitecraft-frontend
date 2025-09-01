@@ -4,3 +4,9 @@
   overflow-x: hidden;
   overflow-wrap: break-word;
 }
+
+@media print { 
+  .button, .modal-card-title, .modal-card-head {
+    display: none
+  }
+}
