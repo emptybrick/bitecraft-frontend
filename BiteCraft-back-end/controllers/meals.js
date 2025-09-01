@@ -25,20 +25,11 @@ router.post('/', verifyToken, async (req, res) => {
 router.get('/', verifyToken, async (req, res) => {
     try {
         const meals = await Meal.find({})
+            .populate('author', 'username')
             .populate([
-                { path: 'author' },
-                {
-                    path: 'main',
-                    populate: { path: 'author' }
-                },
-                {
-                    path: 'side1',
-                    populate: { path: 'author' }
-                },
-                {
-                    path: 'side2',
-                    populate: { path: 'author' }
-                }
+                { path: 'main', populate: { path: 'author', select: 'username' } },
+                { path: 'side1', populate: { path: 'author', select: 'username' } },
+                { path: 'side2', populate: { path: 'author', select: 'username' } }
             ])
             .sort({ createdAt: "desc" });
         res.status(200).json(meals);
@@ -49,26 +40,20 @@ router.get('/', verifyToken, async (req, res) => {
 
 router.get('/:mealId', verifyToken, async (req, res) => {
     try {
-        const meal = await Meal.findById(req.params.mealId).populate([
-            { path: 'author' },
-            { path: 'comments.author' },
-            {
-                path: 'comments',
-                populate: { path: "reply.author" }
-            },
-            {
-                path: 'main',
-                populate: { path: 'author' }
-            },
-            {
-                path: 'side1',
-                populate: { path: 'author' }
-            },
-            {
-                path: 'side2',
-                populate: { path: 'author' }
-            }
-        ]);
+        const meal = await Meal.findById(req.params.mealId)
+            .populate('author', 'username')
+            .populate([
+                { path: 'main', populate: { path: 'author', select: 'username' } },
+                { path: 'side1', populate: { path: 'author', select: 'username' } },
+                { path: 'side2', populate: { path: 'author', select: 'username' } },
+                {
+                    path: 'comments',
+                    populate: [
+                        { path: 'author', select: 'username' }, 
+                        { path: 'reply', populate: { path: 'author', select: 'username' } } 
+                    ]
+                }
+            ]);
         res.status(200).json(meal);
     } catch (error) {
         res.status(500).json(error);

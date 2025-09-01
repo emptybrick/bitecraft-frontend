@@ -13,19 +13,19 @@ const userSchema = new mongoose.Schema({
   mealsCollection: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Meal' } ],
   mealPlan: {
     week1: {
-      meals: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Meal' } ],
+      meals: [ Object ],
       list: [ String ]
     },
     week2: {
-      meals: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Meal' } ],
+      meals: [ Object ],
       list: [ String ]
     },
     week3: {
-      meals: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Meal' } ],
+      meals: [ Object ],
       list: [ String ]
     },
     week4: {
-      meals: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Meal' } ],
+      meals: [ Object ],
       list: [ String ]
     },
   }

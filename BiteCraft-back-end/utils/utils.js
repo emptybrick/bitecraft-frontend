@@ -132,33 +132,54 @@ const handleMealPlan = (data, type) => {
         });
         return flattenedList;
     };
+    
+    // const mealsForWeekIds = (week) => {
+    //     const mealIds = week.map(meal => {
+    //         return meal._id;
+    //     });
+    //     return mealIds;
+    // };
 
-    const mealsForWeekIds = (week) => {
-        const mealIds = week.map(meal => {
-            return meal._id;
-        });
-        return mealIds;
-    };
+    // const mealPlan = {
+    //     week1: {
+    //         meals: mealsForWeekIds(week1),
+    //         list: ingredientListFormat(week1)
+    //     },
+    //     week2: {
+    //         meals: mealsForWeekIds(week2),
+    //         list: ingredientListFormat(week2)
+    //     },
+    //     week3: {
+    //         meals: mealsForWeekIds(week3),
+    //         list: ingredientListFormat(week3)
+    //     },
+    //     week4: {
+    //         meals: mealsForWeekIds(week4),
+    //         list: ingredientListFormat(week4)
+    //     }
+    // };
 
     const mealPlan = {
         week1: {
-            meals: mealsForWeekIds(week1),
+            meals: week1,
             list: ingredientListFormat(week1)
         },
         week2: {
-            meals: mealsForWeekIds(week2),
+            meals: week2,
             list: ingredientListFormat(week2)
         },
         week3: {
-            meals: mealsForWeekIds(week3),
+            meals: week3,
             list: ingredientListFormat(week3)
         },
         week4: {
-            meals: mealsForWeekIds(week4),
+            meals: week4,
             list: ingredientListFormat(week4)
         }
     };
 
+    console.log(mealPlan.week1.meals)
+    console.log(mealPlan.week1.list)
     return mealPlan;
 };
 

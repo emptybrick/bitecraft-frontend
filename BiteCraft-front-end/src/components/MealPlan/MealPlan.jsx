@@ -5,6 +5,7 @@ import { UserContext } from "../../contexts/UserContext";
 import Button from "../Component/Button/Button";
 import ProgressBar from "../Component/ProgressBar/ProgressBar";
 import Select from "react-select";
+import ModalBody from "../Component/ModalBody/ModalBody";
 
 const MealPlan = () => {
   const { user } = useContext(UserContext);
@@ -13,6 +14,7 @@ const MealPlan = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const [visibleForm, setVisibleForm] = useState(null);
+  const [activeModal, setActiveModal] = useState(null);
   const [formData, setFormData] = useState({
     week1: [{}, {}, {}, {}, {}, {}, {}],
     week2: [{}, {}, {}, {}, {}, {}, {}],
@@ -81,8 +83,12 @@ const MealPlan = () => {
 
   const handleAutoGenerate = async () => {
     try {
-      const mealPlan = await biteCraftService.Create("MealPlan", meals, user._id);
-      setMealPlan(mealPlan)
+      const mealPlan = await biteCraftService.Create(
+        "MealPlan",
+        meals,
+        user._id
+      );
+      setMealPlan(mealPlan);
     } catch (error) {
       console.log(error);
     }
@@ -91,10 +97,22 @@ const MealPlan = () => {
   const deleteMealPlan = async () => {
     try {
       await biteCraftService.Delete("MealPlan", user._id);
-      setMealPlan(null)
+      setMealPlan(null);
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleShowQuickView = (e) => {
+    console.log("clicked open", e.target.dataset.target);
+    e.preventDefault();
+    const modal = e.target.dataset.target;
+    setActiveModal(modal);
+  };
+
+  const handleCloseQuickView = (e) => {
+    e.preventDefault();
+    setActiveModal(null);
   };
 
   if (!user || isLoading) return <ProgressBar />;
@@ -258,9 +276,139 @@ const MealPlan = () => {
                   </div>
                 ) : (
                   <>
-                    <h1>Meal Plan Detected!</h1>
-
-                    <button onClick={deleteMealPlan}>Delete Meal Plan</button>
+                    <div className="container">
+                      <div className="columns is-centered">
+                        {weeks.map((week, index) => (
+                          <div className="column" key={index}>
+                            <div className="box">
+                              <>
+                                <h1 className="title is-5 has-text-centered has-text-weight-bold is-underlined">
+                                  Week {index + 1}
+                                </h1>
+                                {weekDays.map((day, idx) => (
+                                  <div className="content" key={day}>
+                                    <div
+                                      className={`modal ${
+                                        activeModal === `modal-${idx}-${day}`
+                                          ? "is-active"
+                                          : ""
+                                      }`}
+                                      id={`modal-${idx}-${day}`}
+                                    >
+                                      <div
+                                        className="modal-background"
+                                        onClick={handleCloseQuickView}
+                                      ></div>
+                                      <div className="modal-card">
+                                        <header className="modal-card-head has-background-primary">
+                                          <h2 className="mb-0 has-text-weight-extrabold modal-card-title has-text-white has-text-centered">
+                                            {mealPlan[week].meals[idx].name}
+                                          </h2>
+                                          <button
+                                            className="delete"
+                                            aria-label="close"
+                                            onClick={handleCloseQuickView}
+                                          ></button>
+                                        </header>
+                                        <section className="modal-card-body">
+                                          <div className="box">
+                                            <ModalBody
+                                              recipe={
+                                                mealPlan[week].meals[idx].main
+                                              }
+                                            />
+                                          </div>
+                                          <div className="box">
+                                            <ModalBody
+                                              recipe={
+                                                mealPlan[week].meals[idx].side1
+                                              }
+                                            />
+                                          </div>
+                                          <div className="box">
+                                            <ModalBody
+                                              recipe={
+                                                mealPlan[week].meals[idx].side2
+                                              }
+                                            />
+                                          </div>
+                                        </section>
+                                        <footer className="modal-card-foot pt-4 is-flex-direction-column">
+                                          <Button
+                                            onClick={handleCloseQuickView}
+                                            buttonText="Close"
+                                          />
+                                        </footer>
+                                      </div>
+                                    </div>
+                                    <button
+                                      className="button modal-trigger is-fullwidth has-background-success-95"
+                                      id={`model-trigger-${idx}-${day}`}
+                                      data-target={`modal-${idx}-${day}`}
+                                      onClick={(e) => handleShowQuickView(e)}
+                                    >
+                                      {`${day}: ${mealPlan[week].meals[idx].name}`}
+                                    </button>
+                                  </div>
+                                ))}
+                                <div className="container">
+                                  <div className="content">
+                                    <div
+                                      className={`modal ${
+                                        activeModal === `modal-${index}-${week}`
+                                          ? "is-active"
+                                          : ""
+                                      }`}
+                                      id={`modal-${index}-${week}`}
+                                    >
+                                      <div className="modal-background"></div>
+                                      <div className="modal-card">
+                                        <header className="modal-card-head has-background-primary">
+                                          <h2 className="mb-0 has-text-weight-extrabold modal-card-title has-text-white has-text-centered">
+                                            {`Week ${index + 1} Grocery List`}
+                                          </h2>
+                                        </header>
+                                        <section className="modal-card-body">
+                                          <div className="box">
+                                            <div className="subtitle is-5 has-text-centered is-underlined">Shopping List</div>
+                                            <ul>
+                                              { mealPlan[ week ].list.map(item => (
+                                                <li>{ item }</li>
+                                              ))}
+                                            </ul>
+                                          </div>
+                                        </section>
+                                        <footer className="modal-card-foot pt-4 is-flex-direction-column">
+                                          <Button
+                                            onClick={handleCloseQuickView}
+                                            buttonText="Close"
+                                          />
+                                        </footer>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <button
+                                    className="button modal-trigger is-fullwidth has-background-info-85"
+                                    id={`model-trigger-${index}-${week}`}
+                                    data-target={`modal-${index}-${week}`}
+                                    onClick={(e) => handleShowQuickView(e)}
+                                  >
+                                    View Grocery List
+                                  </button>
+                                </div>
+                              </>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="buttons is-centered">
+                        <Button
+                          className="button has-background-danger-70"
+                          onClick={deleteMealPlan}
+                          buttonText="Delete Meal Plan"
+                        />
+                      </div>
+                    </div>
                   </>
                 )}
               </>

@@ -38,7 +38,15 @@ router.get('/:userId/planner', verifyToken, async (req, res) => {
       return res.status(403).json({ err: "Unauthorized" });
     }
 
-    const user = await User.findById(req.params.userId);
+    const user = await User.findById(req.params.userId).populate({
+      path: 'mealsCollection',
+      populate: [
+        { path: 'author' },
+        { path: 'main' },
+        { path: 'side1' },
+        { path: 'side2' }
+      ]
+    });
 
     if (!user) {
       return res.status(404).json({ err: 'User not found.' });
@@ -68,8 +76,6 @@ router.post('/:userId/planner', verifyToken, async (req, res) => {
     } else {
       newMealPlan = handleMealPlan(data, "Auto");
     }
-
-
 
     const user = await User.findById(req.params.userId);
 
@@ -112,7 +118,7 @@ router.get('/:userId/recipes-collection', verifyToken, async (req, res) => {
       { path: 'recipesCollection' },
       {
         path: 'recipesCollection',
-        populate: { path: 'author' }
+        populate: { path: 'author', select: 'username' }
       },
     ]);
     if (!user) {
@@ -130,7 +136,7 @@ router.get('/:userId/meals-collection', verifyToken, async (req, res) => {
     const user = await User.findById(req.params.userId).populate({
       path: 'mealsCollection',
       populate: [
-        { path: 'author' },
+        { path: 'author', select: 'username' },
         { path: 'main' },
         { path: 'side1' },
         { path: 'side2' }

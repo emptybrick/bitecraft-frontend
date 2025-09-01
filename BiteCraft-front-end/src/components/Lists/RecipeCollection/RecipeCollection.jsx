@@ -179,7 +179,7 @@ const RecipeCollection = () => {
                                 />
                               )}
                             </>
-                          )}
+                          ) } 
                         </div>
                       </footer>
                     </div>

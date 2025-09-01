@@ -3,8 +3,8 @@ const router = express.Router();
 const verifyToken = require("../middleware/verify-token.js");
 const Recipe = require('../models/recipe');
 const User = require('../models/user.js');
-const mongoose = require('mongoose')
-const { ObjectId} = mongoose.Types
+const mongoose = require('mongoose');
+const { ObjectId } = mongoose.Types;
 
 router.post('/', verifyToken, async (req, res) => {
     try {
@@ -25,7 +25,7 @@ router.post('/', verifyToken, async (req, res) => {
 router.get('/', verifyToken, async (req, res) => {
     try {
         const recipes = await Recipe.find({})
-            .populate("author")
+            .populate('author', 'username')
             .sort({ createdAt: "desc" });
         res.status(200).json(recipes);
     } catch (error) {
@@ -35,15 +35,17 @@ router.get('/', verifyToken, async (req, res) => {
 
 router.get('/:recipeId', verifyToken, async (req, res) => {
     try {
-        const recipe = await Recipe.findById(req.params.recipeId).populate([
-            { path: 'author' },
-            { path: 'comments.author' },
-            {
-                path: 'comments',
-                populate: { path: "reply.author" }
-            }
-        ]);
-
+        const recipe = await Recipe.findById(req.params.recipeId)
+            .populate([
+                { path: 'author', select: 'username' },
+                {
+                    path: 'comments',
+                    populate: [
+                        { path: 'author', select: 'username' },
+                        { path: 'reply', populate: { path: 'author', select: 'username' } }
+                    ]
+                }
+            ]);
         res.status(200).json(recipe);
     } catch (error) {
         res.status(500).json(error);
