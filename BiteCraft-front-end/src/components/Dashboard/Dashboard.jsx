@@ -92,7 +92,7 @@ const Dashboard = () => {
             <h2 className="title is-5 mb-4">Meal Plan</h2>
             <Link
               to={`/${user._id}/planner`}
-              className="button has-background-link-80 is-fullwidth"
+              className="button has-background-link-80 is-fullwidth has-text-black"
             >
               Create a Meal Plan with the Meal Planner
             </Link>

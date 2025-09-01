@@ -38,6 +38,24 @@ const RecipeCollection = () => {
     }
   };
 
+    const handleDeleteRecipe = async (recipeId) => {
+      try {
+        await biteCraftService.Delete("Recipe", recipeId, user._id);
+        setToggleEffect(!toggleEffect);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  
+    const handleAddToCollection = async (recipeId) => {
+      try {
+        await biteCraftService.Add("RecipeCollection", recipeId, user._id);
+        setToggleEffect(!toggleEffect);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
   const handleShowQuickView = (e) => {
     e.preventDefault();
     const modal = e.target.dataset.target;
@@ -132,15 +150,36 @@ const RecipeCollection = () => {
                             buttonText="Close"
                           />
                           {user._id === params.userId &&
-                            recipe.author._id !== user._id && (
-                              <Button
-                                onClick={(e) => {
-                                  handleCloseQuickView(e);
-                                  handleRemoveFromCollection(recipe._id);
-                                }}
-                                buttonText="Remove from Collection"
-                              />
-                            )}
+                          recipe.author._id !== user._id ? (
+                            <Button
+                              onClick={(e) => {
+                                handleCloseQuickView(e);
+                                handleRemoveFromCollection(recipe._id);
+                              }}
+                              buttonText="Remove from Collection"
+                            />
+                          ) : (
+                            <>
+                              {user._id === params.userId &&
+                              recipe.author._id === user._id ? (
+                                <Button
+                                  onClick={(e) => {
+                                    handleCloseQuickView(e);
+                                    handleDeleteRecipe(recipe._id);
+                                  }}
+                                  buttonText="Delete"
+                                />
+                              ) : (
+                                <Button
+                                  onClick={(e) => {
+                                    handleCloseQuickView(e);
+                                    handleAddToCollection(recipe._id);
+                                  }}
+                                  buttonText="Add to Collection"
+                                />
+                              )}
+                            </>
+                          )}
                         </div>
                       </footer>
                     </div>
@@ -197,7 +236,7 @@ const RecipeCollection = () => {
                   <Link className="ml-1" to={`/recipes`}>
                     <Button
                       className="button is-link is-light mt-4 is-medium"
-                      buttonText="View All Meals"
+                      buttonText="View All Recipes"
                     />
                   </Link>
                 </div>

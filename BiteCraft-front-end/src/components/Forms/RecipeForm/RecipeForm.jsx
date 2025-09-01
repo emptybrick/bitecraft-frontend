@@ -231,19 +231,15 @@ const RecipeForm = ({
                     onChange={(e) => handleChange(e, index, "Unit")}
                   >
                     <option value="null">n/a</option>
-                    <option value="Tsp">Tsp</option>
-                    <option value="Tbsp">Tbsp</option>
-                    <option value="Cup">Cup</option>
-                    <option value="Pint">Pint</option>
-                    <option value="Quart">Quart</option>
-                    <option value="Fl Oz">Fl Oz</option>
-                    <option value="Oz">Oz</option>
+                    <option value="teaspoon">Tsp</option>
+                    <option value="tablespoon">Tbsp</option>
+                    <option value="cup">Cup</option>
+                    <option value="pint">Pint</option>
+                    <option value="quart">Quart</option>
+                    <option value="oz">Oz</option>
                     <option value="lb">lb</option>
                     <option value="g">g</option>
-                    <option value="kg">kg</option>
-                    <option value="mL">mL</option>
                     <option value="L">L</option>
-                    <option value="Stick">Stick</option>
                   </select>
                 </div>
               </div>

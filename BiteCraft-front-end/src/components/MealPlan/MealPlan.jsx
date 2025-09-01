@@ -14,10 +14,10 @@ const MealPlan = () => {
   const navigate = useNavigate();
   const [visibleForm, setVisibleForm] = useState(null);
   const [formData, setFormData] = useState({
-    week1: ["", "", "", "", "", "", ""],
-    week2: ["", "", "", "", "", "", ""],
-    week3: ["", "", "", "", "", "", ""],
-    week4: ["", "", "", "", "", "", ""],
+    week1: [{}, {}, {}, {}, {}, {}, {}],
+    week2: [{}, {}, {}, {}, {}, {}, {}],
+    week3: [{}, {}, {}, {}, {}, {}, {}],
+    week4: [{}, {}, {}, {}, {}, {}, {}],
   });
 
   const weeks = ["week1", "week2", "week3", "week4"];
@@ -34,8 +34,13 @@ const MealPlan = () => {
 
   useEffect(() => {
     setIsLoading(true);
-      const fetchdata = async () => {
-        // first attempt to find mealplan, if none then populate meals
+    const fetchdata = async () => {
+      // first attempt to find mealplan, if none then populate meals
+      const getMealPlan = await biteCraftService.Index("MealPlan", user._id);
+      if (getMealPlan) {
+        setMealPlan(getMealPlan);
+      }
+
       const mealsData = await biteCraftService.Index(
         "MealCollection",
         user._id
@@ -43,6 +48,7 @@ const MealPlan = () => {
       if (mealsData.length >= 1) {
         setMeals(mealsData);
       }
+
       setIsLoading(false);
     };
     if (user) fetchdata();
@@ -54,29 +60,42 @@ const MealPlan = () => {
     setFormData({ ...formData, [week]: updatedItem });
   };
 
-    const handleToggleForm = () => {
-      console.log(meals)
+  const handleToggleForm = () => {
     setVisibleForm(!visibleForm);
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-      setMealPlan(formData);
-      // send mealplan data to backend
-    // if (!mealPlan) return;
-    // try {
-    //   await biteCraftService.Create("Meal", mealPlan);
-    //   navigate(`/${user._id}/planner`);
-    // } catch (error) {
-    //   console.log(error);
-    // }
+  const handleSubmit = async () => {
+    setMealPlan(formData);
+    if (!mealPlan) return;
+    try {
+      await biteCraftService.Create("MealPlan", mealPlan, user._id);
+      navigate(`/${user._id}/planner`);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleNavigation = () => {
-    navigate(`/${user._id}/recipes-collection`);
+    navigate(`/meals`);
   };
 
-  const handleAutoGenerate = () => {};
+  const handleAutoGenerate = async () => {
+    try {
+      const mealPlan = await biteCraftService.Create("MealPlan", meals, user._id);
+      setMealPlan(mealPlan)
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteMealPlan = async () => {
+    try {
+      await biteCraftService.Delete("MealPlan", user._id);
+      setMealPlan(null)
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   if (!user || isLoading) return <ProgressBar />;
 
@@ -110,7 +129,7 @@ const MealPlan = () => {
                             id={`${week}-${day}-input`}
                             options={meals.map((meal) => ({
                               label: meal.name,
-                              value: meal._id,
+                              value: meal,
                             }))}
                             placeholder={`${day}`}
                             required
@@ -145,13 +164,13 @@ const MealPlan = () => {
             <div className="hero">
               <h1 className="title has-text-centered mb-6">Meal Planner</h1>
             </div>
-            {!mealPlan && meals ?  (
+            {!mealPlan && meals ? (
               <div className="container">
                 <div className="columns">
                   <div className="column">
                     <div className="buttons is-centered">
                       <Button
-                        className="button  has-background-link-80"
+                        className="button  has-background-link-80 has-text-grey-darker"
                         buttonText="Auto-Generate"
                         onClick={handleAutoGenerate}
                       />
@@ -184,7 +203,7 @@ const MealPlan = () => {
                   <div className="column">
                     <div className="buttons is-centered">
                       <Button
-                        className="button has-background-success-80"
+                        className="button has-background-success-80 has-text-grey-darker"
                         buttonText="Manual Select"
                         onClick={handleToggleForm}
                       />
@@ -217,21 +236,34 @@ const MealPlan = () => {
                 </div>
               </div>
             ) : (
-              <div className="notification is-warning is-light has-text-centered">
-                <p className="is-size-4">There are no meals in your collection!</p>
-                <p className="is-size-5 mt-2">
-                  <span role="img" aria-label="chef">
-                    👨‍🍳
-                  </span>{" "}
-                  Add meals from other users or create your own to get started!
-                </p>
-                <button
-                  className="button is-link is-light mt-4 is-medium"
-                  onClick={handleNavigation}
-                >
-                  View All Meals
-                </button>
-              </div>
+              <>
+                {!mealPlan && !meals ? (
+                  <div className="notification is-warning is-light has-text-centered">
+                    <p className="is-size-4">
+                      There are no meals in your collection!
+                    </p>
+                    <p className="is-size-5 mt-2">
+                      <span role="img" aria-label="chef">
+                        👨‍🍳
+                      </span>{" "}
+                      Add meals from other users or create your own to get
+                      started!
+                    </p>
+                    <button
+                      className="button is-link is-light mt-4 is-medium"
+                      onClick={handleNavigation}
+                    >
+                      View All Meals
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <h1>Meal Plan Detected!</h1>
+
+                    <button onClick={deleteMealPlan}>Delete Meal Plan</button>
+                  </>
+                )}
+              </>
             )}
           </>
         )}

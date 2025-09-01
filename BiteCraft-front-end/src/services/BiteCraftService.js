@@ -15,6 +15,8 @@ const Index = async (type, userId) => {
                 BASE_URL = `${ TRIMMED_URL }/users/${ userId }/recipes-collection`;
             } else if (type === "MealCollection") {
                 BASE_URL = `${ TRIMMED_URL }/users/${ userId }/meals-collection`;
+            } else if (type === "MealPlan") {
+                BASE_URL = `${ TRIMMED_URL }/users/${ userId }/planner`;
             } else {
                 throw new Error("Type not set");
             }
@@ -33,9 +35,6 @@ const Show = async (type, itemId) => {
     try {
         if (type === "Meal") { BASE_URL = Meals_URL; }
         else if (type === "Recipe") { BASE_URL = Recipes_URL; }
-        else if (type === "MealPlan") {
-            BASE_URL = `${ TRIMMED_URL }/${ itemId }/planner`;
-        }
         else { throw new Error("Type not set"); }
         const res = await axios.get(`${ BASE_URL }/${ itemId }`, {
             headers: { Authorization: `Bearer ${ localStorage.getItem("token") }` },
@@ -69,7 +68,8 @@ const Create = async (type, formData, itemId, commentId) => {
                 BASE_URL = `${ Meals_URL }/${ itemId }/comments/${ commentId }/reply`;
                 break;
             case "MealPlan":
-                BASE_URL = `${ TRIMMED_URL }/${ itemId }/planner`;
+                BASE_URL = `${ TRIMMED_URL }/users/${ itemId }/planner`;
+                break;
             default:
                 throw new Error("Type not set");
         }
@@ -105,8 +105,10 @@ const Delete = async (type, itemId, commentId) => {
                 BASE_URL = `${ Meals_URL }/${ itemId }/comments/${ commentId }/reply`;
                 break;
             case "MealPlan":
-                BASE_URL = `${ TRIMMED_URL }/${ itemId }/planner`;
+                BASE_URL = `${ TRIMMED_URL }/users/${ itemId }/planner`;
+                break;
             default:
+                console.log(type)
                 throw new Error("Type not set");
         }
         const res = await axios.delete(BASE_URL, {

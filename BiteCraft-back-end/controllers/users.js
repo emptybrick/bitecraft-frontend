@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
 const verifyToken = require('../middleware/verify-token');
+const handleMealPlan = require('../utils/utils');
 
 router.get('/', verifyToken, async (req, res) => {
   try {
@@ -43,8 +44,12 @@ router.get('/:userId/planner', verifyToken, async (req, res) => {
       return res.status(404).json({ err: 'User not found.' });
     }
 
-    res.json({ mealPlan: user.mealPlan });
-  } catch (error) {
+    const mealPlan = user.mealPlan;
+
+    if (mealPlan) {
+      res.json(user.mealPlan);
+    }
+  } catch (err) {
     res.status(500).json({ err: err.message });
   }
 });
@@ -55,27 +60,32 @@ router.post('/:userId/planner', verifyToken, async (req, res) => {
       return res.status(403).json({ err: "Unauthorized" });
     }
 
-    // test posting data then build functions to manipulate as needed
+    const data = req.body;
+    let newMealPlan;
 
-    // const user = await User.findById(req.params.userId);
+    if (data.week1 && data.length === 4) {
+      newMealPlan = handleMealPlan(data, "Manual");
+    } else {
+      newMealPlan = handleMealPlan(data, "Auto");
+    }
 
-    // if (!user) {
-    //   return res.status(404).json({ err: 'User not found.' });
-    // }
 
-    // const updateMealPlan = await User.findByIdAndUpdate(
-    //   { _id: req.params.userId },
-    //   { $push: { mealPlan: req.body } },
-    //   { new: true, runValidators: true }
-    // );
 
-    // res.json(updateMealPlan);
+    const user = await User.findById(req.params.userId);
+
+    if (!user) {
+      return res.status(404).json({ err: 'User not found.' });
+    }
+
+    user.mealPlan = newMealPlan;
+    await user.save();
+    return res.status(200).json(newMealPlan);
   } catch (error) {
-    res.status(500).json({ err: err.message });
+    res.status(500).json(error);
   }
 });
 
-router.delete('/:userId/planner/:id', verifyToken, async (req, res) => {
+router.delete('/:userId/planner', verifyToken, async (req, res) => {
   try {
     if (req.user._id !== req.params.userId) {
       return res.status(403).json({ err: "Unauthorized" });
@@ -87,11 +97,11 @@ router.delete('/:userId/planner/:id', verifyToken, async (req, res) => {
       return res.status(404).json({ err: 'User not found.' });
     }
 
-    user.mealPlan.remove({ _id: req.params.id });
+    user.mealPlan = null
     await user.save();
 
     res.status(200).json({ message: "Meal Plan removed successfully" });
-  } catch (error) {
+  } catch (err) {
     res.status(500).json({ err: err.message });
   }
 });
