@@ -1,4 +1,4 @@
-const Footer = ({ item }) => {
+const CommentsFooter = ({ item }) => {
   return (
     <div>
       <p className="has-text-right has-text-grey mb-0">
@@ -13,4 +13,4 @@ const Footer = ({ item }) => {
   );
 };
 
-export default Footer;
+export default CommentsFooter;

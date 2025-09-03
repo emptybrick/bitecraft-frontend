@@ -23,24 +23,31 @@ const App = () => {
 
   return (
     <>
-      <NavBar />
-      <Routes>
-        <Route path="/" element={user ? <Dashboard /> : <Landing />} />
-        <Route path="/sign-up" element={<SignUpForm />} />
-        <Route path="/sign-in" element={<SignInForm />} />
-        <Route path="/recipes/:recipeId" element={<RecipeDetails />} />
-        <Route path="/meals/:mealId" element={<MealDetails />} />
-        <Route
-          path="/:userId/recipes-collection"
-          element={<RecipeCollection />}
-        />
-        <Route path="/:userId/meals-collection" element={<MealCollection />} />
-        <Route path="/recipes/new" element={<RecipeForm />} />
-        <Route path="/meals/new" element={<MealForm />} />
-        <Route path="/recipes" element={<RecipeList />} />
-        <Route path="/meals" element={<MealList />} />
-        <Route path="/:userId/planner" element={<MealPlan />} />
-      </Routes>
+      <header>
+        <NavBar />
+      </header>
+      <main>
+        <Routes>
+          <Route path="/" element={user ? <Dashboard /> : <Landing />} />
+          <Route path="/sign-up" element={<SignUpForm />} />
+          <Route path="/sign-in" element={<SignInForm />} />
+          <Route path="/recipes/:recipeId" element={<RecipeDetails />} />
+          <Route path="/meals/:mealId" element={<MealDetails />} />
+          <Route
+            path="/:userId/recipes-collection"
+            element={<RecipeCollection />}
+          />
+          <Route
+            path="/:userId/meals-collection"
+            element={<MealCollection />}
+          />
+          <Route path="/recipes/new" element={<RecipeForm />} />
+          <Route path="/meals/new" element={<MealForm />} />
+          <Route path="/recipes" element={<RecipeList />} />
+          <Route path="/meals" element={<MealList />} />
+          <Route path="/:userId/planner" element={<MealPlan />} />
+        </Routes>
+      </main>
     </>
   );
 };

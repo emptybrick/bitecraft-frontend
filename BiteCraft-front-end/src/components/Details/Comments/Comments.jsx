@@ -2,7 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import * as biteCraftService from "../../../services/BiteCraftService";
 import CommentForm from "../../Forms/CommentForm/CommentForm";
 import { UserContext } from "../../../contexts/UserContext";
-import Footer from "../../Component/Footer/Footer";
+import CommentsFooter from "../../Component/Footer/CommentsFooter";
 import Button from "../../Component/Button/Button";
 
 const CommentsAndReplies = ({ item, itemId, type }) => {
@@ -165,7 +165,7 @@ const CommentsAndReplies = ({ item, itemId, type }) => {
           </h2>
           <div className="content">
             {comments.map((comment, idx) => (
-              <article className="media ml-5 mr-5" key={idx}>
+              <article className="media ml-5 mr-5 " key={idx}>
                 <div className="media-content ml-2 mr-2">
                   <div className="box has-background-light">
                     <div className="box">
@@ -191,47 +191,49 @@ const CommentsAndReplies = ({ item, itemId, type }) => {
                           <p>{comment.text}</p>
                         </div>
                       )}
-                      {!visibleForm &&
-                        !editState.isEditing &&
-                        !comment.reply &&
-                        comment.author._id !== user._id && (
-                          <Button
-                            className="button is-small is-info is-light mt-4"
-                            onClick={() => toggleForm(comment._id)}
-                            buttonText="Reply"
-                          />
-                        )}
-                      {comment.author._id === user._id &&
-                        !editState.isEditing &&
-                        !visibleForm && (
-                          <div className="level is-align-items-center mt-6">
-                            <div className="level-left">
-                              <div className="buttons mb-0">
+                      <div className="level is-align-items-center mt-4">
+                        <div className="level-left">
+                          <div className="buttons mb-0">
+                            {!visibleForm &&
+                              !editState.isEditing &&
+                              !comment.reply &&
+                              comment.author._id !== user._id && (
                                 <Button
-                                  className="button is-small is-danger is-light"
-                                  onClick={() =>
-                                    handleDeleteComment(comment._id)
-                                  }
-                                  buttonText="Delete"
+                                  className="button is-small is-info is-light mt-4"
+                                  onClick={() => toggleForm(comment._id)}
+                                  buttonText="Reply"
                                 />
-                                <Button
-                                  onClick={() =>
-                                    toggleEditMode(
-                                      "Comment",
-                                      comment,
-                                      comment._id
-                                    )
-                                  }
-                                  className="button is-small is-warning is-light"
-                                  buttonText="Edit"
-                                />
-                              </div>
-                            </div>
-                            <div className="level-right">
-                              <Footer item={comment} />
-                            </div>
+                              )}
+                            {comment.author._id === user._id &&
+                              !editState.isEditing &&
+                              !visibleForm && (
+                                <>
+                                  <Button
+                                    className="button is-small is-danger is-light"
+                                    onClick={() =>
+                                      handleDeleteComment(comment._id)
+                                    }
+                                    buttonText="Delete"
+                                  />
+                                  <Button
+                                    onClick={() =>
+                                      toggleEditMode(
+                                        "Comment",
+                                        comment,
+                                        comment._id
+                                      )
+                                    }
+                                    className="button is-small is-warning is-light"
+                                    buttonText="Edit"
+                                  />
+                                </>
+                              )}
                           </div>
-                        )}
+                        </div>
+                        <div className="level-right">
+                          <CommentsFooter item={comment} />
+                        </div>
+                      </div>
                     </div>
                     {item.author._id === user._id && (
                       <>
@@ -272,6 +274,7 @@ const CommentsAndReplies = ({ item, itemId, type }) => {
                                   {comment.reply.author.username}
                                 </p>
                                 <p>{comment.reply.text}</p>
+                                <CommentsFooter item={comment.reply} />
                               </div>
                             )}
                             {comment.reply.author._id === user._id &&
@@ -301,7 +304,7 @@ const CommentsAndReplies = ({ item, itemId, type }) => {
                                     </div>
                                   </div>
                                   <div className="level-right">
-                                    <Footer item={comment.reply} />
+                                    <CommentsFooter item={comment.reply} />
                                   </div>
                                 </div>
                               )}
@@ -320,7 +323,7 @@ const CommentsAndReplies = ({ item, itemId, type }) => {
                     <Button
                       onClick={() => toggleForm(itemId)}
                       buttonText="Add New Comment"
-                      className="button is-medium is-info"
+                      className="button is-info"
                     />
                   </div>
                 )}

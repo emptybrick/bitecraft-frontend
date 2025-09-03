@@ -1,17 +1,21 @@
 import { useState, useEffect, useContext } from "react";
-import { Link, useParams } from "react-router";
+import { Link } from "react-router";
 import * as biteCraftService from "../../../services/BiteCraftService";
 import { UserContext } from "../../../contexts/UserContext";
 import Button from "../../Component/Button/Button";
 import ProgressBar from "../../Component/ProgressBar/ProgressBar";
+import QuickViewCard from "../../Component/QuickViewCard/QuickViewCard";
+import ModalFooter from "../../Component/Footer/ModalFooter";
+import ModalHeader from "../../Component/Header/ModalHeader";
+import Message from "../../Component/Message/Message";
+import PageHeader from "../../Component/Header/PageHeader";
 
 const MealCollection = () => {
   const { user } = useContext(UserContext);
   const [meals, setMeals] = useState([]);
-  const params = useParams();
-  const [toggleEffect, setToggleEffect] = useState(false);
   const [activeModal, setActiveModal] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const mealTypes = ["main", "side1", "side2"];
 
   useEffect(() => {
     setIsLoading(true);
@@ -26,34 +30,7 @@ const MealCollection = () => {
       setIsLoading(false);
     };
     if (user) fetchAllMeals();
-  }, [user, toggleEffect]);
-
-  const handleRemoveFromCollection = async (mealId) => {
-    try {
-      await biteCraftService.RemoveFromCollection("Meal", mealId, user._id);
-      setToggleEffect(!toggleEffect);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleDeleteMeal = async (mealId) => {
-    try {
-      await biteCraftService.Delete("Meal", mealId, user._id);
-      setToggleEffect(!toggleEffect);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleAddToCollection = async (mealId) => {
-    try {
-      await biteCraftService.Add("MealCollection", mealId, user._id);
-      setToggleEffect(!toggleEffect);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  }, [user]);
 
   const handleShowQuickView = (e) => {
     e.preventDefault();
@@ -69,16 +46,12 @@ const MealCollection = () => {
   if (!user || isLoading) return <ProgressBar />;
 
   return (
-    <main className="section">
-      <div className="hero">
-        <h1 className="title has-text-centered mb-6">
-          Welcome to {user.username}'s Meals Collection
-        </h1>
-      </div>
+    <div className="section">
+      <PageHeader userName={user.username} headerText={"Meals Collection"} />
       <div className="container">
-        <div className="columns is-multiline mt-2 has-text-centered is-vcentered">
-          {meals.length > 0 ? (
-            meals.map((meal, idx) => (
+        {meals.length > 0 ? (
+          <div className="columns is-multiline mt-2 has-text-centered is-vcentered">
+            {meals.map((meal, idx) => (
               <div className="column is-one-third" key={idx}>
                 <div
                   className={`modal ${
@@ -91,184 +64,62 @@ const MealCollection = () => {
                     onClick={handleCloseQuickView}
                   ></div>
                   <div className="modal-card">
-                    <header className="modal-card-head has-background-primary">
-                      <h2 className="has-text-weight-extrabold modal-card-title has-text-white">
-                        {meal.name}
-                      </h2>
-                      <button
-                        className="delete"
-                        aria-label="close"
-                        onClick={handleCloseQuickView}
-                      ></button>
-                    </header>
-                    <section className="modal-card-body pb-2">
+                    <ModalHeader itemName={meal.name} />
+                    <section className="modal-card-body pb-2 pt-4">
                       <h3 className="subtitle is-4 has-text-weight-bold is-underlined">
-                        Recipes:
+                        Recipes
                       </h3>
-                      <div className="has-text-left pl-4">
-                        <div className="mb-2">
-                          <span className="has-text-weight-semibold">
-                            Main Dish:{" "}
-                          </span>
-                          {meal.main ? (
-                            <Link
-                              key={meal.main._id}
-                              to={`/recipes/${meal.main._id}`}
-                              className="has-text-link"
-                            >
-                              {meal.main.name}
-                            </Link>
-                          ) : (
-                            <span className="has-text-grey-light">
-                              Recipe is no longer available.
-                            </span>
-                          )}
-                        </div>
-                        <div className="mb-2">
-                          <span className="has-text-weight-semibold">
-                            Side Dish:{" "}
-                          </span>
-                          {meal.side1 ? (
-                            <Link
-                              key={meal.side1._id}
-                              to={`/recipes/${meal.side1._id}`}
-                              className="has-text-link"
-                            >
-                              {meal.side1.name}
-                            </Link>
-                          ) : (
-                            <span className="has-text-grey-light">
-                              Recipe is no longer available.
-                            </span>
-                          )}
-                        </div>
-                        <div className="mb-2">
-                          <span className="has-text-weight-semibold">
-                            Side Dish:{" "}
-                          </span>
-                          {meal.side2 ? (
-                            <Link
-                              key={meal.side2._id}
-                              to={`/recipes/${meal.side2._id}`}
-                              className="has-text-link"
-                            >
-                              {meal.side2.name}
-                            </Link>
-                          ) : (
-                            <span className="has-text-grey-light">
-                              Recipe is no longer available.
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </section>
-                    <footer className="modal-card-foot pt-4 is-flex-direction-column">
-                      <div className="level mb-2 is-gap-8">
-                        <p className="has-text-left pt-2 mr-6 pr-6">{`Total Comments: ${meal.comments.length}`}</p>
-                        <p className="has-text-right pt-2 ml-6 pl-6">{`${
-                          meal.author.username
-                        } posted on ${new Date(
-                          meal.createdAt
-                        ).toLocaleDateString()}`}</p>
-                      </div>
-                      <div className="buttons">
-                        <Button
-                          onClick={(e) => handleCloseQuickView(e)}
-                          buttonText="Close"
-                        />
-                        {user._id === params.userId &&
-                        meal.author._id !== user._id ? (
-                          <Button
-                            onClick={(e) => {
-                              handleCloseQuickView(e);
-                              handleRemoveFromCollection(meal._id);
-                            }}
-                            buttonText="Remove from Collection"
-                          />
+                      <div className="container">
+                        {meal.main && meal.side1 && meal.side2 ? (
+                          mealTypes.map((type) => (
+                            <div className="content" key={type}>
+                              <QuickViewCard
+                                item={meal[type]}
+                                onClick={(e) => handleShowQuickView(e)}
+                                id={`modal-trigger-${idx}`}
+                                target={`modal-${idx}`}
+                                buttonText="Go to Recipe"
+                                link={`/recipes/${meal[type]._id}`}
+                              />
+                            </div>
+                          ))
                         ) : (
                           <>
-                            {user._id === params.userId &&
-                            meal.author._id === user._id ? (
-                              <Button
-                                onClick={(e) => {
-                                  handleCloseQuickView(e);
-                                  handleDeleteMeal(meal._id);
-                                }}
-                                buttonText="Delete"
-                              />
-                            ) : (
-                              <Button
-                                onClick={(e) => {
-                                  handleCloseQuickView(e);
-                                  handleAddToCollection(meal._id);
-                                }}
-                                buttonText="Add to Collection"
-                              />
-                            )}
+                            <Button
+                              className="button has-background-link-70"
+                              buttonText="Go to Meal"
+                            />
                           </>
                         )}
                       </div>
-                    </footer>
+                    </section>
+                    <ModalFooter
+                      item={meal}
+                      type={"Meal"}
+                      collection={"MealCollection"}
+                      closeQuickView={handleCloseQuickView}
+                      setActiveModal={setActiveModal}
+                      items={meals}
+                      setItems={setMeals}
+                    />
                   </div>
                 </div>
-                <div className="card">
-                  <div className="card-content">
-                    <div>
-                      <div className="subtitle is-4 mb-2 pt-2">{meal.name}</div>
-                      <div className="is-6 pl-2 pr-2 card-content-override-details">
-                        {meal.details}
-                      </div>
-                      <div className="is-8 pt-3">
-                        Created by:{" "}
-                        <span className="has-text-weight-semibold">
-                          {meal.author.username}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="buttons is-grouped are-small is-centered mt-2">
-                      <button
-                        className="button modal-trigger is-info is-light"
-                        id={`modal-trigger-${idx}`}
-                        data-target={`modal-${idx}`}
-                        onClick={(e) => handleShowQuickView(e)}
-                      >
-                        Quick View
-                      </button>
-                      <Link className="ml-1" to={`/meals/${meal._id}`}>
-                        <Button
-                          className="button is-primary is-light"
-                          buttonText="Go to Meal"
-                        />
-                      </Link>
-                    </div>
-                  </div>
-                </div>
+                <QuickViewCard
+                  item={meal}
+                  onClick={(e) => handleShowQuickView(e)}
+                  id={`modal-trigger-${idx}`}
+                  target={`modal-${idx}`}
+                  buttonText="Go to Meal"
+                  link={`/meals/${meal._id}`}
+                />
               </div>
-            ))
-          ) : (
-            <div className="container">
-              <div className="notification is-warning is-light has-text-centered">
-                <p className="is-size-4">
-                  There are no meals in your collection!
-                </p>
-                <p className="is-size-5 mt-2">
-                  <span role="img" aria-label="chef">
-                    👨‍🍳
-                  </span>{" "}
-                  Add meals from other users or create your own to get started!
-                </p>
-                <Link className="ml-1" to={`/meals`}>
-                  <Button
-                    className="button is-link is-light mt-4 is-medium"
-                    buttonText="View All Meals"
-                  />
-                </Link>
-              </div>
-            </div>
-          )}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <Message itemName={"Meal"} />
+        )}
       </div>
-    </main>
+    </div>
   );
 };
 

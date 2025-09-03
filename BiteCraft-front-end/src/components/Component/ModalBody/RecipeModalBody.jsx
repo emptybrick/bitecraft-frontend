@@ -1,9 +1,9 @@
-const ModalBody = ({ recipe }) => {
+const RecipeModalBody = ({ recipe, type }) => {
   return (
-      <>
-          <div className="title is-4 has-text-centered">{ recipe.name }</div>
-      <div className="columns is-4 is-centered">
-        <div className="column is-one-third">
+    <section className="modal-card-body pt-5 pb-5">
+      {type === "Planner" && <div className="title is-4 has-text-centered mb-4">{recipe.name}</div>}
+      <div className="columns is-centered">
+        <div className="column box is-one-third mb-0">
           <h4 className="subtitle is-5 mb-4 has-text-weight-bold is-underlined has-text-centered">
             Ingredients
           </h4>
@@ -17,7 +17,7 @@ const ModalBody = ({ recipe }) => {
             </ul>
           </div>
         </div>
-        <div className="column pl-4">
+        <div className="column box ml-4">
           <h4 className="subtitle is-5 mb-4 has-text-weight-bold is-underlined has-text-centered">
             Instructions
           </h4>
@@ -30,8 +30,8 @@ const ModalBody = ({ recipe }) => {
           </ol>
         </div>
       </div>
-    </>
+    </section>
   );
 };
 
-export default ModalBody;
+export default RecipeModalBody;

@@ -1,31 +1,15 @@
-import { useEffect, useState, useContext } from "react";
+import { useContext } from "react";
 import { Link } from "react-router";
-
 import { UserContext } from "../../contexts/UserContext";
-
-import * as userService from "../../services/userService";
 import ProgressBar from "../Component/ProgressBar/ProgressBar";
 
 const Dashboard = () => {
   const { user } = useContext(UserContext);
-  const [users, setUsers] = useState([]);
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const fetchedUsers = await userService.index();
-        setUsers(fetchedUsers);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    if (user) fetchUsers();
-  }, [user]);
 
   if (!user) return <ProgressBar />;
 
   return (
-    <main className="section">
+    <div className="section">
       <div className="container">
         <div className="box has-text-centered">
           <h1 className="title is-2 mb-3">Welcome, {user?.username}!</h1>
@@ -99,7 +83,7 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 };
 

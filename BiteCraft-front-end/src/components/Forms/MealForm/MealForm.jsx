@@ -5,6 +5,8 @@ import { UserContext } from "../../../contexts/UserContext";
 import Button from "../../Component/Button/Button";
 import ProgressBar from "../../Component/ProgressBar/ProgressBar";
 import Select from "react-select";
+import Message from "../../Component/Message/Message";
+import PageHeader from "../../Component/Header/PageHeader";
 
 const MealForm = ({
   onCancel,
@@ -58,7 +60,7 @@ const MealForm = ({
   }, [user]);
 
   const handleNavigation = () => {
-    navigate(`/${user._id}/recipes-collection`);
+    navigate(`/${user._id}/meals-collection`);
   };
 
   const handleChange = (event) => {
@@ -87,42 +89,12 @@ const MealForm = ({
   if (isLoading) return <ProgressBar />;
 
   return (
-    <>
-      {mainRecipes.length < 1 || sideRecipes.length < 1 ? (
-        <div className="container mt-6">
-          <article className="message is-warning">
-            <div className="message-header">
-              <span className="icon-text">
-                <span className="icon">
-                  <i className="fas fa-exclamation-triangle"></i>
-                </span>
-                <span>Not enough recipes found!</span>
-              </span>
-            </div>
-            <div className="message-body has-text-centered">
-              <p>
-                You need at least <strong>1 Main</strong> and{" "}
-                <strong>1 Side</strong> recipe in your collection to create a
-                meal.
-              </p>
-              <p className="mt-2">
-                <span role="img" aria-label="chef">
-                  👨‍🍳
-                </span>{" "}
-                Add recipes from other users or create your own to get started!
-              </p>
-              <button
-                className="button is-link is-light mt-4"
-                onClick={handleNavigation}
-              >
-                Go to Recipes Collection
-              </button>
-            </div>
-          </article>
-        </div>
-      ) : (
-        <div className="container">
-          <h2 className="title is-4 pt-5 has-text-centered">Meal Form</h2>
+    <div className="section">
+      <div className="container">
+        <PageHeader headerText={"Meal Form"} />
+        {mainRecipes.length < 1 || sideRecipes.length < 1 ? (
+          <Message itemName={"Recipe"} itemType={"createMeal"} />
+        ) : (
           <form onSubmit={handleSubmit} className="box mt-4">
             <div className="field">
               <label className="label" htmlFor="name-input">
@@ -258,9 +230,9 @@ const MealForm = ({
               </div>
             </div>
           </form>
-        </div>
-      )}
-    </>
+        )}
+      </div>
+    </div>
   );
 };
 

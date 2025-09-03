@@ -4,7 +4,7 @@ import * as biteCraftService from "../../../services/BiteCraftService";
 import { UserContext } from "../../../contexts/UserContext";
 import RecipeForm from "../../Forms/RecipeForm/RecipeForm";
 import CommentsAndReplies from "../Comments/Comments";
-import Header from "../../Component/Header/Header";
+import CardHeader from "../../Component/Header/CardHeader";
 import Button from "../../Component/Button/Button";
 import ProgressBar from "../../Component/ProgressBar/ProgressBar";
 
@@ -70,6 +70,10 @@ const RecipeDetails = () => {
     }
   };
 
+  const handlePrint = () => {
+    window.print();
+  };
+
   if (!recipe || isLoading || !user) return <ProgressBar />;
 
   return (
@@ -86,7 +90,7 @@ const RecipeDetails = () => {
           />
         ) : (
           <>
-            <Header item={recipe} />
+            <CardHeader item={recipe} />
             <div className="container mt-2">
               <div className="columns is-desktop">
                 <div className="column is-one-third">
@@ -118,26 +122,35 @@ const RecipeDetails = () => {
                   </div>
                 </div>
               </div>
-              {recipe.author._id === user._id && !visibleRecipeForm && (
-                <div className="field mt-4 is-grouped is-grouped-right">
-                  <Button onClick={handleDeleteRecipe} buttonText="Delete" />
-                  <Button onClick={toggleRecipeForm} buttonText="Edit" />
-                </div>
-              )}
-              {!recipesInCollection.includes(recipeId) && (
-                <div className="mt-4 has-text-centered">
-                  <Button
-                    className="button has-background-primary-45 is-medium"
-                    onClick={handleAddToCollection}
-                    buttonText="Add to Collection"
-                  />
-                </div>
-              )}
+              <div className="level mb-4">
+                <Button
+                  className="button is-medium"
+                  onClick={handlePrint}
+                  buttonText="Print"
+                />
+                {recipe.author._id === user._id && !visibleRecipeForm && (
+                  <div className="field is-grouped">
+                    <Button onClick={handleDeleteRecipe} buttonText="Delete" />
+                    <Button onClick={toggleRecipeForm} buttonText="Edit" />
+                  </div>
+                )}
+                {!recipesInCollection.includes(recipeId) && (
+                  <div className="has-text-centered">
+                    <Button
+                      className="button has-background-primary-45 is-medium"
+                      onClick={handleAddToCollection}
+                      buttonText="Add to Collection"
+                    />
+                  </div>
+                )}
+              </div>
             </div>
           </>
         )}
+        <div className="comments-replys">
+          <CommentsAndReplies item={recipe} itemId={recipeId} type={"Recipe"} />
+        </div>
       </section>
-      <CommentsAndReplies item={recipe} itemId={recipeId} type={"Recipe"} />
     </main>
   );
 };

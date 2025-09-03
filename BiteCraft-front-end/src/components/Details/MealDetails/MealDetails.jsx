@@ -5,7 +5,7 @@ import { UserContext } from "../../../contexts/UserContext";
 import { Link } from "react-router";
 import MealForm from "../../Forms/MealForm/MealForm";
 import CommentsAndReplies from "../Comments/Comments";
-import Header from "../../Component/Header/Header";
+import CardHeader from "../../Component/Header/CardHeader";
 import Button from "../../Component/Button/Button";
 import ProgressBar from "../../Component/ProgressBar/ProgressBar";
 
@@ -110,7 +110,7 @@ const MealDetails = () => {
           />
         ) : (
           <>
-            <Header item={meal} />
+            <CardHeader item={meal} />
             <div className="container mt-2">
               <div className="box">
                 <h4 className="subtitle is-3 mb-5 has-text-weight-bold has-text-centered">
@@ -212,7 +212,7 @@ const MealDetails = () => {
                   </div>
                 )}
                 {!mealsInCollection.includes(mealId) && (
-                  <div className="mt-4 has-text-centered">
+                  <div className="mt-4 has-text-right">
                     <Button
                       className="button has-background-primary-45 is-medium"
                       onClick={handleAddToCollection}

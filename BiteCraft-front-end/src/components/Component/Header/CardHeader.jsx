@@ -1,19 +1,17 @@
-const Header = ({ item }) => {
+const CardHeader = ({ item }) => {
   return (
     <header className="container">
-      <div className="box mt-4">
-        <div className="hero has-text-centered">
-          <h2 className="title is-1 mb-3">{item.name}</h2>
+      <div className="card mt-4">
+        <div className="card-header has-background-primary-50 is-justify-content-center">
+          <h2 className="title is-2 py-2">{item.name}</h2>
         </div>
-        <div className="level is-flex is-align-items-flex-end m-4">
+        <div className="level is-flex is-align-items-flex-start m-4 pb-4">
           <div>
             <div className="hero">
               {item.category ? (
-                <h2 className="subtitle is-4 mb-2">
-                  {item.category} Dish
-                </h2>
+                <h2 className="subtitle is-4 mb-2">{item.category} Dish</h2>
               ) : null}
-              <p className="subtitle is-size-5 mt-4">{item.details}</p>
+              <p className="subtitle is-size-5">{item.details}</p>
             </div>
           </div>
           <div className="level-right pl-6">
@@ -37,4 +35,4 @@ const Header = ({ item }) => {
   );
 };
 
-export default Header;
+export default CardHeader;

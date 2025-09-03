@@ -5,6 +5,7 @@ import { UserContext } from "../../../contexts/UserContext";
 import Button from "../../Component/Button/Button";
 import CreatableSelect from "react-select/creatable";
 import ProgressBar from "../../Component/ProgressBar/ProgressBar";
+import PageHeader from "../../Component/Header/PageHeader";
 
 const RecipeForm = ({
   onCancel = null,
@@ -154,221 +155,225 @@ const RecipeForm = ({
   if (!ingredientsData) return <ProgressBar />;
 
   return (
-    <div className="container">
-      <h2 className="title is-4 pt-5 has-text-centered">Recipe Form</h2>
-      <form onSubmit={handleSubmit} className="box">
-        <div className="field">
-          <label htmlFor="category-input" className="label">
-            Category:
-          </label>
-          <div className="control">
-            <div className="select">
-              <select
-                required
-                name="category"
-                id="category-input"
-                value={formData.category}
-                onChange={handleChange}
-              >
-                <option value="Main">Main Dish</option>
-                <option value="Side">Side Dish</option>
-              </select>
+    <div className="section">
+      <div className="container">
+        <PageHeader headerText={"Recipe Form"} />
+        <form onSubmit={handleSubmit} className="box has-background-light">
+          <div className="field">
+            <label htmlFor="category-input" className="label">
+              Category:
+            </label>
+            <div className="control">
+              <div className="select">
+                <select
+                  required
+                  name="category"
+                  id="category-input"
+                  value={formData.category}
+                  onChange={handleChange}
+                >
+                  <option value="Main">Main Dish</option>
+                  <option value="Side">Side Dish</option>
+                </select>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="field">
-          <label htmlFor="name-input" className="label">
-            Name:
-          </label>
-          <div className="control">
-            <input
-              required
-              type="text"
-              name="name"
-              id="name-input"
-              value={formData.name}
-              onChange={handleChange}
-              onInput={handleInput}
-              className="input"
-              placeholder="Recipe name"
-            />
+          <div className="field">
+            <label htmlFor="name-input" className="label">
+              Name:
+            </label>
+            <div className="control">
+              <input
+                required
+                type="text"
+                name="name"
+                id="name-input"
+                value={formData.name}
+                onChange={handleChange}
+                onInput={handleInput}
+                className="input"
+                placeholder="Recipe name"
+              />
+            </div>
           </div>
-        </div>
-        <div className="field">
-          <label htmlFor="details-input" className="label">
-            Details:
-          </label>
-          <div className="control">
-            <textarea
-              type="text"
-              name="details"
-              id="details-input"
-              value={formData.details}
-              onChange={handleChange}
-              required
-              placeholder="Describe your recipe"
-              className="textarea"
-            ></textarea>
+          <div className="field">
+            <label htmlFor="details-input" className="label">
+              Details:
+            </label>
+            <div className="control">
+              <textarea
+                type="text"
+                name="details"
+                id="details-input"
+                value={formData.details}
+                onChange={handleChange}
+                required
+                placeholder="Describe your recipe"
+                className="textarea"
+              ></textarea>
+            </div>
           </div>
-        </div>
-        <div className="field">
-          <h3 className="title is-5">Ingredients</h3>
-          <div className="columns is-mobile has-text-weight-semibold mb-2">
-            <div className="column is-3">Unit</div>
-            <div className="column is-3">Amount/Fraction</div>
-            <div className="column is-4">Name</div>
-            <div className="column is-2"></div>
-          </div>
-          {formData.ingredients.map((ingredient, index) => (
-            <div className="columns is-mobile mb-2" key={index}>
-              <div className="column is-3">
-                <div className="select is-fullwidth">
-                  <select
+          <div className="field">
+            <h3 className="title is-5 has-text-centered is-underlined pt-4">
+              Ingredients
+            </h3>
+            <div className="columns has-text-weight-semibold mb-2 has-text-centered is-vcentered">
+              <div className="column is-2">Unit</div>
+              <div className="column is-3">Amount/Fraction</div>
+              <div className="column is-6">Name</div>
+              <div className="column is-narrow"></div>
+            </div>
+            {formData.ingredients.map((ingredient, index) => (
+              <div className="columns mb-2" key={index}>
+                <div className="column is-2">
+                  <div className="select is-fullwidth">
+                    <select
+                      required
+                      name={`unit-${index}`}
+                      id={`unit-input-${index}`}
+                      value={ingredient.unit}
+                      onChange={(e) => handleChange(e, index, "Unit")}
+                    >
+                      <option value="null">n/a</option>
+                      <option value="teaspoon">Tsp</option>
+                      <option value="tablespoon">Tbsp</option>
+                      <option value="cup">Cup</option>
+                      <option value="pint">Pint</option>
+                      <option value="quart">Quart</option>
+                      <option value="oz">Oz</option>
+                      <option value="lb">lb</option>
+                      <option value="g">g</option>
+                      <option value="L">L</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="column is-3 is-flex">
+                  <input
+                    className="input mr-2"
+                    type="number"
                     required
-                    name={`unit-${index}`}
-                    id={`unit-input-${index}`}
-                    value={ingredient.unit}
-                    onChange={(e) => handleChange(e, index, "Unit")}
-                  >
-                    <option value="null">n/a</option>
-                    <option value="teaspoon">Tsp</option>
-                    <option value="tablespoon">Tbsp</option>
-                    <option value="cup">Cup</option>
-                    <option value="pint">Pint</option>
-                    <option value="quart">Quart</option>
-                    <option value="oz">Oz</option>
-                    <option value="lb">lb</option>
-                    <option value="g">g</option>
-                    <option value="L">L</option>
-                  </select>
+                    name={`quantity-${index}`}
+                    id={`quantity-input-${index}`}
+                    value={ingredient.quantity}
+                    onChange={(e) => handleChange(e, index, "Quantity")}
+                    step={1}
+                    min={1}
+                    placeholder="1"
+                    onInput={handleInputQuantity}
+                  />
+                  <div className="select is-fullwidth">
+                    <select
+                      required
+                      name={`fraction-${index}`}
+                      id={`fraction-input-${index}`}
+                      value={ingredient.fraction}
+                      onChange={(e) => handleChange(e, index, "Fraction")}
+                    >
+                      <option value="null">n/a</option>
+                      <option value="1/8">1/8</option>
+                      <option value="1/4">1/4</option>
+                      <option value="3/8">3/8</option>
+                      <option value="1/2">1/2</option>
+                      <option value="5/8">5/8</option>
+                      <option value="3/4">3/4</option>
+                      <option value="7/8">7/8</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="column is-6">
+                  <CreatableSelect
+                    isClearable
+                    onChange={(e) => handleChange(e, index, "Name")}
+                    onCreateOption={handleCreateIngredient}
+                    name={`ingredients-${index}`}
+                    id={`ingredients-input-${index}`}
+                    options={ingredientsData.map((ing) => ({
+                      label: ing.name,
+                      value: ing.name,
+                    }))}
+                    value={
+                      ingredient.name
+                        ? { value: ingredient.name, label: ingredient.name }
+                        : null
+                    }
+                    placeholder={"e.g. Flour, Sugar, Eggs"}
+                    required
+                    classNamePrefix="react-select"
+                  />
+                </div>
+                <div className="column is-narrow is-flex is-justify-content-center">
+                  {formData.ingredients.length > 1 && (
+                    <Button
+                      className="button has-background-danger-90 is-small"
+                      type="button"
+                      onClick={() => removeIngredient(index)}
+                      buttonText="Remove"
+                    />
+                  )}
                 </div>
               </div>
-              <div className="column is-3 is-flex">
-                <input
-                  className="input mr-2"
-                  type="number"
+            ))}
+            <div className="has-text-centered mt-2">
+              <Button
+                type="button"
+                onClick={() => addIngredient()}
+                buttonText="Add Ingredient"
+                className="button is-info"
+              />
+            </div>
+          </div>
+          <div className="field"></div>
+          <label htmlFor="instructions-input" className="label">
+            Instructions:
+          </label>
+          {formData.instructions.map((instruction, index) => (
+            <div className="field is-grouped mb-2" key={index}>
+              <div className="control is-expanded">
+                <textarea
+                  type="text"
+                  name={`instructions-${index}`}
+                  id={`instructions-input-${index}`}
+                  value={instruction}
+                  onChange={(e) => handleChange(e, index, "instruction")}
+                  placeholder={`Step ${index + 1}:`}
                   required
-                  name={`quantity-${index}`}
-                  id={`quantity-input-${index}`}
-                  value={ingredient.quantity}
-                  onChange={(e) => handleChange(e, index, "Quantity")}
-                  step={1}
-                  min={1}
-                  placeholder="1"
-                  onInput={handleInputQuantity}
-                />
-                <div className="select is-fullwidth">
-                  <select
-                    required
-                    name={`fraction-${index}`}
-                    id={`fraction-input-${index}`}
-                    value={ingredient.fraction}
-                    onChange={(e) => handleChange(e, index, "Fraction")}
-                  >
-                    <option value="null">n/a</option>
-                    <option value="1/8">1/8</option>
-                    <option value="1/4">1/4</option>
-                    <option value="3/8">3/8</option>
-                    <option value="1/2">1/2</option>
-                    <option value="5/8">5/8</option>
-                    <option value="3/4">3/4</option>
-                    <option value="7/8">7/8</option>
-                  </select>
-                </div>
+                  className="textarea"
+                ></textarea>
               </div>
-              <div className="column is-4">
-                <CreatableSelect
-                  isClearable
-                  onChange={(e) => handleChange(e, index, "Name")}
-                  onCreateOption={handleCreateIngredient}
-                  name={`ingredients-${index}`}
-                  id={`ingredients-input-${index}`}
-                  options={ingredientsData.map((ing) => ({
-                    label: ing.name,
-                    value: ing.name,
-                  }))}
-                  value={
-                    ingredient.name
-                      ? { value: ingredient.name, label: ingredient.name }
-                      : null
-                  }
-                  placeholder={"e.g. Flour, Sugar, Eggs"}
-                  required
-                  classNamePrefix="react-select"
-                />
-              </div>
-              <div className="column is-2 is-flex is-align-items-center">
-                {formData.ingredients.length > 1 && (
+              <div className="control is-flex is-flex-direction-column is-justify-content-center">
+                {formData.instructions.length > 1 && (
                   <Button
+                    className="button has-background-danger-90 is-small"
                     type="button"
-                    onClick={() => removeIngredient(index)}
+                    onClick={() => removeInstruction(index)}
                     buttonText="Remove"
-                    className="button is-danger is-light is-small"
                   />
                 )}
               </div>
             </div>
           ))}
-          <div className="has-text-centered mt-2">
+          <div>
             <Button
+              className="button is-info"
               type="button"
-              onClick={() => addIngredient()}
-              buttonText="Add Ingredient"
-              className="button is-info is-light"
+              onClick={() => addInstruction()}
+              buttonText="Add Step"
             />
           </div>
-        </div>
-        <div className="field"></div>
-        <label htmlFor="instructions-input" className="label">
-          Instructions:
-        </label>
-        {formData.instructions.map((instruction, index) => (
-          <div className="field is-grouped mb-2" key={index}>
-            <div className="control is-expanded">
-              <textarea
-                type="text"
-                name={`instructions-${index}`}
-                id={`instructions-input-${index}`}
-                value={instruction}
-                onChange={(e) => handleChange(e, index, "instruction")}
-                placeholder={`Step ${index + 1}:`}
-                required
-                className="textarea"
-              ></textarea>
+          <div className="field is-grouped mt-4 is-grouped-right">
+            <div className="control">
+              <Button type="submit" buttonText={buttonText} />
             </div>
             <div className="control">
-              {formData.instructions.length > 1 && (
-                <Button
-                  type="button"
-                  onClick={() => removeInstruction(index)}
-                  buttonText="Remove"
-                  className="button is-danger is-light is-small"
-                />
-              )}
+              <Button
+                type="button"
+                onClick={onCancel ? onCancel : () => handleNavigation()}
+                buttonText="Cancel"
+              />
             </div>
           </div>
-        ))}
-        <div>
-          <Button
-            className="button is-info is-light"
-            type="button"
-            onClick={() => addInstruction()}
-            buttonText="Add Step"
-          />
-        </div>
-        <div className="field is-grouped mt-4 is-grouped-right">
-          <div className="control">
-            <Button type="submit" buttonText={buttonText} />
-          </div>
-          <div className="control">
-            <Button
-              type="button"
-              onClick={onCancel ? onCancel : () => handleNavigation()}
-              buttonText="Cancel"
-            />
-          </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 };

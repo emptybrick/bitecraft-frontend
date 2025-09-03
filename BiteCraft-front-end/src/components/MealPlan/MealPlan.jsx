@@ -5,7 +5,9 @@ import { UserContext } from "../../contexts/UserContext";
 import Button from "../Component/Button/Button";
 import ProgressBar from "../Component/ProgressBar/ProgressBar";
 import Select from "react-select";
-import ModalBody from "../Component/ModalBody/ModalBody";
+import RecipeModalBody from "../Component/ModalBody/RecipeModalBody";
+import Message from "../Component/Message/Message";
+import PageHeader from "../Component/Header/PageHeader";
 
 const MealPlan = () => {
   const { user } = useContext(UserContext);
@@ -104,7 +106,6 @@ const MealPlan = () => {
   };
 
   const handleShowQuickView = (e) => {
-    console.log("clicked open", e.target.dataset.target);
     e.preventDefault();
     const modal = e.target.dataset.target;
     setActiveModal(modal);
@@ -116,83 +117,76 @@ const MealPlan = () => {
   };
 
   const handlePrint = () => {
-    window.print()
-  }
+    window.print();
+  };
 
   if (!user || isLoading) return <ProgressBar />;
 
   return (
-    <main>
-      <div className="section">
+    <div className="section">
+      <PageHeader userName={user.username} headerText={"Meal Planner"} />
+      <div className="container">
         {visibleForm ? (
-          <div className="container">
-            <h2 className="title is-4 pt-5 has-text-centered">
-              Meal Plan Form
-            </h2>
-            <form action={handleSubmit} className="box">
-              <div className="columns">
-                {weeks.map((week, idx) => (
-                  <div className="column" key={idx}>
-                    <div className="box">
-                      <label
-                        htmlFor="meal-input"
-                        className="label has-text-centered"
-                      >
-                        {`Week ${idx + 1}`}
-                      </label>
-                      {weekDays.map((day, idx) => (
-                        <div className="field" key={idx}>
-                          <label htmlFor={`${week}-${day}-input`} />
-                          <Select
-                            className="is-fullwidth"
-                            isClearable
-                            onChange={(e) => handleSelect(e, week, idx)}
-                            name={`${week}-${day}`}
-                            id={`${week}-${day}-input`}
-                            options={meals.map((meal) => ({
-                              label: meal.name,
-                              value: meal,
-                            }))}
-                            placeholder={`${day}`}
-                            required
-                            classNamePrefix="react-select"
-                          />
-                        </div>
-                      ))}
-                    </div>
+          <form action={handleSubmit} className="box">
+            <div className="columns">
+              {weeks.map((week, idx) => (
+                <div className="column" key={idx}>
+                  <div className="box">
+                    <label
+                      htmlFor="meal-input"
+                      className="label has-text-centered"
+                    >
+                      {`Week ${idx + 1}`}
+                    </label>
+                    {weekDays.map((day, idx) => (
+                      <div className="field" key={idx}>
+                        <label htmlFor={`${week}-${day}-input`} />
+                        <Select
+                          className="is-fullwidth"
+                          isClearable
+                          onChange={(e) => handleSelect(e, week, idx)}
+                          name={`${week}-${day}`}
+                          id={`${week}-${day}-input`}
+                          options={meals.map((meal) => ({
+                            label: meal.name,
+                            value: meal,
+                          }))}
+                          placeholder={`${day}`}
+                          required
+                          classNamePrefix="react-select"
+                        />
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-              <div className="field is-grouped mt-4 is-grouped-centered">
-                <div className="control">
-                  <Button
-                    type="submit"
-                    className="button has-background-primary-65"
-                    buttonText="Create"
-                  />
                 </div>
-                <div className="control">
-                  <Button
-                    type="button"
-                    onClick={handleToggleForm}
-                    buttonText="Cancel"
-                  />
-                </div>
+              ))}
+            </div>
+            <div className="field is-grouped mt-4 is-grouped-centered">
+              <div className="control">
+                <Button
+                  type="submit"
+                  className="button has-background-primary-65"
+                  buttonText="Create"
+                />
               </div>
-            </form>
-          </div>
+              <div className="control">
+                <Button
+                  type="button"
+                  onClick={handleToggleForm}
+                  buttonText="Cancel"
+                />
+              </div>
+            </div>
+          </form>
         ) : (
           <>
-            <div className="hero">
-              <h1 className="title has-text-centered mb-6">Meal Planner</h1>
-            </div>
             {!mealPlan && meals ? (
               <div className="container">
                 <div className="columns">
                   <div className="column">
                     <div className="buttons is-centered">
                       <Button
-                        className="button  has-background-link-80 has-text-grey-darker"
+                        className="button has-background-link-80 has-text-grey-darker"
                         buttonText="Auto-Generate"
                         onClick={handleAutoGenerate}
                       />
@@ -201,7 +195,7 @@ const MealPlan = () => {
                       <div className="message-header has-text-grey-darker has-background-link-80">
                         <p>Auto Generate</p>
                       </div>
-                      <div className="message-body">
+                      <div className="message-body has-background-white box">
                         <div className="content">
                           <ul>
                             <li>
@@ -234,7 +228,7 @@ const MealPlan = () => {
                       <div className="message-header has-text-grey-darker has-background-success-80">
                         <p>Manual Input</p>
                       </div>
-                      <div className="message-body">
+                      <div className="message-body has-background-white box">
                         <div className="content">
                           <ul>
                             <li>
@@ -259,25 +253,8 @@ const MealPlan = () => {
               </div>
             ) : (
               <>
-                {!mealPlan && !meals ? (
-                  <div className="notification is-warning is-light has-text-centered">
-                    <p className="is-size-4">
-                      There are no meals in your collection!
-                    </p>
-                    <p className="is-size-5 mt-2">
-                      <span role="img" aria-label="chef">
-                        👨‍🍳
-                      </span>{" "}
-                      Add meals from other users or create your own to get
-                      started!
-                    </p>
-                    <button
-                      className="button is-link is-light mt-4 is-medium"
-                      onClick={handleNavigation}
-                    >
-                      View All Meals
-                    </button>
-                  </div>
+                {!mealPlan || (mealPlan.week1.meals.length < 1 && !meals) ? (
+                  <Message itemName={"Meal"} />
                 ) : (
                   <>
                     <div className="container">
@@ -286,76 +263,84 @@ const MealPlan = () => {
                           <div className="column" key={index}>
                             <div className="box">
                               <>
-                                <h1 className="title is-5 has-text-centered has-text-weight-bold is-underlined">
+                                <h1 className="title is-5 mb-2 has-text-centered has-text-weight-bold is-underlined">
                                   Week {index + 1}
                                 </h1>
                                 {weekDays.map((day, idx) => (
-                                  <div className="content" key={day}>
-                                    <div
-                                      className={`modal ${
-                                        activeModal === `modal-${idx}-${day}`
-                                          ? "is-active"
-                                          : ""
-                                      }`}
-                                      id={`modal-${idx}-${day}`}
-                                    >
+                                  <div className="container" key={day}>
+                                    <div className="content">
                                       <div
-                                        className="modal-background"
-                                        onClick={handleCloseQuickView}
-                                      ></div>
-                                      <div className="modal-card">
-                                        <header className="modal-card-head has-background-primary">
-                                          <h2 className="mb-0 has-text-weight-extrabold modal-card-title has-text-white has-text-centered">
-                                            {mealPlan[week].meals[idx].name}
-                                          </h2>
-                                          <button
-                                            className="delete"
-                                            aria-label="close"
-                                            onClick={handleCloseQuickView}
-                                          ></button>
-                                        </header>
-                                        <section className="modal-card-body">
-                                          <div className="box">
-                                            <ModalBody
-                                              recipe={
-                                                mealPlan[week].meals[idx].main
-                                              }
-                                            />
-                                          </div>
-                                          <div className="box">
-                                            <ModalBody
-                                              recipe={
-                                                mealPlan[week].meals[idx].side1
-                                              }
-                                            />
-                                          </div>
-                                          <div className="box">
-                                            <ModalBody
-                                              recipe={
-                                                mealPlan[week].meals[idx].side2
-                                              }
-                                            />
-                                          </div>
-                                        </section>
-                                        <footer className="modal-card-foot pt-4 is-flex-direction-column">
-                                          <div className="buttons">
-                                            <Button
+                                        className={`modal ${
+                                          activeModal ===
+                                          `modal-${idx}-${day}-${week}`
+                                            ? "is-active"
+                                            : ""
+                                        }`}
+                                        id={`modal-${idx}-${day}-${week}`}
+                                      >
+                                        <div
+                                          className="modal-background"
+                                          onClick={handleCloseQuickView}
+                                        ></div>
+                                        <div className="modal-card">
+                                          <header className="modal-card-head has-background-primary">
+                                            <h2 className="mb-0 has-text-weight-extrabold modal-card-title has-text-white has-text-centered">
+                                              {mealPlan[week].meals[idx].name}
+                                            </h2>
+                                            <button
+                                              className="delete"
+                                              aria-label="close"
                                               onClick={handleCloseQuickView}
-                                              buttonText="Close"
-                                            />
-                                            <Button
-                                              className="button"
-                                              onClick={handlePrint}
-                                              buttonText="Print"
-                                            />
-                                          </div>
-                                        </footer>
+                                            ></button>
+                                          </header>
+                                          <section className="modal-card-body">
+                                            <div className="box">
+                                              <RecipeModalBody
+                                                recipe={
+                                                  mealPlan[week].meals[idx].main
+                                                }
+                                                type="Planner"
+                                              />
+                                            </div>
+                                            <div className="box">
+                                              <RecipeModalBody
+                                                recipe={
+                                                  mealPlan[week].meals[idx]
+                                                    .side1
+                                                }
+                                                type="Planner"
+                                              />
+                                            </div>
+                                            <div className="box">
+                                              <RecipeModalBody
+                                                recipe={
+                                                  mealPlan[week].meals[idx]
+                                                    .side2
+                                                }
+                                                type="Planner"
+                                              />
+                                            </div>
+                                          </section>
+                                          <footer className="modal-card-foot pt-4 is-flex-direction-column">
+                                            <div className="buttons">
+                                              <Button
+                                                onClick={handleCloseQuickView}
+                                                buttonText="Close"
+                                              />
+                                              <Button
+                                                className="button"
+                                                onClick={handlePrint}
+                                                buttonText="Print"
+                                              />
+                                            </div>
+                                          </footer>
+                                        </div>
                                       </div>
                                     </div>
                                     <button
-                                      className="button modal-trigger is-fullwidth has-background-success-95"
-                                      id={`model-trigger-${idx}-${day}`}
-                                      data-target={`modal-${idx}-${day}`}
+                                      className="button modal-trigger mb-2 is-fullwidth has-background-link-95"
+                                      id={`model-trigger-${idx}-${day}-${week}`}
+                                      data-target={`modal-${idx}-${day}-${week}`}
                                       onClick={(e) => handleShowQuickView(e)}
                                     >
                                       {`${day}: ${mealPlan[week].meals[idx].name}`}
@@ -372,7 +357,10 @@ const MealPlan = () => {
                                       }`}
                                       id={`modal-${index}-${week}`}
                                     >
-                                      <div className="modal-background"></div>
+                                      <div
+                                        className="modal-background"
+                                        onClick={handleCloseQuickView}
+                                      ></div>
                                       <div className="modal-card">
                                         <header className="modal-card-head has-background-primary">
                                           <h2 className="mb-0 has-text-weight-extrabold modal-card-title has-text-white has-text-centered">
@@ -438,7 +426,7 @@ const MealPlan = () => {
           </>
         )}
       </div>
-    </main>
+    </div>
   );
 };
 

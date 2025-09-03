@@ -42,7 +42,6 @@ const handleMealPlan = (data, type) => {
         week4 = data.week4;
     }
 
-    // week#[#].main/side1/side2.ingredients [{ingredient.name/quantity/fraction/unit}]
     const ingredientListFormat = (week) => {
 
         let ingredientList = [];
@@ -132,32 +131,6 @@ const handleMealPlan = (data, type) => {
         });
         return flattenedList;
     };
-    
-    // const mealsForWeekIds = (week) => {
-    //     const mealIds = week.map(meal => {
-    //         return meal._id;
-    //     });
-    //     return mealIds;
-    // };
-
-    // const mealPlan = {
-    //     week1: {
-    //         meals: mealsForWeekIds(week1),
-    //         list: ingredientListFormat(week1)
-    //     },
-    //     week2: {
-    //         meals: mealsForWeekIds(week2),
-    //         list: ingredientListFormat(week2)
-    //     },
-    //     week3: {
-    //         meals: mealsForWeekIds(week3),
-    //         list: ingredientListFormat(week3)
-    //     },
-    //     week4: {
-    //         meals: mealsForWeekIds(week4),
-    //         list: ingredientListFormat(week4)
-    //     }
-    // };
 
     const mealPlan = {
         week1: {
@@ -178,11 +151,7 @@ const handleMealPlan = (data, type) => {
         }
     };
 
-    console.log(mealPlan.week1.meals)
-    console.log(mealPlan.week1.list)
     return mealPlan;
 };
-
-// think about not referencing meals and input meal/recipes into mealplan so if they are deleted midmonth u still have access to instruction
 
 module.exports = handleMealPlan;

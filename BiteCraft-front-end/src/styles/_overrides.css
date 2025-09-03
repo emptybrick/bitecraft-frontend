@@ -5,8 +5,51 @@
   overflow-wrap: break-word;
 }
 
-@media print { 
-  .button, .modal-card-title, .modal-card-head {
-    display: none
+.modal-card-head {
+  height: 80px;
+}
+
+.navbar, a.navbar {
+--bulma-navbar-dropdown-arrow: white;
+--bulma-navbar-item-color: white
+}
+
+a.navbar-item:hover, .navbar-link:hover {
+background-color: var(--bulma-primary-25);
+--bulma-navbar-dropdown-arrow: var(--bulma-primary-45);
+--bulma-navbar-item-color: var(--bulma-primary-45);
+}
+
+a.navbar-item:focus, a.navbar-item:focus-within {
+  --bulma-navbar-item-background-a: none;
+  --bulma-navbar-item-background: none
+}
+
+@media print {
+  .button,
+  .comments-replys,
+  .card-header,
+  .modal-card-foot {
+    display: none;
+  }
+  .box,
+  .modal-card-head {
+    --bulma-box-shadow: none;
+    --bulma-shadow: none;
   }
 }
+
+html {
+  background-color: #d0d0d0;
+}
+
+.media {
+  --bulma-media-border-color: hsl(221deg 14% 86% / 0%);
+}
+
+:root {
+  --bulma-primary-h: 196deg;
+  --bulma-link-h: 213deg;
+  --bulma-success-h: 151deg;
+}
+

@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import * as biteCraftService from "../../../services/BiteCraftService";
 import { UserContext } from "../../../contexts/UserContext";
 import ProgressBar from "../../Component/ProgressBar/ProgressBar";
+import PageHeader from "../../Component/Header/PageHeader";
 
 const RecipeList = () => {
   const { user } = useContext(UserContext);
@@ -30,13 +31,13 @@ const RecipeList = () => {
   if (!user || !recipes) return <ProgressBar />;
 
   return (
-    <main className="section">
+    <div className="section">
       <div className="container">
-        <h1 className="title is-3 has-text-centered mb-5">All Recipes</h1>
+        <PageHeader headerText={"List of all Recipes"} />
         <div className="columns is-centered mb-3">
           <div className="column is-half">
             <input
-              className="input is-small has-background-light"
+              className="input is-small"
               type="text"
               placeholder="Search by name..."
               value={search}
@@ -46,7 +47,6 @@ const RecipeList = () => {
           <div className="column is-half">
             <div className="select is-small is-fullwidth">
               <select
-                className="has-background-light"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
               >
@@ -85,7 +85,7 @@ const RecipeList = () => {
           </table>
         </div>
       </div>
-    </main>
+    </div>
   );
 };
 

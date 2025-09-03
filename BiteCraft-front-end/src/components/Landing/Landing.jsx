@@ -10,7 +10,7 @@ const Landing = () => {
           alt=""
         />
         Text logo or app name */}
-        <h1 className="title is-2 has-text-primary mb-4">Welcome to BiteCraft</h1>
+        <h1 className="title is-2 mb-4">Welcome to BiteCraft</h1>
         <p className="subtitle is-5 has-text-grey mb-5">
           BiteCraft helps you discover, share, and manage your favorite recipes with ease.<br />
           Join our community to save your culinary creations, explore new dishes, and connect with fellow food lovers!

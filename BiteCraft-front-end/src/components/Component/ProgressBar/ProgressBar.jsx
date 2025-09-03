@@ -1,7 +1,7 @@
 const ProgressBar = () => {
         return (
           <main>
-            <div className="section">
+            {/* <div className="section">
               <div className="container pr-6 pl-6 mt-6">
                 <div className="notification mr-6 ml-6">
                   <div className="card">
@@ -11,7 +11,7 @@ const ProgressBar = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </main>
         );
 };

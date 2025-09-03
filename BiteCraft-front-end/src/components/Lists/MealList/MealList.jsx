@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import * as biteCraftService from "../../../services/BiteCraftService";
 import { UserContext } from "../../../contexts/UserContext";
 import ProgressBar from "../../Component/ProgressBar/ProgressBar";
+import PageHeader from "../../Component/Header/PageHeader";
 
 const MealList = () => {
   const { user } = useContext(UserContext);
@@ -23,14 +24,12 @@ const MealList = () => {
   if (!user || !meals) return <ProgressBar />;
 
   return (
-    <main className="section">
+    <div className="section">
       <div className="container">
-        <h1 className="title is-3 has-text-centered mb-5">
-          List of All Meals!
-        </h1>
+        <PageHeader headerText={"List of all Meals"} />
         <div className="container mb-5">
           <input
-            className="input is-small has-background-light"
+            className="input is-small"
             type="text"
             placeholder="Search by name..."
             value={search}
@@ -69,7 +68,7 @@ const MealList = () => {
           </table>
         </div>
       </div>
-    </main>
+    </div>
   );
 };
 
