@@ -3,7 +3,7 @@ import * as biteCraftService from "../../../services/BiteCraftService";
 import { UserContext } from "../../../contexts/UserContext";
 import CommentsFooter from "../Footer/CommentsFooter";
 import Button from "../Button/Button";
-import CommentForm from "./CommentForm";
+import CommentForm from "../../Forms/CommentForm/CommentForm";
 
 const CommentsAndReplies = ({ item, itemId, type }) => {
   const [visibleForm, setVisibleForm] = useState(null);

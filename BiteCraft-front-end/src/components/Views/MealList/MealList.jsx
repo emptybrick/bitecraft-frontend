@@ -29,7 +29,7 @@ const MealList = () => {
         <PageHeader headerText={"List of all Meals"} />
         <div className="container mb-5">
           <input
-            className="input is-small"
+            className="input"
             type="text"
             placeholder="Search by name..."
             value={search}

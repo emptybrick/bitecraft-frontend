@@ -1,8 +1,6 @@
 import { useState, useEffect, useContext } from "react";
-import { Link } from "react-router";
 import * as biteCraftService from "../../../services/BiteCraftService";
 import { UserContext } from "../../../contexts/UserContext";
-import Button from "../../Component/Button/Button";
 import ProgressBar from "../../Component/ProgressBar/ProgressBar";
 import QuickViewCard from "../../Component/QuickViewCard/QuickViewCard";
 import RecipeBody from "../../Component/Body/RecipeBody";
@@ -10,11 +8,11 @@ import ModalFooter from "../../Component/Footer/ModalFooter";
 import ModalHeader from "../../Component/Header/ModalHeader";
 import Message from "../../Component/Message/Message";
 import PageHeader from "../../Component/Header/PageHeader";
+import Card from "../../Component/Card/Card";
 
 const RecipeCollection = () => {
   const { user } = useContext(UserContext);
   const [recipes, setRecipes] = useState([]);
-  const [activeModal, setActiveModal] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -51,44 +49,7 @@ const RecipeCollection = () => {
       <PageHeader userName={user.username} headerText={"Recipes Collection"} />
       <div className="container">
         {recipes.length > 0 ? (
-          <div className="columns is-multiline has-text-centered is-vcentered">
-            {recipes.map((recipe, idx) => (
-              <div className="column is-one-third" key={idx}>
-                <div
-                  className={`modal ${
-                    activeModal === `modal-${idx}` ? "is-active" : ""
-                  }`}
-                  id={`modal-${idx}`}
-                >
-                  <div
-                    className="modal-background"
-                    onClick={handleCloseQuickView}
-                  ></div>
-                  <div className="modal-card">
-                    <ModalHeader itemName={recipe.name} />
-                    <RecipeBody recipe={recipe} isModal={true} />
-                    <ModalFooter
-                      item={recipe}
-                      type={"Recipe"}
-                      collection={"RecipeCollection"}
-                      closeQuickView={handleCloseQuickView}
-                      setActiveModal={setActiveModal}
-                      items={recipes}
-                      setItems={setRecipes}
-                    />
-                  </div>
-                </div>
-                <QuickViewCard
-                  item={recipe}
-                  onClick={(e) => handleShowQuickView(e)}
-                  id={`modal-trigger-${idx}`}
-                  target={`modal-${idx}`}
-                  buttonText="Go to Recipe"
-                  link={`/recipes/${recipe._id}`}
-                />
-              </div>
-            ))}
-          </div>
+          <Card items={recipes} itemType="Recipe" isModal={true} setItems={setRecipes} />
         ) : (
           <Message itemName={"Recipe"} />
         )}

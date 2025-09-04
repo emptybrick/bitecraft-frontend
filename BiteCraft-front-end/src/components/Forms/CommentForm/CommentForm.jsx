@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Button from "../Button/Button";
+import Button from "../../Component/Button/Button";
 
 const CommentForm = ({
   handleAddComment,
