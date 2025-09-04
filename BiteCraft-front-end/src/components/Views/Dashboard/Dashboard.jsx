@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Link } from "react-router";
-import { UserContext } from "../../contexts/UserContext";
-import ProgressBar from "../Component/ProgressBar/ProgressBar";
+import { UserContext } from "../../../contexts/UserContext";
+import ProgressBar from "../../Component/ProgressBar/ProgressBar";
 
 const Dashboard = () => {
   const { user } = useContext(UserContext);

@@ -5,7 +5,7 @@ import { UserContext } from "../../../contexts/UserContext";
 import Button from "../../Component/Button/Button";
 import ProgressBar from "../../Component/ProgressBar/ProgressBar";
 import QuickViewCard from "../../Component/QuickViewCard/QuickViewCard";
-import RecipeModalBody from "../../Component/ModalBody/RecipeModalBody";
+import RecipeBody from "../../Component/Body/RecipeBody";
 import ModalFooter from "../../Component/Footer/ModalFooter";
 import ModalHeader from "../../Component/Header/ModalHeader";
 import Message from "../../Component/Message/Message";
@@ -66,7 +66,7 @@ const RecipeCollection = () => {
                   ></div>
                   <div className="modal-card">
                     <ModalHeader itemName={recipe.name} />
-                    <RecipeModalBody recipe={recipe} />
+                    <RecipeBody recipe={recipe} isModal={true} />
                     <ModalFooter
                       item={recipe}
                       type={"Recipe"}

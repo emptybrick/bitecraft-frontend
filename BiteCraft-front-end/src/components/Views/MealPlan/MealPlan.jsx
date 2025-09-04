@@ -1,13 +1,13 @@
 import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router";
-import * as biteCraftService from "../../services/BiteCraftService";
-import { UserContext } from "../../contexts/UserContext";
-import Button from "../Component/Button/Button";
-import ProgressBar from "../Component/ProgressBar/ProgressBar";
+import * as biteCraftService from "../../../services/BiteCraftService";
+import { UserContext } from "../../../contexts/UserContext";
+import Button from "../../Component/Button/Button";
+import ProgressBar from "../../Component/ProgressBar/ProgressBar";
 import Select from "react-select";
-import RecipeModalBody from "../Component/ModalBody/RecipeModalBody";
-import Message from "../Component/Message/Message";
-import PageHeader from "../Component/Header/PageHeader";
+import RecipeModalBody from "../../Component/Body/RecipeBody";
+import Message from "../../Component/Message/Message";
+import PageHeader from "../../Component/Header/PageHeader";
 
 const MealPlan = () => {
   const { user } = useContext(UserContext);
@@ -41,7 +41,7 @@ const MealPlan = () => {
     const fetchdata = async () => {
       // first attempt to find mealplan, if none then populate meals
       const getMealPlan = await biteCraftService.Index("MealPlan", user._id);
-      if (getMealPlan) {
+      if (!getMealPlan || getMealPlan.week1.length > 1) {
         setMealPlan(getMealPlan);
       }
 
@@ -186,13 +186,13 @@ const MealPlan = () => {
                   <div className="column">
                     <div className="buttons is-centered">
                       <Button
-                        className="button has-background-link-80 has-text-grey-darker"
+                        className="button has-background-link-95 has-text-grey-darker"
                         buttonText="Auto-Generate"
                         onClick={handleAutoGenerate}
                       />
                     </div>
                     <article className="message">
-                      <div className="message-header has-text-grey-darker has-background-link-80">
+                      <div className="message-header has-text-grey-darker has-background-link-95">
                         <p>Auto Generate</p>
                       </div>
                       <div className="message-body has-background-white box">
@@ -219,13 +219,13 @@ const MealPlan = () => {
                   <div className="column">
                     <div className="buttons is-centered">
                       <Button
-                        className="button has-background-success-80 has-text-grey-darker"
+                        className="button has-background-info-90 has-text-grey-darker"
                         buttonText="Manual Select"
                         onClick={handleToggleForm}
                       />
                     </div>
                     <article className="message">
-                      <div className="message-header has-text-grey-darker has-background-success-80">
+                      <div className="message-header has-text-grey-darker has-background-info-90">
                         <p>Manual Input</p>
                       </div>
                       <div className="message-body has-background-white box">
@@ -253,7 +253,7 @@ const MealPlan = () => {
               </div>
             ) : (
               <>
-                {!mealPlan || (mealPlan.week1.meals.length < 1 && !meals) ? (
+                {!mealPlan ? (
                   <Message itemName={"Meal"} />
                 ) : (
                   <>

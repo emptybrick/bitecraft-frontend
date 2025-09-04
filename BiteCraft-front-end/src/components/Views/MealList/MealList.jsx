@@ -38,7 +38,7 @@ const MealList = () => {
         </div>
         <div className="table-container">
           <table className="table is-hoverable is-fullwidth">
-            <thead className="has-background-primary">
+            <thead className="has-background-info-30">
               <tr>
                 <th>Name</th>
                 <th>Author</th>

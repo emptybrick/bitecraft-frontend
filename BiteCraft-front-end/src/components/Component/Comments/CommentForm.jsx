@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Button from "../../Component/Button/Button";
+import Button from "../Button/Button";
 
 const CommentForm = ({
   handleAddComment,
@@ -35,8 +35,17 @@ const CommentForm = ({
         </div>
       </div>
       <div className="field is-grouped is-grouped-center">
-        <Button type="submit" buttonText={buttonText} className="button has-background-primary-40" />
-        <Button type="button" onClick={onCancel} buttonText="Cancel" className="button has-background-danger-80" />
+        <Button
+          type="submit"
+          buttonText={buttonText}
+          className="button has-background-primary-40"
+        />
+        <Button
+          type="button"
+          onClick={onCancel}
+          buttonText="Cancel"
+          className="button has-background-danger-80"
+        />
       </div>
     </form>
   );

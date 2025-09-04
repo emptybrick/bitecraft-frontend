@@ -1,9 +1,9 @@
-const CardHeader = ({ item }) => {
+const DetailsHeader = ({ item }) => {
   return (
     <header className="container">
       <div className="card mt-4">
-        <div className="card-header has-background-primary-50 is-justify-content-center">
-          <h2 className="title is-2 py-2">{item.name}</h2>
+        <div className="card-header has-background-primary-30 is-justify-content-center">
+          <h2 className="title is-2 py-2 has-text-white">{item.name}</h2>
         </div>
         <div className="level is-flex is-align-items-flex-start m-4 pb-4">
           <div>
@@ -35,4 +35,4 @@ const CardHeader = ({ item }) => {
   );
 };
 
-export default CardHeader;
+export default DetailsHeader;

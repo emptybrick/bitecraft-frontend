@@ -1,7 +1,11 @@
-const RecipeModalBody = ({ recipe, type }) => {
+const RecipeBody = ({ recipe, type, isModal }) => {
   return (
-    <section className="modal-card-body pt-5 pb-5">
-      {type === "Planner" && <div className="title is-4 has-text-centered mb-4">{recipe.name}</div>}
+    <section
+      className={`${isModal ? "modal-card-body" : "box mb-4"}  pt-5 pb-5`}
+    >
+      {type === "Planner" && (
+        <div className="title is-4 has-text-centered mb-4">{recipe.name}</div>
+      )}
       <div className="columns is-centered">
         <div className="column box is-one-third mb-0">
           <h4 className="subtitle is-5 mb-4 has-text-weight-bold is-underlined has-text-centered">
@@ -34,4 +38,4 @@ const RecipeModalBody = ({ recipe, type }) => {
   );
 };
 
-export default RecipeModalBody;
+export default RecipeBody;

@@ -4,8 +4,8 @@ import Button from "../Button/Button";
 const QuickViewCard = ({ item, onClick, id, target, link, buttonText }) => {
   return (
     <div className="card">
-      <div className="card-header has-background-primary-50">
-        <div className="card-header-title ">{item.name}</div>
+      <div className="card-header has-background-primary-20">
+        <div className="card-header-title has-text-white">{item.name}</div>
       </div>
       <div className="card-content">
         <div className="is-6 pl-2 pr-2 card-content-override-details">
