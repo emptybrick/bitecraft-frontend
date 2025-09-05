@@ -17,7 +17,7 @@ const Message = ({ itemName, itemType }) => {
   return (
     <div className="content">
       <article className="message is-medium">
-        <div className="message-header has-background-info-30">
+        <div className="message-header">
           <span className="icon-text">
             <span className="icon">
               <i className="fas fa-exclamation-triangle"></i>
@@ -31,7 +31,7 @@ const Message = ({ itemName, itemType }) => {
             )}
           </span>
         </div>
-        <div className="message-body has-text-centered pt-6">
+        <div className="message-body has-text-centered pt-6 has-background-info-85">
           {itemType === "createMeal" && (
             <p className="text is-size-5">
               You need at least <strong>1 Main</strong> and{" "}

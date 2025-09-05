@@ -67,7 +67,7 @@ a.navbar-item:focus-within {
 
 :root {
   --bulma-primary-h: 0deg;
-  --bulma-primary-l: 71%;
+  --bulma-primary-l: 76%;
   --bulma-link-h: 27deg;
   --bulma-link-s: 87%;
   --bulma-link-l: 67%;
@@ -78,16 +78,16 @@ a.navbar-item:focus-within {
   --bulma-success-s: 98%;
   --bulma-success-l: 66%;
   --bulma-warning-h: 44deg;
-  --bulma-warning-l: 59%;
-  --bulma-danger-h: 360deg;
-  --bulma-danger-s: 88%;
+  --bulma-warning-l: 60%;
+  --bulma-danger-h: 345deg;
+  --bulma-danger-s: 80%;
   --bulma-danger-l: 76%;
   --bulma-scheme-h: 36;
   --bulma-scheme-s: 100%;
-  --bulma-body-background-color: #FFF5EE;
-  --bulma-body-color: #2D3748;
-  --bulma-hr-background-color: #FF6B6B;
-  --bulma-skeleton-background: #FFF5EE;
+  --bulma-body-background-color: #fff5ee;
+  --bulma-body-color: #2d3748;
+  --bulma-hr-background-color: #ff6b6b;
+  --bulma-skeleton-background: #fff5ee;
 }
 
 .card {
@@ -106,8 +106,8 @@ a.navbar-item:focus-within {
 }
 
 .navbar {
-  --bulma-navbar-dropdown-background-color: hsl(28.66deg 100% 82.06% / 90%);
-  --bulma-navbar-dropdown-border-color: hsl(28.66deg 100% 82.06% / 90%);
+  --bulma-navbar-dropdown-background-color: hsla(12, 100%, 90%, 0.9);
+  --bulma-navbar-dropdown-border-color: hsla(12, 100%, 90%, 0.9);
   --bulma-navbar-dropdown-item-color-l: 10%;
 }
 
@@ -115,4 +115,6 @@ a.navbar-item:focus-within {
   --bulma-box-background-color: hsl(28.66deg 100% 82.06% / 40%);
 }
 
-
+.button {
+  color: rgb(0, 0, 0) !important;
+}

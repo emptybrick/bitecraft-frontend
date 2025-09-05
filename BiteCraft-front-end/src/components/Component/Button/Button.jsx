@@ -8,73 +8,88 @@ const Button = ({
   disabled,
 }) => {
   const addButtons = [
-    "Add Ingredient",
-    "Add to Collection",
-    "Create New Recipe",
-    "Create New Meal",
     "Submit",
     "Save",
+    "Create",
     "Sign In",
-    "Add New Comment",
     "Go to Recipe",
     "Go to Meal",
+    "Create New Recipe",
+    "Create New Meal",
     "Auto-Generate",
-    "Manual Select",
-    "Add Step",
+    "Add to Collection",
   ];
-  const editButtons = ["Edit", "Close"];
+  const editButtons = [
+    "Edit",
+    "Close",
+    "View All Recipes",
+    "View All Meals",
+    "Manual Select",
+  ];
   const deleteButtons = [
     "Delete",
     "Remove",
     "Cancel",
     "Remove from Collection",
   ];
+  const infoButtons = ["Add Ingredient", "Add New Comment", "Add Step"];
+
   if (addButtons.includes(buttonText)) {
     return (
       <button
         className="button has-background-success"
-        onClick={ onClick }
-        type={ type }
+        onClick={onClick}
+        type={type}
       >
-        { buttonText }
+        {buttonText}
       </button>
     );
   } else if (deleteButtons.includes(buttonText)) {
     return (
       <button
         className="button has-background-danger"
-        onClick={ onClick }
-        type={ type }
+        onClick={onClick}
+        type={type}
       >
-        { buttonText }
+        {buttonText}
+      </button>
+    );
+  } else if (infoButtons.includes(buttonText)) {
+    return (
+      <button
+        className="button has-background-info"
+        onClick={onClick}
+        type={type}
+      >
+        {buttonText}
       </button>
     );
   } else if (editButtons.includes(buttonText)) {
     return (
       <button
         className="button has-background-warning"
-        onClick={ onClick }
-        type={ type }
+        onClick={onClick}
+        type={type}
       >
-        { buttonText }
+        {buttonText}
       </button>
     );
   } else if (buttonText === "Print") {
     return (
       <button
-        className="button has-background-primary"
-        onClick={ onClick }
-        type={ type }
+        className="button has-background-link"
+        onClick={onClick}
+        type={type}
       >
-        { buttonText }
+        {buttonText}
       </button>
     );
   } else if (buttonText === "Quick View") {
     return (
       <button
-        className="button is-primary"
+        className="button is-info"
         onClick={onClick}
-        target={target}
+        data-target={target}
         id={id}
       >
         {buttonText}
@@ -82,11 +97,7 @@ const Button = ({
     );
   } else if (buttonText === "Sign Up") {
     return (
-      <button
-        className="button is-success"
-        disabled={ disabled }
-        type={type}
-      >
+      <button className="button is-success" disabled={disabled} type={type}>
         {buttonText}
       </button>
     );

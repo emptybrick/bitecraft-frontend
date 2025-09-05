@@ -16,10 +16,13 @@ const Card = ({ items, itemType, isModal, setItems }) => {
   };
 
   const handleShowQuickView = (e) => {
+    console.log("clicked")
+    console.log(e.target.dataset.target);
     e.preventDefault();
     const modal = e.target.dataset.target;
     setActiveModal(modal);
   };
+  
 
   return (
     <div className="columns is-multiline has-text-centered is-vcentered">

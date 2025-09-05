@@ -127,7 +127,7 @@ const MealPlan = () => {
       <PageHeader userName={user.username} headerText={"Meal Planner"} />
       <div className="container">
         {visibleForm ? (
-          <form action={handleSubmit} className="box">
+          <form action={handleSubmit}>
             <div className="columns">
               {weeks.map((week, idx) => (
                 <div className="column" key={idx}>
@@ -190,7 +190,7 @@ const MealPlan = () => {
                       />
                     </div>
                     <article className="message">
-                      <div className="message-header has-text-grey-darker has-background-link-95">
+                      <div className="message-header has-text-grey-darker has-background-success-90">
                         <p>Auto Generate</p>
                       </div>
                       <div className="message-body has-background-white box">
@@ -222,7 +222,7 @@ const MealPlan = () => {
                       />
                     </div>
                     <article className="message">
-                      <div className="message-header has-text-grey-darker has-background-info-90">
+                      <div className="message-header has-text-grey-darker has-background-warning-90">
                         <p>Manual Input</p>
                       </div>
                       <div className="message-body has-background-white box">
