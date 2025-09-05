@@ -2,12 +2,12 @@ import { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router";
 import * as biteCraftService from "../../../services/BiteCraftService";
 import { UserContext } from "../../../contexts/UserContext";
-import { Link } from "react-router";
 import MealForm from "../../Forms/MealForm/MealForm";
 import CommentsAndReplies from "../../Component/Comments/Comments";
 import DetailsHeader from "../../Component/Header/DetailsHeader";
 import Button from "../../Component/Button/Button";
 import ProgressBar from "../../Component/ProgressBar/ProgressBar";
+import RecipeBody from "../../Component/Body/RecipeBody";
 
 const MealDetails = () => {
   const navigate = useNavigate();
@@ -20,6 +20,7 @@ const MealDetails = () => {
   const [sideRecipes, setSideRecipes] = useState([]);
   const [mainRecipes, setMainRecipes] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const mealOptions = ["main", "side1", "side2"];
 
   useEffect(() => {
     const getData = async () => {
@@ -92,139 +93,65 @@ const MealDetails = () => {
     }
   };
 
+  const handlePrint = () => {
+    window.print();
+  };
+
   if (!meal || isLoading) return <ProgressBar />;
 
   return (
     <section className="section">
-      {visibleMealForm ? (
-        <MealForm
-          initialData={meal}
-          handleUpdateMeal={(formData) => {
-            handleUpdateMeal(formData);
-          }}
-          buttonText="Save"
-          onCancel={() => toggleMealForm()}
-          sidesFromDetails={sideRecipes}
-          mainsFromDetails={mainRecipes}
-        />
-      ) : (
-        <>
-          <DetailsHeader item={meal} />
-          <div className="container mt-2">
-            <div className="box">
-              <h4 className="subtitle is-3 mb-5 has-text-weight-bold has-text-centered">
-                Recipes:
-              </h4>
-              <div className="content">
-                <div className="content">
-                  <div>
-                    <span className="has-text-weight-semibold is-size-5">
-                      Main Dish:{" "}
-                    </span>
-                    {meal.main ? (
-                      <Link
-                        key={meal.main._id}
-                        to={`/recipes/${meal.main._id}`}
-                        className="has-text-link has-text-weight-semibold is-size-5"
-                      >
-                        {meal.main.name}
-                      </Link>
-                    ) : (
-                      <span className="has-text-grey-light">
-                        Recipe is no longer available.
-                      </span>
-                    )}
+      <div className="container">
+        {visibleMealForm ? (
+          <MealForm
+            initialData={meal}
+            handleUpdateMeal={(formData) => {
+              handleUpdateMeal(formData);
+            }}
+            buttonText="Save"
+            onCancel={() => toggleMealForm()}
+            sidesFromDetails={sideRecipes}
+            mainsFromDetails={mainRecipes}
+          />
+        ) : (
+          <>
+            <DetailsHeader item={meal} />
+            <div className="container">
+              <div className="columns is-multiline">
+                {mealOptions.map((option, idx) => (
+                  <div className="column is-full" key={idx}>
+                    <RecipeBody recipe={meal[option]} type={"Meal"} />
                   </div>
-                  <div className="mt-1">
-                    {meal.main ? (
-                      <p className="is-size-6 has-text-grey">
-                        {meal.main.details}
-                      </p>
-                    ) : (
-                      ""
-                    )}
-                  </div>
-                </div>
-                <div className="content">
-                  <div>
-                    <span className="has-text-weight-semibold is-size-5">
-                      Side Dish:{" "}
-                    </span>
-                    {meal.side1 ? (
-                      <Link
-                        key={meal.side1._id}
-                        to={`/recipes/${meal.side1._id}`}
-                        className="has-text-link has-text-weight-semibold is-size-5"
-                      >
-                        {meal.side1.name}
-                      </Link>
-                    ) : (
-                      <span className="has-text-grey-light">
-                        Recipe is no longer available.
-                      </span>
-                    )}
-                    <div className="mt-1">
-                      {meal.side1 ? (
-                        <p className="is-size-6 has-text-grey">
-                          {meal.side1.details}
-                        </p>
-                      ) : (
-                        ""
-                      )}
-                    </div>
-                  </div>
-                </div>
-                <div className="content">
-                  <div>
-                    <span className="has-text-weight-semibold is-size-5">
-                      Side Dish:{" "}
-                    </span>
-                    {meal.side2 ? (
-                      <Link
-                        key={meal.side2._id}
-                        to={`/recipes/${meal.side2._id}`}
-                        className="has-text-link has-text-weight-semibold is-size-5"
-                      >
-                        {meal.side2.name}
-                      </Link>
-                    ) : (
-                      <span className="has-text-grey-light">
-                        Recipe is no longer available.
-                      </span>
-                    )}
-                    <div className="mt-1">
-                      {meal.side2 ? (
-                        <p className="is-size-6 has-text-grey">
-                          {meal.side2.details}
-                        </p>
-                      ) : (
-                        ""
-                      )}
-                    </div>
-                  </div>
-                </div>
+                ))}
               </div>
-              {meal.author._id === user._id && !visibleMealForm && (
-                <div className="field mt-4 is-grouped is-grouped-right">
-                  <Button onClick={handleDeleteMeal} buttonText="Delete" />
-                  <Button onClick={toggleMealForm} buttonText="Edit" />
-                </div>
-              )}
-              {!mealsInCollection.includes(mealId) && (
-                <div className="mt-4 has-text-right">
-                  <Button
-                    className="button has-background-primary-45 is-medium"
-                    onClick={handleAddToCollection}
-                    buttonText="Add to Collection"
-                  />
-                </div>
-              )}
+              <div className="level">
+                <Button
+                  className="button is-medium"
+                  onClick={handlePrint}
+                  buttonText="Print"
+                />
+                {meal.author._id === user._id && !visibleMealForm && (
+                  <div className="field is-grouped is-grouped-right">
+                    <Button onClick={handleDeleteMeal} buttonText="Delete" />
+                    <Button onClick={toggleMealForm} buttonText="Edit" />
+                  </div>
+                )}
+                {!mealsInCollection.includes(mealId) && (
+                  <div className="has-text-right">
+                    <Button
+                      className="button has-background-primary-45"
+                      onClick={handleAddToCollection}
+                      buttonText="Add to Collection"
+                    />
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        </>
-      )}
-      <div className="comments-replys">
-        <CommentsAndReplies item={meal} itemId={mealId} type={"Meal"} />
+          </>
+        )}
+        <div className="comments-replys">
+          <CommentsAndReplies item={meal} itemId={mealId} type={"Meal"} />
+        </div>
       </div>
     </section>
   );

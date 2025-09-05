@@ -79,45 +79,53 @@ const RecipeDetails = () => {
 
   return (
     <section className="section">
-      {visibleRecipeForm ? (
-        <RecipeForm
-          initialData={recipe}
-          handleUpdateRecipe={(formData) => {
-            handleUpdateRecipe(formData);
-          }}
-          buttonText="Save"
-          onCancel={() => toggleRecipeForm()}
-        />
-      ) : (
-        <>
-          <DetailsHeader item={recipe} />
-          <RecipeBody recipe={recipe} />
-          <div className="level mb-4">
-            <Button
-              className="button is-medium"
-              onClick={handlePrint}
-              buttonText="Print"
+      <div className="container">
+        <div>
+          {visibleRecipeForm ? (
+            <RecipeForm
+              initialData={recipe}
+              handleUpdateRecipe={(formData) => {
+                handleUpdateRecipe(formData);
+              }}
+              buttonText="Save"
+              onCancel={() => toggleRecipeForm()}
             />
-            {recipe.author._id === user._id && !visibleRecipeForm && (
-              <div className="field is-grouped">
-                <Button onClick={handleDeleteRecipe} buttonText="Delete" />
-                <Button onClick={toggleRecipeForm} buttonText="Edit" />
-              </div>
-            )}
-            {!recipesInCollection.includes(recipeId) && (
-              <div className="has-text-centered">
+          ) : (
+            <>
+              <DetailsHeader item={recipe} />
+              <RecipeBody recipe={recipe} />
+              <div className="level mb-4 mt-4">
                 <Button
-                  className="button has-background-primary-45 is-medium"
-                  onClick={handleAddToCollection}
-                  buttonText="Add to Collection"
+                  className="button"
+                  onClick={handlePrint}
+                  buttonText="Print"
                 />
+                {recipe.author._id === user._id && !visibleRecipeForm && (
+                  <div className="field is-grouped">
+                    <Button onClick={handleDeleteRecipe} buttonText="Delete" />
+                    <Button onClick={toggleRecipeForm} buttonText="Edit" />
+                  </div>
+                )}
+                {!recipesInCollection.includes(recipeId) && (
+                  <div className="has-text-centered">
+                    <Button
+                      className="button has-background-primary-45"
+                      onClick={handleAddToCollection}
+                      buttonText="Add to Collection"
+                    />
+                  </div>
+                )}
               </div>
-            )}
-          </div>{" "}
-        </>
-      )}
-      <div className="comments-replys">
-        <CommentsAndReplies item={recipe} itemId={recipeId} type={"Recipe"} />
+            </>
+          )}
+          <div className="comments-replys">
+            <CommentsAndReplies
+              item={recipe}
+              itemId={recipeId}
+              type={"Recipe"}
+            />
+          </div>
+        </div>
       </div>
     </section>
   );

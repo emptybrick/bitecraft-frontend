@@ -138,8 +138,20 @@ router.get('/:userId/meals-collection', verifyToken, async (req, res) => {
       populate: [
         { path: 'author', select: 'username' },
         { path: 'main' },
+        {
+          path: 'main',
+          populate: { path: 'author', select: 'username' }
+        },
         { path: 'side1' },
-        { path: 'side2' }
+        {
+          path: 'side1',
+          populate: { path: 'author', select: 'username' }
+        },
+        { path: 'side2' },
+        {
+          path: 'side2',
+          populate: { path: 'author', select: 'username' }
+        },
       ]
     });
 

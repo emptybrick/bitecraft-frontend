@@ -1,7 +1,7 @@
 const DetailsHeader = ({ item }) => {
   return (
-    <header className="container">
-      <div className="card mt-4">
+    <header>
+      <div className="card">
         <div className="card-header has-background-primary-30 is-justify-content-center">
           <h2 className="title is-2 py-2 has-text-white">{item.name}</h2>
         </div>

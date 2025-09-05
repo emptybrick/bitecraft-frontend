@@ -158,13 +158,13 @@ const CommentsAndReplies = ({ item, itemId, type }) => {
 
   return (
     <div className="box mt-4">
-      <h2 className="subtitle is-4 has-text-centered has-text-weight-bold is-underlined">
+      <h2 className="subtitle is-4 has-text-centered has-text-weight-bold">
         Comments
       </h2>
       <div className="content">
         {comments.map((comment, idx) => (
-          <article className="media ml-5 mr-5 " key={idx}>
-            <div className="media-content ml-2 mr-2">
+          <article className="media" key={idx}>
+            <div className="media-content">
               <div className="box has-background-light">
                 <div className="box">
                   {editState.isEditing &&

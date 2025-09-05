@@ -2,10 +2,6 @@ import { useState, useEffect, useContext } from "react";
 import * as biteCraftService from "../../../services/BiteCraftService";
 import { UserContext } from "../../../contexts/UserContext";
 import ProgressBar from "../../Component/ProgressBar/ProgressBar";
-import QuickViewCard from "../../Component/QuickViewCard/QuickViewCard";
-import RecipeBody from "../../Component/Body/RecipeBody";
-import ModalFooter from "../../Component/Footer/ModalFooter";
-import ModalHeader from "../../Component/Header/ModalHeader";
 import Message from "../../Component/Message/Message";
 import PageHeader from "../../Component/Header/PageHeader";
 import Card from "../../Component/Card/Card";
@@ -30,17 +26,6 @@ const RecipeCollection = () => {
 
     if (user) fetchAllRecipes();
   }, [user]);
-
-  const handleCloseQuickView = (e) => {
-    e.preventDefault();
-    setActiveModal(null);
-  };
-
-  const handleShowQuickView = (e) => {
-    e.preventDefault();
-    const modal = e.target.dataset.target;
-    setActiveModal(modal);
-  };
 
   if (!user || isLoading) return <ProgressBar />;
 

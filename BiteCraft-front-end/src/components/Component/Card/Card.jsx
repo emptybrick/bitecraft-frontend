@@ -8,7 +8,7 @@ import ModalHeader from "../../Component/Header/ModalHeader";
 const Card = ({ items, itemType, isModal, setItems }) => {
   const collection = `${itemType}Collection`;
   const linkType = `${itemType.toLowerCase()}s`;
-    const [ activeModal, setActiveModal ] = useState(null);
+  const [activeModal, setActiveModal] = useState(null);
 
   const handleCloseQuickView = (e) => {
     e.preventDefault();
@@ -40,7 +40,14 @@ const Card = ({ items, itemType, isModal, setItems }) => {
               {itemType === "Recipe" ? (
                 <RecipeBody recipe={item} isModal={isModal} />
               ) : (
-                <MealBody meal={item} isModal={isModal} />
+                <MealBody
+                  item={item}
+                  isModal={isModal}
+                  handleShowQuickView={handleShowQuickView}
+                  handleCloseQuickView={handleCloseQuickView}
+                  setActiveModal={setActiveModal}
+                  activeModal={activeModal}
+                />
               )}
               <ModalFooter
                 item={item}

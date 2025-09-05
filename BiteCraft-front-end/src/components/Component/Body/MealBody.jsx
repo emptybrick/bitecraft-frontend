@@ -1,95 +1,66 @@
-const MealBody = ({ item }) => {
-  return (
-    <>
-      <div className="columns">
-        <div className="column is-one-third">
-          <QuickViewCard
-            item={recipe}
-            onClick={(e) => handleShowQuickView(e)}
-            id={`modal-trigger-${idx}`}
-            target={`modal-${idx}`}
-            buttonText="Go to Recipe"
-            link={`/recipes/${recipe._id}`}
-          />
-        </div>
-        <div className="column is-one-third">
-          <QuickViewCard
-            item={recipe}
-            onClick={(e) => handleShowQuickView(e)}
-            id={`modal-trigger-${idx}`}
-            target={`modal-${idx}`}
-            buttonText="Go to Recipe"
-            link={`/recipes/${recipe._id}`}
-          />
-        </div>
-        <div className="column is-one-third">
-          <QuickViewCard
-            item={recipe}
-            onClick={(e) => handleShowQuickView(e)}
-            id={`modal-trigger-${idx}`}
-            target={`modal-${idx}`}
-            buttonText="Go to Recipe"
-            link={`/recipes/${recipe._id}`}
-          />
-        </div>
-      </div>
+import { useState } from "react";
+import QuickViewCard from "../QuickViewCard/QuickViewCard";
+import ModalFooter from "../Footer/ModalFooter";
+import ModalHeader from "../Header/ModalHeader";
+import RecipeBody from "./RecipeBody";
 
-      <section className="modal-card-body pb-2">
-        <h3 className="subtitle is-4 has-text-weight-bold is-underlined">
-          {item.name}
-        </h3>
-        <div className="has-text-left pl-4">
-          <div className="mb-2">
-            <span className="has-text-weight-semibold">Main Dish: </span>
-            {meal.main ? (
-              <Link
-                key={meal.main._id}
-                to={`/recipes/${meal.main._id}`}
-                className="has-text-link"
-              >
-                {meal.main.name}
-              </Link>
-            ) : (
-              <span className="has-text-grey-light">
-                Recipe is no longer available.
-              </span>
-            )}
+const MealBody = ({ item }) => {
+  const mealOptions = ["main", "side1", "side2"];
+  const [activeModal, setActiveModal] = useState(null);
+
+  const handleCloseQuickView = (e) => {
+    e.preventDefault();
+    setActiveModal(null);
+  };
+
+  const handleShowQuickView = (e) => {
+    e.preventDefault();
+    const modal = e.target.dataset.target;
+    setActiveModal(modal);
+  };
+
+  return (
+    <section className="modal-card-body pt-5 pb-5`">
+      <h2 className="title is-4">Recipes</h2>
+      <div className="columns is-multiline is-centered">
+        {mealOptions.map((option, idx) => (
+          <div className="column is-full" key={idx}>
+            <div
+              className={`modal ${
+                activeModal === `modal-${idx}` ? "is-active" : ""
+              }`}
+              id={`modal-${idx}`}
+            >
+              <div
+                className="modal-background"
+                onClick={handleCloseQuickView}
+              ></div>
+              <div className="modal-card">
+                <ModalHeader itemName={item[option].name} />
+                <RecipeBody recipe={item[option]} isModal={true} />
+                <ModalFooter
+                  item={item[option]}
+                  type={"Meal"}
+                  collection={"MealCollection"}
+                  closeQuickView={handleCloseQuickView}
+                  setActiveModal={ setActiveModal }
+                  mealBody={true}
+                />
+              </div>
+            </div>
+            <QuickViewCard
+              item={item[option]}
+              onClick={(e) => handleShowQuickView(e)}
+              id={`modal-trigger-${idx}`}
+              target={`modal-${idx}`}
+              buttonText="Go to Recipe"
+              link={ `/recipes/${ item[ option ]._id }` }
+              MealBody={true}
+            />
           </div>
-          <div className="mb-2">
-            <span className="has-text-weight-semibold">Side Dish: </span>
-            {meal.side1 ? (
-              <Link
-                key={meal.side1._id}
-                to={`/recipes/${meal.side1._id}`}
-                className="has-text-link"
-              >
-                {meal.side1.name}
-              </Link>
-            ) : (
-              <span className="has-text-grey-light">
-                Recipe is no longer available.
-              </span>
-            )}
-          </div>
-          <div className="mb-2">
-            <span className="has-text-weight-semibold">Side Dish: </span>
-            {meal.side2 ? (
-              <Link
-                key={meal.side2._id}
-                to={`/recipes/${meal.side2._id}`}
-                className="has-text-link"
-              >
-                {meal.side2.name}
-              </Link>
-            ) : (
-              <span className="has-text-grey-light">
-                Recipe is no longer available.
-              </span>
-            )}
-          </div>
-        </div>
-      </section>
-    </>
+        ))}
+      </div>
+    </section>
   );
 };
 
