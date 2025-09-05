@@ -66,11 +66,10 @@ const ModalFooter = ({
       </div>
       <div className="container is-flex is-justify-content-space-between">
         {type === "Recipe" ? (
-          <Button className="button" onClick={handlePrint} buttonText="Print" />
+          <Button onClick={handlePrint} buttonText="Print" />
         ) : (
           !mealBody && (
             <Button
-              className="button has-background-info-90"
               onClick={() => handleNavigate(item._id)}
               buttonText="Go to Meal"
             />

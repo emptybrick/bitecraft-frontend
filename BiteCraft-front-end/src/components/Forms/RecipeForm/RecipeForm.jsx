@@ -304,7 +304,6 @@ const RecipeForm = ({
                 <div className="column is-narrow is-flex is-justify-content-center">
                   {formData.ingredients.length > 1 && (
                     <Button
-                      className="button has-background-danger-90 is-small"
                       type="button"
                       onClick={() => removeIngredient(index)}
                       buttonText="Remove"
@@ -318,7 +317,6 @@ const RecipeForm = ({
                 type="button"
                 onClick={() => addIngredient()}
                 buttonText="Add Ingredient"
-                className="button is-info"
               />
             </div>
           </div>
@@ -343,7 +341,6 @@ const RecipeForm = ({
               <div className="control is-flex is-flex-direction-column is-justify-content-center">
                 {formData.instructions.length > 1 && (
                   <Button
-                    className="button has-background-danger-90 is-small"
                     type="button"
                     onClick={() => removeInstruction(index)}
                     buttonText="Remove"
@@ -354,7 +351,6 @@ const RecipeForm = ({
           ))}
           <div>
             <Button
-              className="button is-info"
               type="button"
               onClick={() => addInstruction()}
               buttonText="Add Step"

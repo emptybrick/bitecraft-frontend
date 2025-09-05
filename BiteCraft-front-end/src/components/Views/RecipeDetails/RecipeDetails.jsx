@@ -96,7 +96,6 @@ const RecipeDetails = () => {
               <RecipeBody recipe={recipe} />
               <div className="level mb-4 mt-4">
                 <Button
-                  className="button"
                   onClick={handlePrint}
                   buttonText="Print"
                 />
@@ -109,7 +108,6 @@ const RecipeDetails = () => {
                 {!recipesInCollection.includes(recipeId) && (
                   <div className="has-text-centered">
                     <Button
-                      className="button has-background-primary-45"
                       onClick={handleAddToCollection}
                       buttonText="Add to Collection"
                     />

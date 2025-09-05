@@ -76,13 +76,12 @@ const SignInForm = () => {
             </div>
             <div className="field is-grouped is-grouped-centered">
               <div className="control">
-                <Button type="submit" buttonText="Sign In" className="button is-primary" />
+                <Button type="submit" buttonText="Sign In" />
               </div>
               <div className="control">
                 <Button
                   onClick={() => navigate('/')}
                   buttonText="Cancel"
-                  className="button is-light"
                 />
               </div>
             </div>

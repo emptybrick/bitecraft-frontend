@@ -28,7 +28,6 @@ const QuickViewCard = ({ item, onClick, id, target, link, buttonText }) => {
           </button>
           <Link className="ml-1" to={link}>
             <Button
-              className="button has-background-link-70"
               buttonText={buttonText}
             />
           </Link>

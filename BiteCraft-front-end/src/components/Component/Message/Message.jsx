@@ -47,12 +47,10 @@ const Message = ({ itemName, itemType }) => {
           </p>
           <div className="buttons pt-4 pb-4 is-centered are-medium is-gap-6">
             <Button
-              className="button has-background-info-40 has-text-light"
               onClick={() => handleNavigation("Create")}
               buttonText={`Create New ${itemName}`}
             />
             <Button
-              className="button has-background-info-40 has-text-light"
               onClick={() => handleNavigation("View")}
               buttonText={`View All ${itemName}s`}
             />

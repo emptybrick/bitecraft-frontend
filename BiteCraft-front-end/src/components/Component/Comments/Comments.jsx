@@ -197,7 +197,6 @@ const CommentsAndReplies = ({ item, itemId, type }) => {
                           !comment.reply &&
                           comment.author._id !== user._id && (
                             <Button
-                              className="button is-small is-info is-light mt-4"
                               onClick={() => toggleForm(comment._id)}
                               buttonText="Reply"
                             />
@@ -207,7 +206,6 @@ const CommentsAndReplies = ({ item, itemId, type }) => {
                           !visibleForm && (
                             <>
                               <Button
-                                className="button is-small is-danger is-light"
                                 onClick={() => handleDeleteComment(comment._id)}
                                 buttonText="Delete"
                               />
@@ -219,7 +217,6 @@ const CommentsAndReplies = ({ item, itemId, type }) => {
                                     comment._id
                                   )
                                 }
-                                className="button is-small is-warning is-light"
                                 buttonText="Edit"
                               />
                             </>
@@ -280,14 +277,12 @@ const CommentsAndReplies = ({ item, itemId, type }) => {
                               <div className="level-left">
                                 <div className="buttons mb-0">
                                   <Button
-                                    className="button is-small is-danger is-light"
                                     onClick={() =>
                                       handleDeleteReply(comment._id)
                                     }
                                     buttonText="Delete"
                                   />
                                   <Button
-                                    className="button is-small is-warning is-light"
                                     onClick={() =>
                                       toggleEditMode(
                                         "Reply",
@@ -319,7 +314,6 @@ const CommentsAndReplies = ({ item, itemId, type }) => {
                 <Button
                   onClick={() => toggleForm(itemId)}
                   buttonText="Add New Comment"
-                  className="button is-info"
                 />
               </div>
             )}

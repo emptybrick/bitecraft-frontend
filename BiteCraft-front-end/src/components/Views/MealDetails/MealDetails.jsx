@@ -126,7 +126,6 @@ const MealDetails = () => {
               </div>
               <div className="level">
                 <Button
-                  className="button is-medium"
                   onClick={handlePrint}
                   buttonText="Print"
                 />
@@ -139,7 +138,6 @@ const MealDetails = () => {
                 {!mealsInCollection.includes(mealId) && (
                   <div className="has-text-right">
                     <Button
-                      className="button has-background-primary-45"
                       onClick={handleAddToCollection}
                       buttonText="Add to Collection"
                     />

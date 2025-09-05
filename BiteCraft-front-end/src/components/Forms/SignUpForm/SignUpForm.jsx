@@ -108,7 +108,6 @@ const SignUpForm = () => {
               </div>
               <div className="control">
                 <Button
-                  className="button is-light"
                   onClick={() => navigate("/")}
                   buttonText="Cancel"
                 />

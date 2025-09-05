@@ -38,13 +38,11 @@ const CommentForm = ({
         <Button
           type="submit"
           buttonText={buttonText}
-          className="button has-background-primary-40"
         />
         <Button
           type="button"
           onClick={onCancel}
           buttonText="Cancel"
-          className="button has-background-danger-80"
         />
       </div>
     </form>

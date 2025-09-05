@@ -165,7 +165,6 @@ const MealPlan = () => {
               <div className="control">
                 <Button
                   type="submit"
-                  className="button has-background-primary-65"
                   buttonText="Create"
                 />
               </div>
@@ -186,7 +185,6 @@ const MealPlan = () => {
                   <div className="column">
                     <div className="buttons is-centered">
                       <Button
-                        className="button has-background-link-95 has-text-grey-darker"
                         buttonText="Auto-Generate"
                         onClick={handleAutoGenerate}
                       />
@@ -219,7 +217,6 @@ const MealPlan = () => {
                   <div className="column">
                     <div className="buttons is-centered">
                       <Button
-                        className="button has-background-info-90 has-text-grey-darker"
                         buttonText="Manual Select"
                         onClick={handleToggleForm}
                       />
@@ -328,7 +325,6 @@ const MealPlan = () => {
                                                 buttonText="Close"
                                               />
                                               <Button
-                                                className="button"
                                                 onClick={handlePrint}
                                                 buttonText="Print"
                                               />
@@ -388,7 +384,6 @@ const MealPlan = () => {
                                               buttonText="Close"
                                             />
                                             <Button
-                                              className="button"
                                               onClick={handlePrint}
                                               buttonText="Print"
                                             />
@@ -413,7 +408,6 @@ const MealPlan = () => {
                       </div>
                       <div className="buttons is-centered">
                         <Button
-                          className="button has-background-danger-70"
                           onClick={deleteMealPlan}
                           buttonText="Delete Meal Plan"
                         />
