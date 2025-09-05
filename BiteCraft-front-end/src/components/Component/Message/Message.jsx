@@ -31,7 +31,7 @@ const Message = ({ itemName, itemType }) => {
             )}
           </span>
         </div>
-        <div className="message-body has-text-centered has-background-light pt-6">
+        <div className="message-body has-text-centered pt-6">
           {itemType === "createMeal" && (
             <p className="text is-size-5">
               You need at least <strong>1 Main</strong> and{" "}

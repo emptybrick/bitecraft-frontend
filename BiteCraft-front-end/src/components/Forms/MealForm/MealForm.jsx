@@ -95,7 +95,7 @@ const MealForm = ({
         {mainRecipes.length < 1 || sideRecipes.length < 1 ? (
           <Message itemName={"Recipe"} itemType={"createMeal"} />
         ) : (
-          <form onSubmit={handleSubmit} className="box mt-4">
+          <form onSubmit={handleSubmit} className="box">
             <div className="field">
               <label className="label" htmlFor="name-input">
                 Name

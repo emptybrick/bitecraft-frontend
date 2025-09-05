@@ -139,7 +139,6 @@ const RecipeForm = ({
     } else {
       try {
         await biteCraftService.Create("Recipe", formData);
-        // navigate('/recipes')
         navigate(`/${user._id}/recipes-collection`);
       } catch (error) {
         console.log(error);
@@ -148,8 +147,8 @@ const RecipeForm = ({
   };
 
   const handleCreateIngredient = async (inputValue) => {
+    // need to finish
     console.log("something happened", inputValue);
-    // event.preventDefault();
   };
 
   if (!ingredientsData) return <ProgressBar />;
@@ -158,7 +157,7 @@ const RecipeForm = ({
     <div className="section">
       <div className="container">
         <PageHeader headerText={"Recipe Form"} />
-        <form onSubmit={handleSubmit} className="box has-background-light">
+        <form onSubmit={handleSubmit} className="box">
           <div className="field">
             <label htmlFor="category-input" className="label">
               Category:
@@ -218,14 +217,14 @@ const RecipeForm = ({
               Ingredients
             </h3>
             <div className="columns has-text-weight-semibold mb-2 has-text-centered is-vcentered">
-              <div className="column is-2">Unit</div>
-              <div className="column is-3">Amount/Fraction</div>
-              <div className="column is-6">Name</div>
+              <div className="column is-narrow pl-5 pr-6 ml-4 mr-6">Unit</div>
+              <div className="column is-narrow pl-6">Amount/Fraction</div>
+              <div className="column">Name</div>
               <div className="column is-narrow"></div>
             </div>
             {formData.ingredients.map((ingredient, index) => (
               <div className="columns mb-2" key={index}>
-                <div className="column is-2">
+                <div className="column is-narrow">
                   <div className="select is-fullwidth">
                     <select
                       required
@@ -247,7 +246,7 @@ const RecipeForm = ({
                     </select>
                   </div>
                 </div>
-                <div className="column is-3 is-flex">
+                <div className="column is-flex is-narrow">
                   <input
                     className="input mr-2"
                     type="number"
@@ -261,7 +260,7 @@ const RecipeForm = ({
                     placeholder="1"
                     onInput={handleInputQuantity}
                   />
-                  <div className="select is-fullwidth">
+                  <div className="select">
                     <select
                       required
                       name={`fraction-${index}`}
@@ -280,7 +279,7 @@ const RecipeForm = ({
                     </select>
                   </div>
                 </div>
-                <div className="column is-6">
+                <div className="column">
                   <CreatableSelect
                     isClearable
                     onChange={(e) => handleChange(e, index, "Name")}
@@ -301,7 +300,7 @@ const RecipeForm = ({
                     classNamePrefix="react-select"
                   />
                 </div>
-                <div className="column is-narrow is-flex is-justify-content-center">
+                <div className="column is-narrow">
                   {formData.ingredients.length > 1 && (
                     <Button
                       type="button"
@@ -312,7 +311,7 @@ const RecipeForm = ({
                 </div>
               </div>
             ))}
-            <div className="has-text-centered mt-2">
+            <div className="mt-2">
               <Button
                 type="button"
                 onClick={() => addIngredient()}
@@ -320,12 +319,12 @@ const RecipeForm = ({
               />
             </div>
           </div>
-          <div className="field"></div>
+          <div className="field mt-5"></div>
           <label htmlFor="instructions-input" className="label">
-            Instructions:
+            <h3 className="title is-5 is-underlined has-text-centered">Instructions:</h3> 
           </label>
           {formData.instructions.map((instruction, index) => (
-            <div className="field is-grouped mb-2" key={index}>
+            <div className="field is-grouped mb-2 mt-4" key={index}>
               <div className="control is-expanded">
                 <textarea
                   type="text"
@@ -349,7 +348,7 @@ const RecipeForm = ({
               </div>
             </div>
           ))}
-          <div>
+          <div className="mt-4">
             <Button
               type="button"
               onClick={() => addInstruction()}

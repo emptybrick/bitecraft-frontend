@@ -19,6 +19,8 @@ const MealBody = ({ item }) => {
     setActiveModal(modal);
   };
 
+  console.log(item)
+
   return (
     <section className="modal-card-body pt-5 pb-5`">
       <h2 className="title is-4">Recipes</h2>
@@ -32,7 +34,7 @@ const MealBody = ({ item }) => {
               id={`modal-${idx}`}
             >
               <div
-                className="modal-background"
+                className=""
                 onClick={handleCloseQuickView}
               ></div>
               <div className="modal-card">

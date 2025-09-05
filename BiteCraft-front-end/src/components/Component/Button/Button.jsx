@@ -3,16 +3,24 @@ const Button = ({
   buttonText = "Submit",
   type = "button",
   className = "",
+  target,
+  id,
+  disabled,
 }) => {
   const addButtons = [
     "Add Ingredient",
-    "Add",
     "Add to Collection",
     "Create New Recipe",
     "Create New Meal",
     "Submit",
     "Save",
     "Sign In",
+    "Add New Comment",
+    "Go to Recipe",
+    "Go to Meal",
+    "Auto-Generate",
+    "Manual Select",
+    "Add Step",
   ];
   const editButtons = ["Edit", "Close"];
   const deleteButtons = [
@@ -21,41 +29,62 @@ const Button = ({
     "Cancel",
     "Remove from Collection",
   ];
-  if (addButtons.includes(buttonText) && !className) {
+  if (addButtons.includes(buttonText)) {
     return (
       <button
-        className="button has-background-success-55"
-        onClick={onClick}
-        type={type}
+        className="button has-background-success"
+        onClick={ onClick }
+        type={ type }
       >
-        {buttonText}
+        { buttonText }
       </button>
     );
-  } else if (deleteButtons.includes(buttonText) && !className) {
+  } else if (deleteButtons.includes(buttonText)) {
     return (
       <button
-        className="button has-background-danger-80"
-        onClick={onClick}
-        type={type}
+        className="button has-background-danger"
+        onClick={ onClick }
+        type={ type }
       >
-        {buttonText}
+        { buttonText }
       </button>
     );
-  } else if (editButtons.includes(buttonText) && !className) {
+  } else if (editButtons.includes(buttonText)) {
     return (
       <button
-        className="button has-background-warning-80"
-        onClick={onClick}
-        type={type}
+        className="button has-background-warning"
+        onClick={ onClick }
+        type={ type }
       >
-        {buttonText}
+        { buttonText }
       </button>
     );
   } else if (buttonText === "Print") {
     return (
       <button
-        className="button has-background-primary-90"
+        className="button has-background-primary"
+        onClick={ onClick }
+        type={ type }
+      >
+        { buttonText }
+      </button>
+    );
+  } else if (buttonText === "Quick View") {
+    return (
+      <button
+        className="button is-primary"
         onClick={onClick}
+        target={target}
+        id={id}
+      >
+        {buttonText}
+      </button>
+    );
+  } else if (buttonText === "Sign Up") {
+    return (
+      <button
+        className="button is-success"
+        disabled={ disabled }
         type={type}
       >
         {buttonText}
@@ -69,9 +98,5 @@ const Button = ({
     );
   }
 };
-
-// need to figure out CSS stuff
-// button text options
-//   Reply, "Comment",
 
 export default Button;

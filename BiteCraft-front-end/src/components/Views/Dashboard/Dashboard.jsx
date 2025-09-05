@@ -11,7 +11,7 @@ const Dashboard = () => {
   return (
     <div className="section">
       <div className="container">
-        <div className="box has-text-centered">
+        <div className="has-text-centered">
           <h1 className="title is-2 mb-3">Welcome, {user?.username}!</h1>
           <p className="subtitle is-5 mb-5">
             This is your dashboard. Here’s what you can do:

@@ -57,7 +57,7 @@ const ModalFooter = ({
   };
 
   return (
-    <footer className="modal-card-foot pt-1 pb-3 is-flex-direction-column has-background-grey-lighter">
+    <footer className="modal-card-foot pt-1 pb-3 is-flex-direction-column">
       <div className="level mb-2 is-gap-8">
         <p className="has-text-left pt-2 mr-6 pr-6">{`Total Comments: ${item.comments.length}`}</p>
         <p className="has-text-right pt-2 ml-6 pl-6">{`${

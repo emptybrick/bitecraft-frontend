@@ -165,7 +165,7 @@ const CommentsAndReplies = ({ item, itemId, type }) => {
         {comments.map((comment, idx) => (
           <article className="media" key={idx}>
             <div className="media-content">
-              <div className="box has-background-light">
+              <div className="box">
                 <div className="box">
                   {editState.isEditing &&
                   editState.type === "Comment" &&
@@ -318,7 +318,7 @@ const CommentsAndReplies = ({ item, itemId, type }) => {
               </div>
             )}
             {visibleForm === itemId && (
-              <div className="box has-background-light">
+              <div className="box">
                 <CommentForm
                   handleAddComment={(formData) => {
                     handleAddComment(formData);

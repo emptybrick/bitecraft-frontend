@@ -98,19 +98,14 @@ const SignUpForm = () => {
             </div>
             <div className="field is-grouped is-grouped-centered">
               <div className="control">
-                <button
-                  className="button is-primary"
+                <Button
                   disabled={isFormInvalid()}
                   type="submit"
-                >
-                  Sign Up
-                </button>
+                  buttonText="Sign Up"
+                />
               </div>
               <div className="control">
-                <Button
-                  onClick={() => navigate("/")}
-                  buttonText="Cancel"
-                />
+                <Button onClick={() => navigate("/")} buttonText="Cancel" />
               </div>
             </div>
           </form>

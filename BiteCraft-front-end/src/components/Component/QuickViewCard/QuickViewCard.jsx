@@ -18,18 +18,14 @@ const QuickViewCard = ({ item, onClick, id, target, link, buttonText }) => {
           </span>
         </div>
         <div className="buttons is-grouped are-small is-centered mt-4">
-          <button
-            className="button modal-trigger has-background-info-90"
+          <Button
             id={id}
-            data-target={target}
+            target={target}
             onClick={onClick}
-          >
-            Quick View
-          </button>
+            buttonText="Quick View"
+          />
           <Link className="ml-1" to={link}>
-            <Button
-              buttonText={buttonText}
-            />
+            <Button buttonText={buttonText} />
           </Link>
         </div>
       </div>
