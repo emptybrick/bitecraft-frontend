@@ -51,7 +51,7 @@ const SignUpForm = () => {
               </label>
               <div className="control">
                 <input
-                  className="input"
+                  className="input is-primary"
                   type="text"
                   id="name"
                   value={username}
@@ -68,7 +68,7 @@ const SignUpForm = () => {
               </label>
               <div className="control">
                 <input
-                  className="input"
+                  className="input is-primary"
                   type="password"
                   id="password"
                   value={password}
@@ -85,7 +85,7 @@ const SignUpForm = () => {
               </label>
               <div className="control">
                 <input
-                  className="input"
+                  className="input is-primary"
                   type="password"
                   id="confirm"
                   value={passwordConf}

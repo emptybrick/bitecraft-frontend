@@ -103,7 +103,7 @@ const MealForm = ({
               <div className="control">
                 <input
                   required
-                  className="input"
+                  className="input input-select"
                   type="text"
                   name="name"
                   id="name-input"
@@ -136,8 +136,7 @@ const MealForm = ({
               </label>
               <div className="control">
                 <Select
-                  className="is-fullwidth"
-                  isClearable
+                  className="react-select is-fullwidth"
                   onChange={(e) => handleSelect(e, "main")}
                   name="main"
                   id="main-input"
@@ -155,7 +154,6 @@ const MealForm = ({
                   }
                   placeholder="Select a Recipe"
                   required
-                  classNamePrefix="react-select"
                 />
               </div>
             </div>
@@ -165,8 +163,7 @@ const MealForm = ({
               </label>
               <div className="control">
                 <Select
-                  className="is-fullwidth"
-                  isClearable
+                  className="react-select is-fullwidth"
                   onChange={(e) => handleSelect(e, "side1")}
                   name="side1"
                   id="side1-input"
@@ -184,7 +181,6 @@ const MealForm = ({
                   }
                   placeholder="Select a Recipe"
                   required
-                  classNamePrefix="react-select"
                 />
               </div>
             </div>
@@ -194,8 +190,7 @@ const MealForm = ({
               </label>
               <div className="control">
                 <Select
-                  className="is-fullwidth"
-                  isClearable
+                  className="react-select is-fullwidth"
                   onChange={(e) => handleSelect(e, "side2")}
                   name="side2"
                   id="side2-input"
@@ -213,7 +208,6 @@ const MealForm = ({
                   }
                   placeholder="Select a Recipe"
                   required
-                  classNamePrefix="react-select"
                 />
               </div>
             </div>

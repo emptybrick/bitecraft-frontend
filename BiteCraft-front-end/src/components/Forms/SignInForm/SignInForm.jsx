@@ -46,7 +46,7 @@ const SignInForm = () => {
               </label>
               <div className="control">
                 <input
-                  className="input"
+                  className="input is-primary"
                   type="text"
                   autoComplete="off"
                   id="username"
@@ -63,7 +63,7 @@ const SignInForm = () => {
               </label>
               <div className="control">
                 <input
-                  className="input"
+                  className="input is-primary"
                   type="password"
                   autoComplete="off"
                   id="password"

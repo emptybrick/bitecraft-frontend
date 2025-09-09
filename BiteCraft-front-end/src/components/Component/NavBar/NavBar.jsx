@@ -37,7 +37,11 @@ const NavBar = () => {
     >
       <div className="container">
         <div className="navbar-brand" onClick={() => toggleDropdown("brand")}>
-          <Link to="/" className="navbar-item has-text-weight-bold is-size-4">
+          <Link to="/" className="navbar-item has-text-weight-bold is-size-4 is-gap-0"><img
+            className="navbar-icon"
+            src="/public/bitecraft_icon.png"
+            alt="icon"
+          />
             BiteCraft
           </Link>
         </div>
@@ -147,9 +151,6 @@ const NavBar = () => {
             <div className="navbar-end">
               <Link to="/sign-in" className="navbar-item">
                 <span>Sign In</span>
-              </Link>
-              <Link to="/sign-up" className="navbar-item">
-                <span>Sign Up</span>
               </Link>
             </div>
           </div>

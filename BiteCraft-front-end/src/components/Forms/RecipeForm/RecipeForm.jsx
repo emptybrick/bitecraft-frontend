@@ -6,6 +6,7 @@ import Button from "../../Component/Button/Button";
 import CreatableSelect from "react-select/creatable";
 import ProgressBar from "../../Component/ProgressBar/ProgressBar";
 import PageHeader from "../../Component/Header/PageHeader";
+import Select from "react-select";
 
 const RecipeForm = ({
   onCancel = null,
@@ -43,6 +44,32 @@ const RecipeForm = ({
           category: "Main",
         }
   );
+  const categories = [
+    { label: "Main Dish", value: "Main" },
+    { label: "Side Dish", value: "Side" },
+  ];
+  const units = [
+    { label: "n/a", value: "null" },
+    { label: "tsp", value: "teaspoon" },
+    { label: "tbsp", value: "tablespoon" },
+    { label: "cup", value: "cup" },
+    { label: "pint", value: "pint" },
+    { label: "quart", value: "quart" },
+    { label: "oz", value: "oz" },
+    { label: "lb", value: "lb" },
+    { label: "g", value: "g" },
+    { label: "L", value: "L" },
+  ];
+  const fractions = [
+    { value: "null", label: "n/a" },
+    { value: "1/8", label: "1/8" },
+    { value: "1/4", label: "1/4" },
+    { value: "3/8", label: "3/8" },
+    { value: "1/2", label: "1/2" },
+    { value: "5/8", label: "5/8" },
+    { value: "3/4", label: "3/4" },
+    { value: "7/8", label: "7/8" },
+  ];
 
   useEffect(() => {
     const getData = async () => {
@@ -57,6 +84,7 @@ const RecipeForm = ({
   };
 
   const handleChange = (event, index, type) => {
+    console.log(event);
     if (type) {
       let updatedItem;
       if (type === "instruction") {
@@ -65,33 +93,19 @@ const RecipeForm = ({
         setFormData({ ...formData, instructions: updatedItem });
       } else {
         updatedItem = [...formData.ingredients];
-        if (type === "Name") {
-          updatedItem[index] = {
-            ...updatedItem[index],
-            name: event.value,
-          };
-        } else if (type === "Quantity") {
-          updatedItem[index] = {
-            ...updatedItem[index],
-            quantity: event.target.value,
-          };
-        } else if (type === "Unit") {
-          updatedItem[index] = {
-            ...updatedItem[index],
-            unit: event.target.value,
-          };
-        } else {
-          updatedItem[index] = {
-            ...updatedItem[index],
-            fraction: event.target.value,
-          };
-        }
+        updatedItem[index] = {
+          ...updatedItem[index],
+          [type]: event.value,
+        };
         setFormData({ ...formData, ingredients: updatedItem });
       }
     } else {
-      setFormData({ ...formData, [event.target.name]: event.target.value });
+      if (!event.target) {
+        setFormData({ ...formData, category: event.value });
+      } else {
+        setFormData({ ...formData, [event.target.name]: event.target.value });
+      }
     }
-    console.log(formData.ingredients);
   };
 
   const handleInput = (e) => {
@@ -148,7 +162,7 @@ const RecipeForm = ({
 
   const handleCreateIngredient = async (inputValue) => {
     // need to finish
-    console.log("trying to create ingredient", inputValue)
+    console.log("trying to create ingredient", inputValue);
   };
 
   if (!ingredientsData) return <ProgressBar />;
@@ -163,18 +177,26 @@ const RecipeForm = ({
               Category:
             </label>
             <div className="control">
-              <div className="select">
-                <select
-                  required
-                  name="category"
-                  id="category-input"
-                  value={formData.category}
-                  onChange={handleChange}
-                >
-                  <option value="Main">Main Dish</option>
-                  <option value="Side">Side Dish</option>
-                </select>
-              </div>
+              <Select
+                className="react-select"
+                onChange={handleChange}
+                name="category"
+                id="category-input"
+                options={categories.map((cat) => ({
+                  label: cat.label,
+                  value: cat.value,
+                }))}
+                defaultValue={
+                  formData.category
+                    ? {
+                        value: formData.category,
+                        label: formData.category,
+                      }
+                    : null
+                }
+                placeholder="Select a Category"
+                required
+              />
             </div>
           </div>
           <div className="field">
@@ -190,7 +212,7 @@ const RecipeForm = ({
                 value={formData.name}
                 onChange={handleChange}
                 onInput={handleInput}
-                className="input"
+                className="input input-select"
                 placeholder="Recipe name"
               />
             </div>
@@ -225,64 +247,67 @@ const RecipeForm = ({
             {formData.ingredients.map((ingredient, index) => (
               <div className="columns mb-2" key={index}>
                 <div className="column is-narrow">
-                  <div className="select is-fullwidth">
-                    <select
-                      required
-                      name={`unit-${index}`}
-                      id={`unit-input-${index}`}
-                      value={ingredient.unit}
-                      onChange={(e) => handleChange(e, index, "Unit")}
-                    >
-                      <option value="null">n/a</option>
-                      <option value="teaspoon">Tsp</option>
-                      <option value="tablespoon">Tbsp</option>
-                      <option value="cup">Cup</option>
-                      <option value="pint">Pint</option>
-                      <option value="quart">Quart</option>
-                      <option value="oz">Oz</option>
-                      <option value="lb">lb</option>
-                      <option value="g">g</option>
-                      <option value="L">L</option>
-                    </select>
-                  </div>
+                  <Select
+                    className="react-select"
+                    onChange={(e) => handleSelect(e, index, "unit")}
+                    name={`unit-${index}`}
+                    id={`unit-input-${index}`}
+                    options={units.map((unit) => ({
+                      label: unit.label,
+                      value: unit.value,
+                    }))}
+                    defaultValue={
+                      ingredient.unit
+                        ? {
+                            value: ingredient.unit,
+                            label: ingredient.unit,
+                          }
+                        : null
+                    }
+                    placeholder="n/a"
+                    required
+                  />
                 </div>
                 <div className="column is-flex is-narrow">
                   <input
-                    className="input mr-2"
+                    className="input input-select"
                     type="number"
                     required
                     name={`quantity-${index}`}
                     id={`quantity-input-${index}`}
                     value={ingredient.quantity}
-                    onChange={(e) => handleChange(e, index, "Quantity")}
+                    onChange={(e) => handleChange(e, index, "quantity")}
                     step={1}
                     min={1}
                     placeholder="1"
                     onInput={handleInputQuantity}
                   />
-                  <div className="select">
-                    <select
-                      required
-                      name={`fraction-${index}`}
-                      id={`fraction-input-${index}`}
-                      value={ingredient.fraction}
-                      onChange={(e) => handleChange(e, index, "Fraction")}
-                    >
-                      <option value="null">n/a</option>
-                      <option value="1/8">1/8</option>
-                      <option value="1/4">1/4</option>
-                      <option value="3/8">3/8</option>
-                      <option value="1/2">1/2</option>
-                      <option value="5/8">5/8</option>
-                      <option value="3/4">3/4</option>
-                      <option value="7/8">7/8</option>
-                    </select>
-                  </div>
+                </div>
+                <div className="column is-flex is-narrow">
+                  <Select
+                    className="react-select"
+                    onChange={(e) => handleChange(e, index, "fraction")}
+                    name={`fraction-${index}`}
+                    id={`fraction-input-${index}`}
+                    options={units.map((unit) => ({
+                      label: unit.label,
+                      value: unit.value,
+                    }))}
+                    defaultValue={
+                      ingredient.unit
+                        ? {
+                            value: ingredient.unit,
+                            label: ingredient.unit,
+                          }
+                        : null
+                    }
+                    placeholder="n/a"
+                    required
+                  />
                 </div>
                 <div className="column">
                   <CreatableSelect
-                    isClearable
-                    onChange={(e) => handleChange(e, index, "Name")}
+                    onChange={(e) => handleChange(e, index, "name")}
                     onCreateOption={handleCreateIngredient}
                     name={`ingredients-${index}`}
                     id={`ingredients-input-${index}`}
@@ -297,7 +322,7 @@ const RecipeForm = ({
                     }
                     placeholder={"e.g. Flour, Sugar, Eggs"}
                     required
-                    classNamePrefix="react-select"
+                    className="react-select"
                   />
                 </div>
                 <div className="column is-narrow">
@@ -321,7 +346,9 @@ const RecipeForm = ({
           </div>
           <div className="field mt-5"></div>
           <label htmlFor="instructions-input" className="label">
-            <h3 className="title is-5 is-underlined has-text-centered">Instructions:</h3> 
+            <h3 className="title is-5 is-underlined has-text-centered">
+              Instructions:
+            </h3>
           </label>
           {formData.instructions.map((instruction, index) => (
             <div className="field is-grouped mb-2 mt-4" key={index}>

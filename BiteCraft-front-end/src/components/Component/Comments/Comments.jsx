@@ -163,7 +163,7 @@ const CommentsAndReplies = ({ item, itemId, type }) => {
           <article className="media" key={idx}>
             <div className="media-content">
               <div>
-                <div className="box mb-0 has-background-warning-95">
+                <div className="box mb-0 has-background-primary-90">
                   {editState.isEditing &&
                   editState.type === "Comment" &&
                   editState.itemId === comment._id &&
@@ -243,7 +243,7 @@ const CommentsAndReplies = ({ item, itemId, type }) => {
                 {comment.reply && (
                   <article className="media ml-6">
                     <div className="media-content ml-4">
-                      <div className="box has-background-link-95">
+                      <div className="box has-background-primary-95">
                         {editState.isEditing &&
                         editState.type === "Reply" &&
                         editState.itemId === comment._id &&

@@ -14,11 +14,17 @@
   --bulma-navbar-item-background-l-delta: hsl(28.66deg 100% 82.06% / 96%);
 }
 
+.navbar-icon {
+  height: fit-content;
+  display: flex;
+  align-self: center;
+}
+
 a.navbar-item:hover,
 .navbar-link:hover {
   background-color: var(--bulma-primary-25);
-  --bulma-navbar-dropdown-arrow: var(--bulma-primary-45);
-  --bulma-navbar-item-color: var(--bulma-primary-45);
+  --bulma-navbar-dropdown-arrow: var(--bulma-primary-85);
+  --bulma-navbar-item-color: var(--bulma-primary-85);
 }
 
 a.navbar-item:focus,
@@ -113,4 +119,24 @@ a.navbar-item:focus-within {
 
 .button {
   color: rgb(0, 0, 0) !important;
+}
+
+.input-select,
+.textarea
+ {
+  --bulma-input-h: 220;
+  --bulma-input-s: 65%;
+  --bulma-input-l: 79%;
+  --bulma-input-border-l: 35%;
+  --bulma-input-border-l-delta: 50%;
+  --bulma-input-hover-border-l-delta: 30%;
+  --bulma-input-focus-h: 220;
+  --bulma-input-focus-s: 100%;
+  --bulma-input-focus-l: 50%;
+  --bulma-input-focus-shadow-size: 0 0 0 0.08em;
+  --bulma-input-focus-shadow-alpha: 0.7;
+}
+
+.input, .textarea {
+    --bulma-input-placeholder-color: hsla(220, 14%, 21%, 0.596);
 }

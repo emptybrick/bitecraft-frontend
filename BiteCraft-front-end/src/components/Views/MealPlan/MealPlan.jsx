@@ -118,7 +118,6 @@ const MealPlan = () => {
   };
 
   if (!user || isLoading) return <ProgressBar />;
-  console.log(mealPlan);
   return (
     <div className="section">
       <PageHeader userName={user.username} headerText={"Meal Planner"} />
@@ -139,8 +138,7 @@ const MealPlan = () => {
                       <div className="field" key={idx}>
                         <label htmlFor={`${week}-${day}-input`} />
                         <Select
-                          className="is-fullwidth"
-                          isClearable
+                          className="react-select is-fullwidth"
                           onChange={(e) => handleSelect(e, week, idx)}
                           name={`${week}-${day}`}
                           id={`${week}-${day}-input`}
@@ -150,7 +148,6 @@ const MealPlan = () => {
                           }))}
                           placeholder={`${day}`}
                           required
-                          classNamePrefix="react-select"
                         />
                       </div>
                     ))}
@@ -314,7 +311,7 @@ const MealPlan = () => {
                                       </div>
                                     </div>
                                     <button
-                                      className="button modal-trigger mb-2 is-fullwidth has-background-warning-80"
+                                      className="button modal-trigger mb-2 is-fullwidth has-background-success-80"
                                       id={`model-trigger-${idx}-${day}-${week}`}
                                       data-target={`modal-${idx}-${day}-${week}`}
                                       onClick={(e) => handleShowQuickView(e)}
@@ -373,7 +370,7 @@ const MealPlan = () => {
                                     </div>
                                   </div>
                                   <button
-                                    className="button modal-trigger is-fullwidth has-background-info-75"
+                                    className="button modal-trigger is-fullwidth has-background-primary-85"
                                     id={`model-trigger-${index}-${week}`}
                                     data-target={`modal-${index}-${week}`}
                                     onClick={(e) => handleShowQuickView(e)}
