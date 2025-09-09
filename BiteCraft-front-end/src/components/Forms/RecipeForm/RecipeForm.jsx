@@ -16,7 +16,8 @@ const RecipeForm = ({
 }) => {
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
-  const [ingredientsData, setIngredientsData] = useState([]);
+  const [ ingredientsData, setIngredientsData ] = useState([]);
+  const [toggle, setToggle] = useState(false)
   const [formData, setFormData] = useState(
     initialData
       ? initialData
@@ -77,7 +78,7 @@ const RecipeForm = ({
       setIngredientsData(getIngredients);
     };
     if (user) getData();
-  }, [user]);
+  }, [user, toggle]);
 
   const handleNavigation = () => {
     navigate(`/${user._id}/recipes-collection`);
@@ -109,7 +110,6 @@ const RecipeForm = ({
       if (!event.target) {
         setFormData({ ...formData, category: event.value });
       } else {
-        console.log("setting something", event.target.name, event.target.value);
         setFormData({ ...formData, [event.target.name]: event.target.value });
       }
     }
@@ -167,9 +167,16 @@ const RecipeForm = ({
     }
   };
 
-  const handleCreateIngredient = async (inputValue) => {
-    // need to finish
-    console.log("trying to create ingredient", inputValue);
+  const handleCreateIngredient = async (e, idx) => {
+    const event = {label: e, value: e}
+      try {
+        await biteCraftService.Create("Ingredient", e);
+        setIngredientsData([...ingredientsData, event])
+        handleChange(event, idx, "name")
+        setToggle(!toggle)
+      } catch (error) {
+        console.log(error);
+      }
   };
 
   if (!ingredientsData) return <ProgressBar />;
@@ -317,7 +324,7 @@ const RecipeForm = ({
                 <div className="column">
                   <CreatableSelect
                     onChange={(e) => handleChange(e, index, "name")}
-                    onCreateOption={handleCreateIngredient}
+                    onCreateOption={(e) => handleCreateIngredient(e, index)}
                     name={`ingredients-${index}`}
                     id={`ingredients-input-${index}`}
                     options={ingredientsData.map((ing) => ({

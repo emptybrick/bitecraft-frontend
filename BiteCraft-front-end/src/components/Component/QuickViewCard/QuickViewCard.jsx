@@ -12,7 +12,7 @@ const QuickViewCard = ({ item, onClick, id, target, link, buttonText }) => {
           {item.details}
         </div>
         <div className="is-8 pt-3">
-          Created by:{" "}
+          Created by:{ " " }
           <span className="has-text-weight-semibold">
             {item.author.username}
           </span>

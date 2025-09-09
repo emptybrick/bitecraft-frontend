@@ -4,7 +4,7 @@ const Landing = () => {
   return (
     <main className="section">
       <div className="container has-text-centered">
-        <img src="public/bitecraft_logo.png" alt="logo" />
+        <img src="/bitecraft_logo.png" alt="logo" />
         <p className="subtitle is-5 mb-2">
           BiteCraft helps you discover, share, and manage your favorite recipes
           with ease.

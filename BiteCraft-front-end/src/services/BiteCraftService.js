@@ -70,6 +70,9 @@ const Create = async (type, formData, itemId, commentId) => {
             case "MealPlan":
                 BASE_URL = `${ TRIMMED_URL }/users/${ itemId }/planner`;
                 break;
+            case "Ingredient":
+                BASE_URL = `${ TRIMMED_URL }/ingredients`;
+                break;
             default:
                 throw new Error("Type not set");
         }

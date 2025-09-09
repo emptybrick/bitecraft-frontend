@@ -39,7 +39,7 @@ const NavBar = () => {
         <div className="navbar-brand" onClick={() => toggleDropdown("brand")}>
           <Link to="/" className="navbar-item has-text-weight-bold is-size-4 is-gap-0"><img
             className="navbar-icon"
-            src="/public/bitecraft_icon.png"
+            src="/bitecraft_icon.png"
             alt="icon"
           />
             BiteCraft
