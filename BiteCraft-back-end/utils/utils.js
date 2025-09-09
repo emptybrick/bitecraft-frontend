@@ -16,7 +16,6 @@ const handleMealPlan = (data, type) => {
     if (type === "Auto") {
 
         if (data.length < 28) {
-            // repeat until 28 meals in array
             let newMealsArray = [];
             while (newMealsArray.length < 28) {
                 newMealsArray = concat(newMealsArray, shuffledMeals);
@@ -27,7 +26,6 @@ const handleMealPlan = (data, type) => {
             week3 = trimmedMealsArray[ 2 ];
             week4 = trimmedMealsArray[ 3 ];
         } else {
-            // shuffle using lodash, and take first 28 items in array to split into 7 weeks with chunk
             const chunkedMeals = chunk(shuffledMeals, 7);
             week1 = chunkedMeals[ 0 ];
             week2 = chunkedMeals[ 1 ];

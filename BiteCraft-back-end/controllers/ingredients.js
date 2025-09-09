@@ -4,7 +4,6 @@ const verifyToken = require("../middleware/verify-token.js");
 const Ingredient = require('../models/ingredient.js');
 
 router.get('/', verifyToken, async (req, res) => {
-    console.log("hit backend")
     try {
         const results = await Ingredient.find({});
         res.status(200).json(results);

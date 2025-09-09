@@ -5,9 +5,9 @@ import MealBody from "../../Component/Body/MealBody";
 import ModalFooter from "../../Component/Footer/ModalFooter";
 import ModalHeader from "../../Component/Header/ModalHeader";
 
-const Card = ({ items, itemType, isModal, setItems }) => {
-  const collection = `${itemType}Collection`;
-  const linkType = `${itemType.toLowerCase()}s`;
+const Card = ({ items, type, setItems, itemCollection }) => {
+  const collectionType = `${type}Collection`;
+  const linkType = `${type.toLowerCase()}s`;
   const [activeModal, setActiveModal] = useState(null);
 
   const handleCloseQuickView = (e) => {
@@ -16,12 +16,10 @@ const Card = ({ items, itemType, isModal, setItems }) => {
   };
 
   const handleShowQuickView = (e) => {
-    console.log(e.target.dataset.target);
     e.preventDefault();
     const modal = e.target.dataset.target;
     setActiveModal(modal);
   };
-  
 
   return (
     <div className="columns is-multiline has-text-centered is-vcentered">
@@ -39,7 +37,7 @@ const Card = ({ items, itemType, isModal, setItems }) => {
             ></div>
             <div className="modal-card">
               <ModalHeader itemName={item.name} />
-              {itemType === "Recipe" ? (
+              {type === "Recipe" ? (
                 <RecipeBody item={item} isModal={true} />
               ) : (
                 <MealBody
@@ -48,8 +46,9 @@ const Card = ({ items, itemType, isModal, setItems }) => {
               )}
               <ModalFooter
                 item={item}
-                type={itemType}
-                collection={collection}
+                type={type}
+                collection={ collectionType }
+                itemCollection={itemCollection}
                 closeQuickView={handleCloseQuickView}
                 setActiveModal={setActiveModal}
                 items={items}
@@ -62,7 +61,7 @@ const Card = ({ items, itemType, isModal, setItems }) => {
             onClick={(e) => handleShowQuickView(e)}
             id={`modal-trigger-${idx}`}
             target={`modal-${idx}`}
-            buttonText={`Go to ${itemType}`}
+            buttonText={`Go to ${type}`}
             link={`/${linkType}/${item._id}`}
           />
         </div>

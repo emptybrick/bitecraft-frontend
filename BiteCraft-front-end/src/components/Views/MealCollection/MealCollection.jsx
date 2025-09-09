@@ -4,7 +4,7 @@ import { UserContext } from "../../../contexts/UserContext";
 import ProgressBar from "../../Component/ProgressBar/ProgressBar";
 import Message from "../../Component/Message/Message";
 import PageHeader from "../../Component/Header/PageHeader";
-import Card from "../../Component/Card/Card";
+import Filter from "../../Component/Filter/Filter";
 
 const MealCollection = () => {
   const { user } = useContext(UserContext);
@@ -34,11 +34,7 @@ const MealCollection = () => {
       <PageHeader userName={user.username} headerText={"Meals Collection"} />
       <div className="container">
         {meals.length > 0 ? (
-          <Card
-            items={meals}
-            itemType="Meal"
-            setItems={setMeals}
-          />
+          <Filter items={meals} type={"Meal"} setItems={setMeals} itemCollection={meals} />
         ) : (
           <Message itemName={"Meal"} />
         )}

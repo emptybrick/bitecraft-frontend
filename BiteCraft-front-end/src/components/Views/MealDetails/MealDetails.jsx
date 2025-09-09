@@ -62,7 +62,6 @@ const MealDetails = () => {
     setVisibleMealForm(!visibleMealForm);
   };
 
-  // meal handlers
   const handleUpdateMeal = async (formData) => {
     if (!formData.main || !formData.side1 || !formData.side2) return;
     try {

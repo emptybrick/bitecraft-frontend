@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Card from "../Card/Card";
 
-const Filter = ({ items, type, setItems }) => {
+const Filter = ({ items, type, setItems, itemCollection }) => {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
 
@@ -18,7 +18,7 @@ const Filter = ({ items, type, setItems }) => {
       <div className="columns is-centered mb-3">
         <div className="column">
           <input
-            className="input"
+            className="input is-primary"
             type="text"
             placeholder="Search by name..."
             value={search}
@@ -27,7 +27,7 @@ const Filter = ({ items, type, setItems }) => {
         </div>
         {type === "Recipe" && (
           <div className="column">
-            <div className="select is-fullwidth">
+            <div className="select is-fullwidth is-primary">
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
@@ -41,7 +41,7 @@ const Filter = ({ items, type, setItems }) => {
         )}
       </div>
       <div className="container">
-        <Card items={filtered} itemType={type} setItems={setItems} />
+        <Card items={filtered} type={type} setItems={setItems} itemCollection={itemCollection} />
       </div>
     </div>
   );

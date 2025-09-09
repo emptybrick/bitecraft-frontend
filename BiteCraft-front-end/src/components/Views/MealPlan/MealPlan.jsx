@@ -39,7 +39,6 @@ const MealPlan = () => {
   useEffect(() => {
     setIsLoading(true);
     const fetchdata = async () => {
-      // first attempt to find mealplan, if none then populate meals
       const getMealPlan = await biteCraftService.Index("MealPlan", user._id);
       if (!getMealPlan || getMealPlan.week1.length > 1) {
         setMealPlan(getMealPlan);

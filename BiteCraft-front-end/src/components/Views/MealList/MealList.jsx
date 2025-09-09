@@ -8,6 +8,7 @@ import Filter from "../../Component/Filter/Filter";
 const MealList = () => {
   const { user } = useContext(UserContext);
   const [meals, setMeals] = useState([]);
+  const [mealsInCollection, setMealsInCollection] = useState([]);
 
   useEffect(() => {
     const fetchAllMeals = async () => {
@@ -16,6 +17,11 @@ const MealList = () => {
         (meal) => meal.main && meal.side1 && meal.side2
       );
       setMeals(filteredMeals);
+      const collectionData = await biteCraftService.Index(
+        "MealCollection",
+        user._id
+      );
+      if (collectionData) setMealsInCollection(collectionData);
     };
     if (user) fetchAllMeals();
   }, [user]);
@@ -26,7 +32,12 @@ const MealList = () => {
     <div className="section">
       <div className="container">
         <PageHeader headerText={"List of all Meals"} />
-        <Filter items={meals} type={"Meal"} setItems={setMeals} />
+        <Filter
+          items={meals}
+          type={"Meal"}
+          setItems={setMeals}
+          itemCollection={mealsInCollection}
+        />
       </div>
     </div>
   );

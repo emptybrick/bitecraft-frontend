@@ -148,7 +148,7 @@ const RecipeForm = ({
 
   const handleCreateIngredient = async (inputValue) => {
     // need to finish
-    console.log("something happened", inputValue);
+    console.log("trying to create ingredient", inputValue)
   };
 
   if (!ingredientsData) return <ProgressBar />;

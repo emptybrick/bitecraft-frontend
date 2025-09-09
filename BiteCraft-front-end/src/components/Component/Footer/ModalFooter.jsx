@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import Button from "../Button/Button";
 import { UserContext } from "../../../contexts/UserContext";
 import { useNavigate, useParams } from "react-router";
@@ -12,10 +12,16 @@ const ModalFooter = ({
   items,
   setItems,
   mealBody,
+  itemCollection = [],
 }) => {
   const { user } = useContext(UserContext);
   const params = useParams();
   const navigate = useNavigate();
+  const [addedToCollection, setAddedToCollection] = useState(null);
+
+  useEffect(() => {
+    setAddedToCollection(false);
+  }, [addedToCollection]);
 
   const handleDelete = async (itemId) => {
     try {
@@ -31,6 +37,8 @@ const ModalFooter = ({
   const handleAddToCollection = async (item) => {
     try {
       await biteCraftService.AddToCollection(type, item, user._id);
+      itemCollection.push(item)
+      setAddedToCollection(true);
     } catch (error) {
       console.log(error);
     }
@@ -64,24 +72,23 @@ const ModalFooter = ({
         } posted on ${new Date(item.createdAt).toLocaleDateString()}`}</p>
       </div>
       <div className="container is-flex is-justify-content-space-between is-align-content-center">
-          {type === "Recipe" ? (
-            <div className="buttons mb-0">
-              <Button onClick={handlePrint} buttonText="Print" />
-              <Button
-                onClick={() => handleNavigate(item._id, "recipes")}
-                buttonText="Go to Recipe"
-              />
-            </div>
-          ) : (
-            !mealBody && (
-              <Button
-                onClick={() => handleNavigate(item._id, "meals")}
-                buttonText="Go to Meal"
-              />
-            )
-          )}
+        {type === "Recipe" ? (
+          <div className="buttons mb-0">
+            <Button onClick={handlePrint} buttonText="Print" />
+            <Button
+              onClick={() => handleNavigate(item._id, "recipes")}
+              buttonText="Go to Recipe"
+            />
+          </div>
+        ) : (
+          !mealBody && (
+            <Button
+              onClick={() => handleNavigate(item._id, "meals")}
+              buttonText="Go to Meal"
+            />
+          )
+        )}
         <div className="buttons">
-          <Button onClick={(e) => closeQuickView(e)} buttonText="Close" />
           {user._id === params.userId &&
           item.author._id !== user._id &&
           !mealBody ? (
@@ -105,10 +112,10 @@ const ModalFooter = ({
                   buttonText="Delete"
                 />
               ) : (
-                !mealBody && (
+                !mealBody &&
+                !itemCollection.some((i) => i._id === item._id) && (
                   <Button
                     onClick={(e) => {
-                      closeQuickView(e);
                       handleAddToCollection(item);
                     }}
                     buttonText="Add to Collection"
@@ -117,6 +124,7 @@ const ModalFooter = ({
               )}
             </>
           )}
+          <Button onClick={(e) => closeQuickView(e)} buttonText="Close" />
         </div>
       </div>
     </footer>

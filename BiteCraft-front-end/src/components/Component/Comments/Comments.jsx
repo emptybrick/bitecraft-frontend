@@ -46,7 +46,6 @@ const CommentsAndReplies = ({ item, itemId, type }) => {
     setVisibleForm((prev) => (prev === id ? null : id));
   };
 
-  // comment handlers
   const handleAddComment = async (commentFormData) => {
     const newComment = await biteCraftService.Create(
       `${type}Comment`,
@@ -59,7 +58,6 @@ const CommentsAndReplies = ({ item, itemId, type }) => {
     const sortedComments = updatedComments.sort(
       (a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
     );
-    console.log("sort:", sortedComments);
     setComments(sortedComments);
   };
 
@@ -95,7 +93,6 @@ const CommentsAndReplies = ({ item, itemId, type }) => {
     }
   };
 
-  // reply handlers
   const handleAddReply = async (commentFormData, commentId) => {
     const newReply = await biteCraftService.Create(
       `${type}Reply`,
