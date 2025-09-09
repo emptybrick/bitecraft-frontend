@@ -1,7 +1,9 @@
 const dotenv = require('dotenv');
 dotenv.config();
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
+
 const mongoose = require('mongoose');
 const cors = require('cors');
 const logger = require('morgan');
@@ -18,6 +20,8 @@ mongoose.connection.on('connected', () => {
   console.log(`Connected to MongoDB ${ mongoose.connection.name }.`);
 });
 
+app.use(bodyParser.json({ limit: '5mb' }));
+app.use(bodyParser.urlencoded({ limit: '5mb', extended: true }));
 app.use(cors());
 app.use(express.json());
 app.use(logger('dev'));

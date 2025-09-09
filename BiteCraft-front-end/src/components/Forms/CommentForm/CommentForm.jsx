@@ -24,7 +24,7 @@ const CommentForm = ({
         <label htmlFor="text-input"></label>
         <div className="control">
           <textarea
-            className="textarea"
+            className="textarea is-success"
             name="text"
             id="text-input"
             value={formData.text}

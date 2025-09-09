@@ -24,6 +24,7 @@ const MealPlan = () => {
     week4: [{}, {}, {}, {}, {}, {}, {}],
   });
 
+  const mealOptions = ["main", "side1", "side2"];
   const weeks = ["week1", "week2", "week3", "week4"];
 
   const weekDays = [
@@ -40,7 +41,7 @@ const MealPlan = () => {
     setIsLoading(true);
     const fetchdata = async () => {
       const getMealPlan = await biteCraftService.Index("MealPlan", user._id);
-      if (!getMealPlan || getMealPlan.week1.length > 1) {
+      if (getMealPlan) {
         setMealPlan(getMealPlan);
       }
 
@@ -78,18 +79,15 @@ const MealPlan = () => {
     }
   };
 
-  const handleNavigation = () => {
-    navigate(`/meals`);
-  };
-
   const handleAutoGenerate = async () => {
     try {
-      const mealPlan = await biteCraftService.Create(
+      const newMealPlan = await biteCraftService.Create(
         "MealPlan",
         meals,
         user._id
       );
-      setMealPlan(mealPlan);
+      setMealPlan(newMealPlan);
+      navigate(`/${user._id}/planner`);
     } catch (error) {
       console.log(error);
     }
@@ -120,7 +118,7 @@ const MealPlan = () => {
   };
 
   if (!user || isLoading) return <ProgressBar />;
-
+  console.log(mealPlan);
   return (
     <div className="section">
       <PageHeader userName={user.username} headerText={"Meal Planner"} />
@@ -162,10 +160,7 @@ const MealPlan = () => {
             </div>
             <div className="field is-grouped mt-4 is-grouped-centered">
               <div className="control">
-                <Button
-                  type="submit"
-                  buttonText="Create"
-                />
+                <Button type="submit" buttonText="Create" />
               </div>
               <div className="control">
                 <Button
@@ -290,42 +285,28 @@ const MealPlan = () => {
                                             ></button>
                                           </header>
                                           <section className="modal-card-body">
-                                            <div className="box">
-                                              <RecipeModalBody
-                                                recipe={
-                                                  mealPlan[week].meals[idx].main
-                                                }
-                                                type="Planner"
-                                              />
-                                            </div>
-                                            <div className="box">
-                                              <RecipeModalBody
-                                                recipe={
-                                                  mealPlan[week].meals[idx]
-                                                    .side1
-                                                }
-                                                type="Planner"
-                                              />
-                                            </div>
-                                            <div className="box">
-                                              <RecipeModalBody
-                                                recipe={
-                                                  mealPlan[week].meals[idx]
-                                                    .side2
-                                                }
-                                                type="Planner"
-                                              />
-                                            </div>
+                                            {mealOptions.map((option, idx) => (
+                                              <div className="pb-6" key-idx>
+                                                <RecipeModalBody
+                                                  item={
+                                                    mealPlan[week].meals[idx][
+                                                      option
+                                                    ]
+                                                  }
+                                                  type="Planner"
+                                                />
+                                              </div>
+                                            ))}
                                           </section>
                                           <footer className="modal-card-foot pt-4 is-flex-direction-column">
                                             <div className="buttons">
                                               <Button
-                                                onClick={handleCloseQuickView}
-                                                buttonText="Close"
-                                              />
-                                              <Button
                                                 onClick={handlePrint}
                                                 buttonText="Print"
+                                              />
+                                              <Button
+                                                onClick={handleCloseQuickView}
+                                                buttonText="Close"
                                               />
                                             </div>
                                           </footer>
@@ -333,7 +314,7 @@ const MealPlan = () => {
                                       </div>
                                     </div>
                                     <button
-                                      className="button modal-trigger mb-2 is-fullwidth has-background-link-95"
+                                      className="button modal-trigger mb-2 is-fullwidth has-background-warning-80"
                                       id={`model-trigger-${idx}-${day}-${week}`}
                                       data-target={`modal-${idx}-${day}-${week}`}
                                       onClick={(e) => handleShowQuickView(e)}
@@ -392,7 +373,7 @@ const MealPlan = () => {
                                     </div>
                                   </div>
                                   <button
-                                    className="button modal-trigger is-fullwidth has-background-info-85"
+                                    className="button modal-trigger is-fullwidth has-background-info-75"
                                     id={`model-trigger-${index}-${week}`}
                                     data-target={`modal-${index}-${week}`}
                                     onClick={(e) => handleShowQuickView(e)}

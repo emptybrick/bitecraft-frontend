@@ -31,6 +31,7 @@ const Button = ({
     "Remove",
     "Cancel",
     "Remove from Collection",
+    "Delete Meal Plan"
   ];
   const infoButtons = ["Add Ingredient", "Add New Comment", "Add Step"];
 
@@ -84,7 +85,7 @@ const Button = ({
         {buttonText}
       </button>
     );
-  } else if (buttonText === "Quick View") {
+  } else if (buttonText === "Quick View" || buttonText === "Reply") {
     return (
       <button
         className="button is-info"

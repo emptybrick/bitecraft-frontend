@@ -71,7 +71,7 @@ router.post('/:userId/planner', verifyToken, async (req, res) => {
     const data = req.body;
     let newMealPlan;
 
-    if (data.week1 && data.length === 4) {
+    if (data.week1) {
       newMealPlan = handleMealPlan(data, "Manual");
     } else {
       newMealPlan = handleMealPlan(data, "Auto");

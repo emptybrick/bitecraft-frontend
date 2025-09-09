@@ -162,8 +162,8 @@ const CommentsAndReplies = ({ item, itemId, type }) => {
         {comments.map((comment, idx) => (
           <article className="media" key={idx}>
             <div className="media-content">
-              <div className="box">
-                <div className="box">
+              <div>
+                <div className="box mb-0 has-background-warning-95">
                   {editState.isEditing &&
                   editState.type === "Comment" &&
                   editState.itemId === comment._id &&
@@ -243,7 +243,7 @@ const CommentsAndReplies = ({ item, itemId, type }) => {
                 {comment.reply && (
                   <article className="media ml-6">
                     <div className="media-content ml-4">
-                      <div className="box">
+                      <div className="box has-background-link-95">
                         {editState.isEditing &&
                         editState.type === "Reply" &&
                         editState.itemId === comment._id &&
@@ -264,38 +264,37 @@ const CommentsAndReplies = ({ item, itemId, type }) => {
                               {comment.reply.author.username}
                             </p>
                             <p>{comment.reply.text}</p>
-                            <CommentsFooter item={comment.reply} />
-                          </div>
-                        )}
-                        {comment.reply.author._id === user._id &&
-                          !editState.isEditing &&
-                          !visibleForm && (
                             <div className="level is-align-items-center mt-4">
                               <div className="level-left">
-                                <div className="buttons mb-0">
-                                  <Button
-                                    onClick={() =>
-                                      handleDeleteReply(comment._id)
-                                    }
-                                    buttonText="Delete"
-                                  />
-                                  <Button
-                                    onClick={() =>
-                                      toggleEditMode(
-                                        "Reply",
-                                        comment.reply,
-                                        comment._id
-                                      )
-                                    }
-                                    buttonText="Edit"
-                                  />
-                                </div>
+                                {comment.reply.author._id === user._id &&
+                                  !editState.isEditing &&
+                                  !visibleForm && (
+                                    <div className="buttons mb-0">
+                                      <Button
+                                        onClick={() =>
+                                          handleDeleteReply(comment._id)
+                                        }
+                                        buttonText="Delete"
+                                      />
+                                      <Button
+                                        onClick={() =>
+                                          toggleEditMode(
+                                            "Reply",
+                                            comment.reply,
+                                            comment._id
+                                          )
+                                        }
+                                        buttonText="Edit"
+                                      />
+                                    </div>
+                                  )}
                               </div>
                               <div className="level-right">
                                 <CommentsFooter item={comment.reply} />
                               </div>
                             </div>
-                          )}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </article>
