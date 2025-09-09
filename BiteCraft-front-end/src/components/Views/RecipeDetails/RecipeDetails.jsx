@@ -93,7 +93,7 @@ const RecipeDetails = () => {
           ) : (
             <>
               <DetailsHeader item={recipe} />
-              <RecipeBody recipe={recipe} />
+              <RecipeBody item={recipe} />
               <div className="level mb-4 mt-4">
                 <Button
                   onClick={handlePrint}

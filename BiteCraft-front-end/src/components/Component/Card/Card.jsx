@@ -16,7 +16,6 @@ const Card = ({ items, itemType, isModal, setItems }) => {
   };
 
   const handleShowQuickView = (e) => {
-    console.log("clicked")
     console.log(e.target.dataset.target);
     e.preventDefault();
     const modal = e.target.dataset.target;
@@ -41,15 +40,10 @@ const Card = ({ items, itemType, isModal, setItems }) => {
             <div className="modal-card">
               <ModalHeader itemName={item.name} />
               {itemType === "Recipe" ? (
-                <RecipeBody recipe={item} isModal={isModal} />
+                <RecipeBody item={item} isModal={true} />
               ) : (
                 <MealBody
                   item={item}
-                  isModal={isModal}
-                  handleShowQuickView={handleShowQuickView}
-                  handleCloseQuickView={handleCloseQuickView}
-                  setActiveModal={setActiveModal}
-                  activeModal={activeModal}
                 />
               )}
               <ModalFooter

@@ -120,7 +120,7 @@ const MealDetails = () => {
               <div className="columns is-multiline">
                 {mealOptions.map((option, idx) => (
                   <div className="column is-full" key={idx}>
-                    <RecipeBody recipe={meal[option]} type={"Meal"} />
+                    <RecipeBody item={meal[option]} type={"Meal"} />
                   </div>
                 ))}
               </div>

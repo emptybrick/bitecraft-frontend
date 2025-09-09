@@ -4,21 +4,20 @@ import ModalFooter from "../Footer/ModalFooter";
 import ModalHeader from "../Header/ModalHeader";
 import RecipeBody from "./RecipeBody";
 
-const MealBody = ({ item, isModal, handleCloseQuickView, handleShowQuickView, setActiveModal, activeModal }) => {
+const MealBody = ({ item }) => {
   const mealOptions = ["main", "side1", "side2"];
-  // const [activeModal, setActiveModal] = useState(null);
+  const [activeModal, setActiveModal] = useState(null);
 
-  // const handleCloseQuickView = (e) => {
-  //   e.preventDefault();
-  //   setActiveModal(null);
-  // };
+  const handleCloseQuickView = (e) => {
+    e.preventDefault();
+    setActiveModal(null);
+  };
 
-  // const handleShowQuickView = (e) => {
-  //   console.log("clicked")
-  //   e.preventDefault();
-  //   const modal = e.target.dataset.target;
-  //   setActiveModal(modal);
-  // };
+  const handleShowQuickView = (e) => {
+    e.preventDefault();
+    const modal = e.target.dataset.target;
+    setActiveModal(modal);
+  };
 
   return (
     <section className="modal-card-body pt-5 pb-5`">
@@ -34,13 +33,13 @@ const MealBody = ({ item, isModal, handleCloseQuickView, handleShowQuickView, se
                   }`}
                   id={`modal-${idx}`}
                 >
-                  <div className="" onClick={handleCloseQuickView}></div>
+                  <div className="modal-background" onClick={handleCloseQuickView}></div>
                   <div className="modal-card">
                     <ModalHeader itemName={item[option].name} />
-                    <RecipeBody recipe={item[option]} isModal={true} />
+                    <RecipeBody item={item[option]} isModal={true} />
                     <ModalFooter
                       item={item[option]}
-                      type={"Meal"}
+                      type={"Recipe"}
                       collection={"MealCollection"}
                       closeQuickView={handleCloseQuickView}
                       setActiveModal={setActiveModal}

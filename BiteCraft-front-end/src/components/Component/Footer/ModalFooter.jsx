@@ -7,7 +7,6 @@ import * as biteCraftService from "../../../services/BiteCraftService";
 const ModalFooter = ({
   item,
   type,
-  collection,
   closeQuickView,
   setActiveModal,
   items,
@@ -29,9 +28,9 @@ const ModalFooter = ({
     }
   };
 
-  const handleAddToCollection = async (itemId) => {
+  const handleAddToCollection = async (item) => {
     try {
-      await biteCraftService.Add(collection, itemId, user._id);
+      await biteCraftService.AddToCollection(type, item, user._id);
     } catch (error) {
       console.log(error);
     }
@@ -52,8 +51,8 @@ const ModalFooter = ({
     window.print();
   };
 
-  const handleNavigate = (itemId) => {
-    navigate(`/meals/${itemId}`);
+  const handleNavigate = (itemId, type) => {
+    navigate(`/${type}/${itemId}`);
   };
 
   return (
@@ -64,17 +63,23 @@ const ModalFooter = ({
           item.author.username
         } posted on ${new Date(item.createdAt).toLocaleDateString()}`}</p>
       </div>
-      <div className="container is-flex is-justify-content-space-between">
-        {type === "Recipe" ? (
-          <Button onClick={handlePrint} buttonText="Print" />
-        ) : (
-          !mealBody && (
-            <Button
-              onClick={() => handleNavigate(item._id)}
-              buttonText="Go to Meal"
-            />
-          )
-        )}
+      <div className="container is-flex is-justify-content-space-between is-align-content-center">
+          {type === "Recipe" ? (
+            <div className="buttons mb-0">
+              <Button onClick={handlePrint} buttonText="Print" />
+              <Button
+                onClick={() => handleNavigate(item._id, "recipes")}
+                buttonText="Go to Recipe"
+              />
+            </div>
+          ) : (
+            !mealBody && (
+              <Button
+                onClick={() => handleNavigate(item._id, "meals")}
+                buttonText="Go to Meal"
+              />
+            )
+          )}
         <div className="buttons">
           <Button onClick={(e) => closeQuickView(e)} buttonText="Close" />
           {user._id === params.userId &&
@@ -104,7 +109,7 @@ const ModalFooter = ({
                   <Button
                     onClick={(e) => {
                       closeQuickView(e);
-                      handleAddToCollection(item._id);
+                      handleAddToCollection(item);
                     }}
                     buttonText="Add to Collection"
                   />

@@ -17,14 +17,13 @@ const RecipeList = () => {
     if (user) fetchAllRecipes();
   }, [user]);
 
-
   if (!user || !recipes) return <ProgressBar />;
 
   return (
     <div className="section">
       <div className="container">
         <PageHeader headerText={"List of all Recipes"} />
-        <Filter items={recipes} type={"recipes"} />
+        <Filter items={recipes} type={"Recipe"} setItems={setRecipes} />
       </div>
     </div>
   );

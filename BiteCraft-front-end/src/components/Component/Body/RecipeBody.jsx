@@ -1,11 +1,11 @@
-const RecipeBody = ({ recipe, type, isModal }) => {
+const RecipeBody = ({ item, type, isModal }) => {
   return (
     <section className={`${isModal ? "modal-card-body" : "container"}`}>
       <div className={`${!isModal ? "box" : ""}`}>
         {type === "Planner" ||
           (type === "Meal" && (
             <div className="level">
-              <div className="title is-4">{recipe.name}</div>
+              <div className="title is-4">{item.name}</div>
               <div className="level-right pl-6">
                 <div>
                   <p className="is-size-6 mb-1">
@@ -30,7 +30,7 @@ const RecipeBody = ({ recipe, type, isModal }) => {
             </h4>
             <div className="content">
               <ul>
-                {recipe.ingredients.map((ing, idx) => (
+                {item.ingredients.map((ing, idx) => (
                   <li key={idx}>
                     <p className="mb-2 has-text-left">{`${ing.quantity} ${ing.unit} ${ing.name}`}</p>
                   </li>
@@ -43,7 +43,7 @@ const RecipeBody = ({ recipe, type, isModal }) => {
               Instructions
             </h4>
             <ol className="pl-6">
-              {recipe.instructions.map((instruction, idx) => (
+              {item.instructions.map((instruction, idx) => (
                 <li className="" key={idx}>
                   <p className="has-text-left pl-2">{instruction}</p>
                 </li>

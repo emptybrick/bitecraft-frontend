@@ -57,10 +57,6 @@ a.navbar-item:focus-within {
   }
 }
 
-/* html {
-  background-color: #d0d0d0;
-} */
-
 .media {
   --bulma-media-border-color: hsl(221deg 14% 86% / 0%);
 }
@@ -99,7 +95,7 @@ a.navbar-item:focus-within {
 }
 
 .modal {
-  --bulma-modal-background-background-color: hsl(18.66deg 100% 82.06% / 78%);
+  --bulma-modal-background-background-color: hsla(17, 11%, 33%, 0.78);
   --bulma-modal-card-head-background-color: hsl(10, 71%, 68%);
   --bulma-modal-card-foot-background-color: hsl(10, 71%, 88%);
   --bulma-modal-card-body-background-color: hsl(10, 71%, 95%);
