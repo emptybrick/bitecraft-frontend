@@ -84,7 +84,6 @@ const RecipeForm = ({
   };
 
   const handleChange = (event, index, type) => {
-    console.log(event);
     if (type) {
       let updatedItem;
       if (type === "instruction") {
@@ -93,16 +92,24 @@ const RecipeForm = ({
         setFormData({ ...formData, instructions: updatedItem });
       } else {
         updatedItem = [...formData.ingredients];
-        updatedItem[index] = {
-          ...updatedItem[index],
-          [type]: event.value,
-        };
+        if (type === "quantity") {
+          updatedItem[index] = {
+            ...updatedItem[index],
+            [type]: event.target.value,
+          };
+        } else {
+          updatedItem[index] = {
+            ...updatedItem[index],
+            [type]: event.value,
+          };
+        }
         setFormData({ ...formData, ingredients: updatedItem });
       }
     } else {
       if (!event.target) {
         setFormData({ ...formData, category: event.value });
       } else {
+        console.log("setting something", event.target.name, event.target.value);
         setFormData({ ...formData, [event.target.name]: event.target.value });
       }
     }
@@ -249,7 +256,7 @@ const RecipeForm = ({
                 <div className="column is-narrow">
                   <Select
                     className="react-select"
-                    onChange={(e) => handleSelect(e, index, "unit")}
+                    onChange={(e) => handleChange(e, index, "unit")}
                     name={`unit-${index}`}
                     id={`unit-input-${index}`}
                     options={units.map((unit) => ({
@@ -289,15 +296,17 @@ const RecipeForm = ({
                     onChange={(e) => handleChange(e, index, "fraction")}
                     name={`fraction-${index}`}
                     id={`fraction-input-${index}`}
-                    options={units.map((unit) => ({
-                      label: unit.label,
-                      value: unit.value,
+                    options={fractions.map((fraction) => ({
+                      label: fraction.label,
+                      value: fraction.value,
                     }))}
                     defaultValue={
-                      ingredient.unit
+                      ingredient.fraction
                         ? {
-                            value: ingredient.unit,
-                            label: ingredient.unit,
+                            value: ingredient.fraction,
+                            label: fractions.find(
+                              (i) => i.value === ingredient.fraction
+                            ),
                           }
                         : null
                     }
