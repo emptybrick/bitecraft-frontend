@@ -20,6 +20,7 @@ const RecipeForm = ({
   const [ingredientsData, setIngredientsData] = useState([]);
   const [toggle, setToggle] = useState(false);
   const [similarIngredients, setSimilarIngredients] = useState([]);
+  const [searchedIngredient, setSearchedIngredient] = useState(null);
   const [showSearchModal, setShowSearchModal] = useState(false);
   const [formData, setFormData] = useState(
     initialData
@@ -185,8 +186,8 @@ const RecipeForm = ({
       );
       if (searchIngredients && searchIngredients.itemsFound.length > 0) {
         setSimilarIngredients(searchIngredients.itemsFound);
+        setSearchedIngredient(searchIngredients.searchedItem);
         setShowSearchModal(true);
-        console.log(searchIngredients.itemsFound);
       } else {
         handleCreateIngredient(e, idx);
       }
@@ -205,6 +206,12 @@ const RecipeForm = ({
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleCancelSearchModal = () => {
+    setShowSearchModal(false);
+    setSimilarIngredients([]);
+    setSearchedIngredient(null)
   };
 
   if (!ingredientsData) return <ProgressBar />;
@@ -380,7 +387,16 @@ const RecipeForm = ({
                 </div>
               </div>
             ))}
-            { showSearchModal ? <SearchModal items={ similarIngredients } cancel={ () => setShowSearchModal(false) } submit={ '' } /> : ""}
+            {showSearchModal ? (
+              <SearchModal
+                items={similarIngredients}
+                search={searchedIngredient}
+                cancel={handleCancelSearchModal}
+                submit={""}
+              />
+            ) : (
+              ""
+            )}
             <div className="mt-2">
               <Button
                 type="button"
