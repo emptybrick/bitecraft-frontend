@@ -7,6 +7,7 @@ import CreatableSelect from "react-select/creatable";
 import ProgressBar from "../../Component/ProgressBar/ProgressBar";
 import PageHeader from "../../Component/Header/PageHeader";
 import Select from "react-select";
+import SearchModal from "../../Component/SearchModal/SearchModal";
 
 const RecipeForm = ({
   onCancel = null,
@@ -16,8 +17,10 @@ const RecipeForm = ({
 }) => {
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
-  const [ ingredientsData, setIngredientsData ] = useState([]);
-  const [toggle, setToggle] = useState(false)
+  const [ingredientsData, setIngredientsData] = useState([]);
+  const [toggle, setToggle] = useState(false);
+  const [similarIngredients, setSimilarIngredients] = useState([]);
+  const [showSearchModal, setShowSearchModal] = useState(false);
   const [formData, setFormData] = useState(
     initialData
       ? initialData
@@ -74,7 +77,11 @@ const RecipeForm = ({
 
   useEffect(() => {
     const getData = async () => {
-      const getIngredients = await biteCraftService.Index("Ingredient");
+      const getIngredients = await biteCraftService.Index(
+        "Ingredient",
+        user._id,
+        true
+      );
       setIngredientsData(getIngredients);
     };
     if (user) getData();
@@ -167,16 +174,37 @@ const RecipeForm = ({
     }
   };
 
-  const handleCreateIngredient = async (e, idx) => {
-    const event = {label: e, value: e}
-      try {
-        await biteCraftService.Create("Ingredient", e);
-        setIngredientsData([...ingredientsData, event])
-        handleChange(event, idx, "name")
-        setToggle(!toggle)
-      } catch (error) {
-        console.log(error);
+  const handleSearchIngredient = async (e, idx) => {
+    const event = { label: e, value: e };
+    try {
+      const searchIngredients = await biteCraftService.Index(
+        "Ingredient",
+        user._id,
+        false,
+        event.value
+      );
+      if (searchIngredients && searchIngredients.itemsFound.length > 0) {
+        setSimilarIngredients(searchIngredients.itemsFound);
+        setShowSearchModal(true);
+        console.log(searchIngredients.itemsFound);
+      } else {
+        handleCreateIngredient(e, idx);
       }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleCreateIngredient = async (e, idx) => {
+    const event = { label: e, value: e };
+    try {
+      await biteCraftService.Create("Ingredient", e);
+      setIngredientsData([...ingredientsData, event]);
+      handleChange(event, idx, "name");
+      setToggle(!toggle);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   if (!ingredientsData) return <ProgressBar />;
@@ -324,7 +352,7 @@ const RecipeForm = ({
                 <div className="column">
                   <CreatableSelect
                     onChange={(e) => handleChange(e, index, "name")}
-                    onCreateOption={(e) => handleCreateIngredient(e, index)}
+                    onCreateOption={(e) => handleSearchIngredient(e, index)}
                     name={`ingredients-${index}`}
                     id={`ingredients-input-${index}`}
                     options={ingredientsData.map((ing) => ({
@@ -352,6 +380,7 @@ const RecipeForm = ({
                 </div>
               </div>
             ))}
+            { showSearchModal ? <SearchModal items={ similarIngredients } cancel={ () => setShowSearchModal(false) } submit={ '' } /> : ""}
             <div className="mt-2">
               <Button
                 type="button"

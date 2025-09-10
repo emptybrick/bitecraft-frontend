@@ -4,12 +4,12 @@ const Meals_URL = `${ import.meta.env.VITE_BACK_END_SERVER_URL }/meals`;
 const Recipes_URL = `${ import.meta.env.VITE_BACK_END_SERVER_URL }/recipes`;
 const TRIMMED_URL = `${ import.meta.env.VITE_BACK_END_SERVER_URL }`;
 
-const Index = async (type, userId) => {
+const Index = async (type, userId, getAll, item) => {
     let BASE_URL = null;
     try {
         if (type === "Meal") { BASE_URL = Meals_URL; }
         else if (type === "Recipe") { BASE_URL = Recipes_URL; }
-        else if (type === "Ingredient") { BASE_URL = `${ TRIMMED_URL }/ingredients`; }
+        else if (type === "Ingredient") { BASE_URL = `${ TRIMMED_URL }/ingredients?all=${ getAll }&search=${ item }`; }
         else {
             if (type === "RecipeCollection") {
                 BASE_URL = `${ TRIMMED_URL }/users/${ userId }/recipes-collection`;
@@ -79,6 +79,7 @@ const Create = async (type, formData, itemId, commentId) => {
         const res = await axios.post(BASE_URL, formData, {
             headers: { Authorization: `Bearer ${ localStorage.getItem("token") }` },
         });
+
         return res.data;
     } catch (error) {
         console.log(error);
@@ -111,7 +112,7 @@ const Delete = async (type, itemId, commentId) => {
                 BASE_URL = `${ TRIMMED_URL }/users/${ itemId }/planner`;
                 break;
             default:
-                console.log(type)
+                console.log(type);
                 throw new Error("Type not set");
         }
         const res = await axios.delete(BASE_URL, {
