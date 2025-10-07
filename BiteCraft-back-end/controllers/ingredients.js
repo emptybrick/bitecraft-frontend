@@ -23,7 +23,7 @@ router.get('/', verifyToken, async (req, res) => {
                         text: {
                             query: trimmedName,
                             path: "name",
-                            fuzzy: { maxEdits: 2, prefixLength: 1 }
+                            fuzzy: { maxEdits: 2, prefixLength: 3 }
                         },
                     },
                 },
@@ -36,7 +36,7 @@ router.get('/', verifyToken, async (req, res) => {
                 },
 
                 {
-                    $limit: 10,
+                    $limit: 5,
                 }
             ];
 
@@ -58,18 +58,14 @@ router.get('/', verifyToken, async (req, res) => {
 });
 
 router.post('/', verifyToken, async (req, res) => {
-    console.log(req.body)
     try {
         const name = keys(req.body)[ 0 ];
         if (!name || typeof name !== 'string' || name.trim().length < 2) {
             return res.status(400).json({ error: 'Invalid name' });
         }
         const trimmedName = name.trim();
-
-        console.log(trimmedName)
-
-        // const ingredient = await Ingredient.create({ name: trimmedName });
-        // return res.status(201).json(ingredient);
+        const ingredient = await Ingredient.create({ name: trimmedName });
+        return res.status(201).json(ingredient);
 
     } catch (error) {
         res.status(500).json(error);

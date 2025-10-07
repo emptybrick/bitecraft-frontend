@@ -1,5 +1,3 @@
-// need logo and text logo to add
-
 const Landing = () => {
   return (
     <main className="section">

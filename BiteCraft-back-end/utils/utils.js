@@ -40,8 +40,6 @@ const handleMealPlan = (data, type) => {
         week4 = data.week4;
     }
 
-    console.log(type)
-
     const ingredientListFormat = (week) => {
 
         let ingredientList = [];

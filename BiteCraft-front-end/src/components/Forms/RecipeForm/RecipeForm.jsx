@@ -203,6 +203,7 @@ const RecipeForm = ({
       setIngredientsData([...ingredientsData, event]);
       handleChange(event, idx, "name");
       setToggle(!toggle);
+      setShowSearchModal(false)
     } catch (error) {
       console.log(error);
     }
@@ -392,7 +393,7 @@ const RecipeForm = ({
                 items={similarIngredients}
                 search={searchedIngredient}
                 cancel={handleCancelSearchModal}
-                submit={""}
+                submit={handleCreateIngredient}
               />
             ) : (
               ""
