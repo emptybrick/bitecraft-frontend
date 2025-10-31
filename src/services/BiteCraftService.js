@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-const Meals_URL = `${ import.meta.env.VITE_BACK_END_SERVER_URL }/meals`;
-const Recipes_URL = `${ import.meta.env.VITE_BACK_END_SERVER_URL }/recipes`;
-const TRIMMED_URL = `${ import.meta.env.VITE_BACK_END_SERVER_URL }`;
+const Meals_URL = `${ import.meta.env.VITE_BACK_END_SERVER_URL || 'https://bitecraft-backend-44f247390d1f.herokuapp.com/' }/meals`;
+const Recipes_URL = `${ import.meta.env.VITE_BACK_END_SERVER_URL || 'https://bitecraft-backend-44f247390d1f.herokuapp.com/' }/recipes`;
+const TRIMMED_URL = `${ import.meta.env.VITE_BACK_END_SERVER_URL || 'https://bitecraft-backend-44f247390d1f.herokuapp.com/'}`;
 
 const Index = async (type, userId, getAll, item) => {
     let BASE_URL = null;

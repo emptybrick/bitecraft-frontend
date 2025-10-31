@@ -1,4 +1,4 @@
-const BASE_URL = `${import.meta.env.VITE_BACK_END_SERVER_URL}/auth`;
+const BASE_URL = `${ import.meta.env.VITE_BACK_END_SERVER_URL || 'https://bitecraft-backend-44f247390d1f.herokuapp.com/'}/auth`;
 
 const signUp = async (formData) => {
   try {
