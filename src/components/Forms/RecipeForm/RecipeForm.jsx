@@ -261,7 +261,7 @@ const RecipeForm = ({
                 id="name-input"
                 value={formData.name}
                 onChange={handleChange}
-                onInput={handleInput}
+                // onInput={handleInput} -- allow user to enter whatever they want (tester complained)
                 className="input input-select"
                 placeholder="Recipe name"
               />
