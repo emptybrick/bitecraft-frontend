@@ -349,7 +349,7 @@ const RecipeForm = ({
                             value: ingredient.fraction,
                             label: fractions.find(
                               (i) => i.value === ingredient.fraction
-                            ),
+                            ).label,
                           }
                         : null
                     }
